@@ -1,0 +1,65 @@
+<div class="card-container">
+  <h1 class="sample-content">Welcome to Food App</h1>
+
+  <hr>
+</div>
+<!--
+
+<div [hidden]="allFoods && allConditions">Loading...</div>
+<div [hidden]="!allFoods || !allConditions">
+    <div class="button" (click)="showFood=true;showCondition=false">Search by Food</div>
+    <br>
+    <div class="button" (click)="showFood=false;showCondition=true">Search by Condition</div>
+
+    <br>
+    <br>
+
+    <div class="selection-container" [ngIf]="showFood">
+        <div class="checkbox-container">
+
+    <div *ngFor="let food of allFoods">
+        <label>
+            <input type="checkbox"
+                   name="allFoods"
+                   value="{{food.value}}"
+                   [(ngModel)]="food.checked"/>
+            {{option.name}}
+        </label>
+    </div>
+
+
+            <label ng-repeat="food in allFoods">
+            <input type="checkbox" checklist-before-change="changeFood(food)" checklist-change="onChangeFood()" checklist-model="selectedFoods" checklist-value="food"> {{food}}
+            <br>
+        </label>
+        </div>
+        <div class="button" (click)="filter('food')">Filter Food</div>
+    </div>
+
+    <div class="selection-container" [ngIf]="showCondition">
+        <div class="checkbox-container">
+            <label ng-repeat="condition in allConditions">
+            <input type="checkbox" checklist-before-change="changeCondition(condition)" checklist-change="onChangeSelection()" checklist-model="selectedConditions" checklist-value="condition"> {{condition}}
+            <br>
+        </label>
+        </div>
+        <div class="button" (click)="filter('condition')">Filter Condition</div>
+    </div>
+</div>
+
+
+
+
+  <div>
+      <div class="button">Submit Value</button>
+
+    <!--
+        <input type="text" [value]="localState.value" (input)="localState.value = $event.target.value" autofocus>
+        Rather than wiring up two-way data-binding ourselves with [value] and (input)
+        we can use Angular's [(ngModel)] syntax
+        <input type="text" name="textInput" [(ngModel)]="localState.value" autofocus>
+      -->
+
+  <!--</div>
+
+</div>-->
