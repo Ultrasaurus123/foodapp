@@ -3,63 +3,51 @@
 
   <hr>
 </div>
-<!--
 
-<div [hidden]="allFoods && allConditions">Loading...</div>
-<div [hidden]="!allFoods || !allConditions">
-    <div class="button" (click)="showFood=true;showCondition=false">Search by Food</div>
-    <br>
-    <div class="button" (click)="showFood=false;showCondition=true">Search by Condition</div>
+<div [hidden]="dataService.allFoods && dataService.allConditions">Loading...</div>
 
-    <br>
-    <br>
+<div [hidden]="!dataService.allFoods || !dataService.allConditions">
+  <div class="button" [class.btn-selected]="showFood" (click)="showItemList('food')">Search by Food</div>
+  <div class="button" [class.btn-selected]="showCondition" (click)="showItemList('condition')">Search by Condition</div>
 
-    <div class="selection-container" [ngIf]="showFood">
-        <div class="checkbox-container">
+  <br>
+  <div [hidden]="!showFood && !showCondition">
+      Search: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+  </div>
+  <br>
 
-    <div *ngFor="let food of allFoods">
+  <div class="selection-container" [hidden]="!showFood">
+    <div class="checkbox-container">
+      <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods">
         <label>
             <input type="checkbox"
                    name="allFoods"
-                   value="{{food.value}}"
+                   value="{{food.item}}"
+                   (click)="onSelectItem(food, 'food')"
+                   [disabled]="checkedFoods >= 5 && !food.checked"
                    [(ngModel)]="food.checked"/>
-            {{option.name}}
+            {{food.item}}
         </label>
+      </div>
     </div>
+    <div class="button" [class.btn-disabled]="checkedFoods === 0" (click)="checkedFoods > 0 && selectItems('food')">Select Food</div>
+  </div>
 
-
-            <label ng-repeat="food in allFoods">
-            <input type="checkbox" checklist-before-change="changeFood(food)" checklist-change="onChangeFood()" checklist-model="selectedFoods" checklist-value="food"> {{food}}
-            <br>
+  <div class="selection-container" [hidden]="!showCondition">
+    <div class="checkbox-container">
+      <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions">
+        <label>
+            <input type="checkbox"
+                   name="allConditions"
+                   value="{{condition.item}}"
+                   (click)="onSelectItem(condition, 'condition')"
+                   [disabled]="checkedConditions >= 5 && !condition.checked"
+                   [(ngModel)]="condition.checked"/>
+            {{condition.item}}
         </label>
-        </div>
-        <div class="button" (click)="filter('food')">Filter Food</div>
+      </div>
     </div>
-
-    <div class="selection-container" [ngIf]="showCondition">
-        <div class="checkbox-container">
-            <label ng-repeat="condition in allConditions">
-            <input type="checkbox" checklist-before-change="changeCondition(condition)" checklist-change="onChangeSelection()" checklist-model="selectedConditions" checklist-value="condition"> {{condition}}
-            <br>
-        </label>
-        </div>
-        <div class="button" (click)="filter('condition')">Filter Condition</div>
-    </div>
+    <div class="button" [class.btn-disabled]="checkedConditions === 0" (click)="checkedConditions > 0 && selectItems('condition')">Select Condition</div>
+  </div>
+  
 </div>
-
-
-
-
-  <div>
-      <div class="button">Submit Value</button>
-
-    <!--
-        <input type="text" [value]="localState.value" (input)="localState.value = $event.target.value" autofocus>
-        Rather than wiring up two-way data-binding ourselves with [value] and (input)
-        we can use Angular's [(ngModel)] syntax
-        <input type="text" name="textInput" [(ngModel)]="localState.value" autofocus>
-      -->
-
-  <!--</div>
-
-</div>-->

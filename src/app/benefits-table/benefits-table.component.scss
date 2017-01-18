@@ -1,0 +1,68 @@
+.benefits-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    display: table;
+}
+
+.benefits-table {
+    border: 1px solid #ccc;
+    font-size: 12px;
+}
+
+.benefits-table th, .benefits-table tbody td {
+    border: 1px solid #ccc;
+    font-size: 12px;
+
+    @media (max-width: 320px) { 
+        font-size: 10px;
+        max-width: 40px;
+     }
+
+    @media (min-width: 321px) and (max-width: 767px) { 
+        max-width: 60px;
+     }
+}
+
+// Rotate table headers on smaller mobiles
+//      @media (max-width: 320px) { 
+// th.rotate {
+//   /* Something you can count on */
+//   height: 140px;
+//   white-space: nowrap;
+// }
+
+// th.rotate > div {
+//   transform: 
+//     /* Magic Numbers */
+//     translate(0px, 51px)
+//     /* 45 is really 360 - 45 */
+//     rotate(270deg);
+//   width: 30px;
+// }
+// th.rotate > div > span {
+// //   border-bottom: 1px solid #ccc;
+//   padding: 5px 10px;
+// }
+//      }
+
+.benefits-table tr {
+    border-bottom: 1px solid #ddd
+}
+
+.benefits-table tbody tr:nth-child(even) {
+    background-color: #f1f1f1
+}
+
+.benefits-table tr:nth-child(odd) {
+    background-color: #fff
+}
+
+.benefits-table tr:nth-child(even) {
+    background-color: #f1f1f1
+}
+
+.effect-icon {
+    width: 16px;
+    height: 16px;
+}

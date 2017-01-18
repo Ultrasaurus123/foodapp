@@ -23,11 +23,14 @@ import { ROUTES } from './app.routes';
 // App is our top level component
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 import { BenefitsTableComponent } from './benefits-table';
 import { NoContentComponent } from './no-content';
-import { XLargeDirective } from './home/x-large';
+
+import { AppState, InternalStateType } from './app.service';
+import { DataService } from './common';
+
+import { KeysPipe } from './common';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
@@ -35,7 +38,7 @@ import '../styles/headings.css';
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState
+  AppState, DataService
 ];
 
 type StoreType = {
@@ -54,7 +57,7 @@ type StoreType = {
     BenefitsTableComponent,
     HomeComponent,
     NoContentComponent,
-    XLargeDirective
+    KeysPipe
   ],
   imports: [ // import Angular's modules
     BrowserModule,

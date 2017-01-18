@@ -14,16 +14,15 @@ import {
   styleUrls: [
     './app.component.css'
   ],
+     // <nav>
+    //   <a [routerLink]=" ['./'] " routerLinkActive="active">
+    //     Home
+    //   </a>
+    //   <a [routerLink]=" ['./benefits'] " routerLinkActive="active">
+    //     Benefits Table
+    //   </a>
+    // </nav>
   template: `
-    <nav>
-      <a [routerLink]=" ['./'] " routerLinkActive="active">
-        Home
-      </a>
-      <a [routerLink]=" ['./benefits'] " routerLinkActive="active">
-        Benefits Table
-      </a>
-    </nav>
-
     <main>
       <router-outlet></router-outlet>
     </main>
