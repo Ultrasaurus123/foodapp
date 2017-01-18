@@ -25,6 +25,8 @@ export class BenefitsTableComponent implements OnInit {
   private dataArray: Array<any>;
   private currentSort: { type: string, asc: boolean };
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
+  private lastSelectedRow: number = -1;
+  private selectedItem: any;
 
   constructor(private http: Http, private router: Router) { }
 
@@ -111,6 +113,41 @@ export class BenefitsTableComponent implements OnInit {
     this.filteredList = this.dataArray;
   }
 
+  private selectRow(item: any, index: number) {
+    item.selected = !item.selected;
+    if (item.selected) {
+      this.selectedItem = item;
+    } else {
+      this.selectedItem = undefined;
+    }
+    if (this.lastSelectedRow > -1 && this.lastSelectedRow != index) {
+      this.filteredList[this.lastSelectedRow].selected = false;
+    }
+    this.lastSelectedRow = index;
+  }
+
+  private resetSelection() {
+    if (this.lastSelectedRow > -1) {
+      this.filteredList[this.lastSelectedRow].selected = false;
+      this.lastSelectedRow = -1;
+    }  
+    this.selectedItem = undefined;
+  }
+
+  private removeRow() {
+    if (this.selectedItem) {
+      this.selectedItem.hidden = true;
+      this.selectedItem.selected = false;
+      this.selectedItem = undefined;
+    }  
+  }
+
+  private showAllRows() {
+    for (let item of this.filteredList) {
+      item.hidden = false;
+    }
+  }
+
 
   private getSortOrderIcon = function (sortType): string {
     if (this.currentSort.type === sortType) {
@@ -124,6 +161,7 @@ export class BenefitsTableComponent implements OnInit {
   };
 
   private sort(sortType: string) {
+    this.resetSelection();
     this.currentSort.asc = (this.currentSort.type === sortType) ? !this.currentSort.asc : true;
     this.currentSort.type = sortType;
     let orderFactor = (this.currentSort.asc) ? 1 : -1;
@@ -210,6 +248,7 @@ export class BenefitsTableComponent implements OnInit {
   }
 
   private onFilterChange(index, newValue): void {
+    this.resetSelection();
     this.filterOptions[index].checked = newValue;
     let beneficial: boolean = this.filterOptions[0].checked;
     let assist: boolean = this.filterOptions[1].checked;

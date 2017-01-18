@@ -1,54 +1,74 @@
-<h1>Table of Benefits</h1>
+<div class="header">
+    <h1>Table of Benefits</h1>
 
-<!-- drop downs -->
-<div class="button-container clearfix">
-    <!--<div class="button" [class.btn-selected]="showFood" (click)="showItemList('food')">Foods</div>-->
-    <!-- sort drop down -->
-    <div class="button dropdown">
-        <span class="dropbtn">Sort By</span>
-        <div class="dropdown-content">
-            <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
-            <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
-            <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+    <div class="button-container">
+        <div class="dropdown">
+            <button class="dropbtn">Sort By</button>
+            <div class="dropdown-content">
+                <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
+                <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
+                <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+            </div>
         </div>
-    </div>
+        <!-- filter drop down -->
+        <div class="dropdown">
+            <button class="dropbtn">Filter By</button>
+            <div class="dropdown-content">
+                <div *ngFor="let option of filterOptions; let i = index;">
+                    <label>
+                    <input type="checkbox" name="filterOptions" value="{{option.name}}" 
+                    (ngModelChange)="onFilterChange(i, $event)"[disabled]="false" [ngModel]="option.checked"/>
+                    {{option.name}}
+                </label>
+                </div>
+                <hr>
+                <a (click)="showAllRows()">Hide Negative Rows</a>
+                <a (click)="showAllRows()">Hide Negative Rows</a>
+                <a (click)="showAllRows()">Hide Negative Rows</a>
+                <hr>
+                <a (click)="showAllRows()">Unhide All Rows</a>
+            </div>
+        </div>
 
-    <!-- filter drop down -->
-    <div class="button dropdown">
-        <button class="dropbtn">Filter By</button>
-        <div class="dropdown-content">
-            <div *ngFor="let option of filterOptions; let i = index;">
-                <label>
-            <input type="checkbox"
-                   name="filterOptions"
-                   value="{{option.name}}"
-                   (ngModelChange)="onFilterChange(i, $event)"
-                   [disabled]="false"
-                   [ngModel]="option.checked"/>
-            {{option.name}}
-        </label>
+        <!-- legend drop down -->
+        <div class="dropdown right-align">
+            <button class="dropbtn btn-icon">?</button>
+            <div class="dropdown-content right-align">
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</div>
             </div>
         </div>
     </div>
+</div>
+<div class="table-container-outer">
+    <div class="table-container-fade"></div>
+    <div class="table-container-fade-top"></div>
+    <div class="table-container-fade-bottom" [class.fade-bottom-menu-show]="selectedItem" [class.fade-bottom-menu-hide]="!selectedItem"></div>
+    <div class="table-container" [class.bottom-menu-margin]="selectedItem">
+        <table class="benefits-table">
+            <th>
+                <div><span>{{heading}}</span></div>
+            </th>
+            <th class="text-center" *ngFor="let selectionHeading of selected">
+                <div><span>{{selectionHeading}}</span></div>
+            </th>
 
+            <tr *ngFor="let item of filteredList; let i = index" [class.row-selected]="item.selected" (click)="selectRow(item, i)" [hidden]="item.hidden">
+                <td>
+                    {{item.item}}
+                </td>
+                <td class="text-center" *ngFor="let selection of selected">
+                    <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<br>
-
-<table class="benefits-table">
-    <th class="rotate">
-        <div><span>{{heading}}</span></div>
-    </th>
-    <th class="text-center rotate" *ngFor="let selectionHeading of selected">
-        <div><span>{{selectionHeading}}</span></div>
-    </th>
-
-    <tr *ngFor="let item of filteredList">
-        <td>
-            {{item.item}}
-        </td>
-        <td class="text-center" *ngFor="let selection of selected">
-            <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
-        </td>
-    </tr>
-</table>
+<div class="button-container footer clearfix" [class.show]="selectedItem" [class.hide]="!selectedItem">
+    <div class="button" (click)="showItemList('food')">Details</div>
+    <div class="button" (click)="removeRow()">Hide Row</div>
+</div>

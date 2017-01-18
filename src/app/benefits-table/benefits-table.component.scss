@@ -1,3 +1,9 @@
+@import '../../styles/variables';
+
+.button-container {
+    height: 60px;
+}
+
 .benefits-table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -24,34 +30,57 @@
      }
 }
 
-// Rotate table headers on smaller mobiles
-//      @media (max-width: 320px) { 
-// th.rotate {
-//   /* Something you can count on */
-//   height: 140px;
-//   white-space: nowrap;
-// }
+.table-container {
+    margin-top: 140px;
+    margin-bottom: 20px;
 
-// th.rotate > div {
-//   transform: 
-//     /* Magic Numbers */
-//     translate(0px, 51px)
-//     /* 45 is really 360 - 45 */
-//     rotate(270deg);
-//   width: 30px;
-// }
-// th.rotate > div > span {
-// //   border-bottom: 1px solid #ccc;
-//   padding: 5px 10px;
-// }
-//      }
-
-.benefits-table tr {
-    border-bottom: 1px solid #ddd
 }
 
-.benefits-table tbody tr:nth-child(even) {
-    background-color: #f1f1f1
+.table-container-outer { position: relative; }
+
+.table-container-fade-top
+{
+	position: fixed;
+	top: 120px;
+	height: 20px;
+	width: 100%;
+	background-image: -webkit-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+	background-image: -moz-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+	background-image: -ms-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+	background-image: -o-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+}
+
+.table-container-fade-bottom
+{
+	position: fixed;
+	bottom: 0;
+	height: 20px;
+	width: 100%;
+	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+	background-image: -moz-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+	background-image: -ms-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+	background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+}
+
+.fade-bottom-menu-show {
+    bottom: 50px;
+    -moz-transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -moz-transition-timing-function: ease-in;
+    -webkit-transition-timing-function: ease-in;
+    -o-transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+    max-height: 1000px;
+    overflow: hidden;
+}
+.fade-bottom-menu-hide {
+    bottom: 0;
+}
+
+.benefits-table tr {
+    border-bottom: 1px solid #ddd;
 }
 
 .benefits-table tr:nth-child(odd) {
@@ -62,7 +91,77 @@
     background-color: #f1f1f1
 }
 
+.row-selected {
+    background-color: $nav-button-color !important;
+}
+
 .effect-icon {
     width: 16px;
     height: 16px;
+    vertical-align: middle;
+}
+
+.legend-text {
+    font-size: 12px;
+    padding: 2px 0 2px 0;
+    margin-left: 10px;
+    color: white;
+}
+
+.button-container {
+    height: 50px;
+    padding-right: 15px;
+
+    .button {
+        float: left;
+        width: 33.33%;
+    }
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    background: white;
+    top: 0;
+    z-index: 1;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+}
+
+.bottom-menu-margin {
+    margin-bottom: 70px;
+}
+
+.hide {
+    overflow: hidden;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    -moz-transition-duration: 1s;
+    -webkit-transition-duration: 1s;
+    -o-transition-duration: 1s;
+    transition-duration: 1s;
+    -moz-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    -webkit-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    -o-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+.show {
+    -moz-transition-duration: 1s;
+    -webkit-transition-duration: 1s;
+    -o-transition-duration: 1s;
+    transition-duration: 1s;
+    -moz-transition-timing-function: ease-in;
+    -webkit-transition-timing-function: ease-in;
+    -o-transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+    max-height: 1000px;
+    overflow: hidden;
 }
