@@ -4,50 +4,37 @@
   <hr>
 </div>
 
-<div [hidden]="dataService.allFoods && dataService.allConditions">Loading...</div>
+<div [hidden]="dataService.allFoods.length > 0 && dataService.allConditions.length > 0">Loading...</div>
 
-<div [hidden]="!dataService.allFoods || !dataService.allConditions">
-  <div class="button" [class.btn-selected]="showFood" (click)="showItemList('food')">Search by Food</div>
-  <div class="button" [class.btn-selected]="showCondition" (click)="showItemList('condition')">Search by Condition</div>
-
-  <br>
+<div [hidden]="dataService.allFoods.length === 0 || dataService.allConditions.length === 0">
+  <div class="button-container clearfix">
+    <div class="button" [class.btn-selected]="showFood" (click)="showItemList('food')">Foods</div>
+    <div class="button" [class.btn-selected]="showCondition" (click)="showItemList('condition')">Conditions</div>
+  </div>
   <div [hidden]="!showFood && !showCondition">
-      Search: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+    Search: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
   </div>
   <br>
-
-  <div class="selection-container" [hidden]="!showFood">
+  <div class="selection-container" *ngIf="showFood">
     <div class="checkbox-container">
-      <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods">
-        <label>
-            <input type="checkbox"
-                   name="allFoods"
-                   value="{{food.item}}"
-                   (click)="onSelectItem(food, 'food')"
-                   [disabled]="checkedFoods >= 5 && !food.checked"
-                   [(ngModel)]="food.checked"/>
-            {{food.item}}
-        </label>
+      <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods; let i = index">
+        <input type="checkbox" [id]="'item' + i" name="allFoods" value="{{food.item}}" (click)="onSelectItem(food, 'food')" [disabled]="checkedFoods >= 5 && !food.checked"
+          [(ngModel)]="food.checked" />
+        <label [for]="'item' + i"><span>{{food.item}}</span></label>
       </div>
     </div>
     <div class="button" [class.btn-disabled]="checkedFoods === 0" (click)="checkedFoods > 0 && selectItems('food')">Select Food</div>
   </div>
 
-  <div class="selection-container" [hidden]="!showCondition">
+  <div class="selection-container" *ngIf="showCondition">
     <div class="checkbox-container">
-      <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions">
-        <label>
-            <input type="checkbox"
-                   name="allConditions"
-                   value="{{condition.item}}"
-                   (click)="onSelectItem(condition, 'condition')"
-                   [disabled]="checkedConditions >= 5 && !condition.checked"
-                   [(ngModel)]="condition.checked"/>
-            {{condition.item}}
-        </label>
+      <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions; let i = index">
+        <input type="checkbox" [id]="'item' + i" name="allConditions" value="{{condition.item}}" (click)="onSelectItem(condition, 'condition')"
+          [disabled]="checkedConditions >= 5 && !condition.checked" [(ngModel)]="condition.checked" />
+        <label [for]="'item' + i"><span>{{condition.item}}</span></label>
       </div>
     </div>
     <div class="button" [class.btn-disabled]="checkedConditions === 0" (click)="checkedConditions > 0 && selectItems('condition')">Select Condition</div>
   </div>
-  
+
 </div>

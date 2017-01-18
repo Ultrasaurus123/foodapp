@@ -1,22 +1,24 @@
 <h1>Table of Benefits</h1>
-<br>
 
-<!-- sort drop down -->
-<div class="dropdown">
-  <button class="dropbtn">Sort By</button>
-  <div class="dropdown-content">
-    <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
-    <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
-    <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
-  </div>
-</div>
-<!-- filter drop down -->
-<div class="dropdown">
-  <button class="dropbtn">Filter By</button>
-  <div class="dropdown-content">
+<!-- drop downs -->
+<div class="button-container clearfix">
+    <!--<div class="button" [class.btn-selected]="showFood" (click)="showItemList('food')">Foods</div>-->
+    <!-- sort drop down -->
+    <div class="button dropdown">
+        <span class="dropbtn">Sort By</span>
+        <div class="dropdown-content">
+            <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
+            <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
+            <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+        </div>
+    </div>
 
-      <div *ngFor="let option of filterOptions; let i = index;">
-        <label>
+    <!-- filter drop down -->
+    <div class="button dropdown">
+        <button class="dropbtn">Filter By</button>
+        <div class="dropdown-content">
+            <div *ngFor="let option of filterOptions; let i = index;">
+                <label>
             <input type="checkbox"
                    name="filterOptions"
                    value="{{option.name}}"
@@ -25,24 +27,28 @@
                    [ngModel]="option.checked"/>
             {{option.name}}
         </label>
-      </div>
-  </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<table class="benefits-table">
-<th class="rotate">
-    <div><span>{{heading}}</span></div>
-</th>
-<th class="text-center rotate" *ngFor="let selectionHeading of selected">
-    <div><span>{{selectionHeading}}</span></div>
-</th>
+<br>
 
-<tr *ngFor="let item of filteredList">
-    <td>
-        {{item.item}}
-    </td>
-    <td class="text-center" *ngFor="let selection of selected">
-        <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
-    </td>
-</tr>
+<table class="benefits-table">
+    <th class="rotate">
+        <div><span>{{heading}}</span></div>
+    </th>
+    <th class="text-center rotate" *ngFor="let selectionHeading of selected">
+        <div><span>{{selectionHeading}}</span></div>
+    </th>
+
+    <tr *ngFor="let item of filteredList">
+        <td>
+            {{item.item}}
+        </td>
+        <td class="text-center" *ngFor="let selection of selected">
+            <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
+        </td>
+    </tr>
 </table>

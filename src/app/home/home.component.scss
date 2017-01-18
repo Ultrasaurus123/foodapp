@@ -1,0 +1,42 @@
+/*styles for home content only*/
+@import '../../styles/variables';
+
+.selection-container {
+  height: 300px;
+}
+
+.selection-container > select {
+  height: 100%;
+}
+
+.checkbox-container {
+    height: 100%;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+.button-container {
+    height: 60px;
+
+    .button {
+        float: left;
+        width: 33.33%;
+    }
+}
+
+input[id^="item"]:checked + label {
+    background: $nav-button-color;
+    color: white;
+}
+
+input[type="checkbox"] {
+    display:none;
+}
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width: 100%;
+}
+
+input[type="checkbox"]:disabled + label span {
+    color: gray;
+}

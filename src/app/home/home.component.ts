@@ -17,7 +17,7 @@ import { DataService } from '../common';
   // We need to tell Angular's Dependency Injection which providers are in our app.
   providers: [DataService],
   // Our list of styles in our component. We may add more to compose many styles together
-  styleUrls: ['./home.component.css'],
+  styleUrls: ['./home.component.scss'],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   templateUrl: './home.component.html'
 })
