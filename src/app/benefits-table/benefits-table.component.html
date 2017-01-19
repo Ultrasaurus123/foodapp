@@ -3,7 +3,7 @@
 
     <div class="button-container">
         <div class="dropdown">
-            <button class="dropbtn">Sort By</button>
+            <button class="dropbtn">Sort</button>
             <div class="dropdown-content">
                 <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
                 <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
@@ -12,7 +12,7 @@
         </div>
         <!-- filter drop down -->
         <div class="dropdown">
-            <button class="dropbtn">Filter By</button>
+            <button class="dropbtn">Filter</button>
             <div class="dropdown-content">
                 <div *ngFor="let option of filterOptions; let i = index;">
                     <label>
@@ -22,7 +22,8 @@
                 </label>
                 </div>
                    <hr>
-                <a (click)="showAllRows()">Unhide All Rows</a>
+                <a (click)="removeRows()">Hide Selected</a>
+                <a (click)="showAllRows()">Unhide All</a>
             </div>
         </div>
 
@@ -40,10 +41,13 @@
     </div>
 </div>
 <div class="table-container-outer">
-    <div class="table-container-fade"></div>
     <div class="table-container-fade-top"></div>
-    <div class="table-container-fade-bottom" [class.fade-bottom-menu-show]="selectedItem" [class.fade-bottom-menu-hide]="!selectedItem"></div>
-    <div class="table-container" [class.bottom-menu-margin]="selectedItem">
+    <div class="table-container-fade-bottom"></div>
+    <div class="table-container">
+
+    <!--<div class="table-container-fade-bottom" [class.fade-bottom-menu-show]="selectedItem" [class.fade-bottom-menu-hide]="!selectedItem"></div>
+    <div class="table-container" [class.bottom-menu-margin]="selectedItem">-->
+
         <table class="benefits-table">
             <th>
                 <div><span>{{heading}}</span></div>
@@ -52,8 +56,8 @@
                 <div><span>{{selectionHeading}}</span></div>
             </th>
 
-            <tr *ngFor="let item of filteredList; let i = index" [class.row-selected]="item.selected" (click)="selectRow(item, i)" [hidden]="item.hidden">
-                <td>
+            <tr *ngFor="let item of filteredList; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" >
+                <td  (click)="selectItem(item, i)" >
                     {{item.item}}
                 </td>
                 <td class="text-center" *ngFor="let selection of selected">
@@ -64,7 +68,7 @@
     </div>
 </div>
 
-<div class="button-container footer clearfix" [class.show]="selectedItem" [class.hide]="!selectedItem">
+<!--<div class="button-container footer clearfix" [class.show]="selectedItem" [class.hide]="!selectedItem">
     <div class="button" (click)="showItemList('food')">Details</div>
     <div class="button" (click)="removeRow()">Hide Row</div>
-</div>
+</div>-->

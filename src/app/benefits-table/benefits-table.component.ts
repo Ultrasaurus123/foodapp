@@ -25,12 +25,12 @@ export class BenefitsTableComponent implements OnInit {
   private dataArray: Array<any>;
   private currentSort: { type: string, asc: boolean };
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
-  private lastSelectedRow: number = -1;
-  private selectedItem: any;
+  private selectedItems: Array<number> = [];
 
   constructor(private http: Http, private router: Router) { }
 
   public ngOnInit() {
+    window.scrollTo(0, 0);
     //get state of this page
     let selectedString: string = sessionStorage.getItem('selected');
     this.selected = JSON.parse(selectedString);
@@ -46,15 +46,15 @@ export class BenefitsTableComponent implements OnInit {
   private init = function () {
     this.heading = '';
     this.currentSort = {
-      type: 'az',
+      type: '',
       asc: true
     };
     this.filterOptions = [
-      { name: 'Beneficial Effect', checked: true },
-      { name: 'Assists', checked: true },
-      { name: 'Mixed Effects', checked: true },
-      { name: 'Inhibits', checked: true },
-      { name: 'Negative Effect', checked: true }
+      { name: 'Beneficial Effect', checked: false },
+      { name: 'Assists', checked: false },
+      { name: 'Mixed Effects', checked: false },
+      { name: 'Inhibits', checked: false },
+      { name: 'Negative Effect', checked: false }
     ];
 
     let query = '';
@@ -111,40 +111,44 @@ export class BenefitsTableComponent implements OnInit {
       this.dataArray.push({ item: item, values: dataHash[item] });
     }
     this.filteredList = this.dataArray;
+    this.sort('az');
   }
 
-  private selectRow(item: any, index: number) {
+  private selectItem(item: any, index: number) {
     item.selected = !item.selected;
+
     if (item.selected) {
-      this.selectedItem = item;
+      this.selectedItems.push(index);
     } else {
-      this.selectedItem = undefined;
+      let i = this.selectedItems.indexOf(index);
+      this.selectedItems.splice(i, 1);
     }
-    if (this.lastSelectedRow > -1 && this.lastSelectedRow != index) {
-      this.filteredList[this.lastSelectedRow].selected = false;
-    }
-    this.lastSelectedRow = index;
+
+    console.log(this.selectedItems);
   }
 
   private resetSelection() {
-    if (this.lastSelectedRow > -1) {
-      this.filteredList[this.lastSelectedRow].selected = false;
-      this.lastSelectedRow = -1;
-    }  
-    this.selectedItem = undefined;
+    for (let i of this.selectedItems) {
+      this.filteredList[i].selected = false;
+    }
+    this.selectedItems = [];
   }
 
-  private removeRow() {
-    if (this.selectedItem) {
-      this.selectedItem.hidden = true;
-      this.selectedItem.selected = false;
-      this.selectedItem = undefined;
-    }  
+  private removeRows() {
+    for (let i of this.selectedItems) {
+      this.filteredList[i].selected = false;
+      this.filteredList[i].hidden = true;
+    }
+    this.selectedItems = [];
   }
 
   private showAllRows() {
     for (let item of this.filteredList) {
       item.hidden = false;
+    }
+    // this.filteredList = this.dataArray;
+    for (let filter of this.filterOptions) {
+      filter.checked = false;
     }
   }
 
@@ -156,7 +160,7 @@ export class BenefitsTableComponent implements OnInit {
       } else {
         return '&#8595;';
       }
-    }  
+    }
     return '';
   };
 
@@ -256,9 +260,11 @@ export class BenefitsTableComponent implements OnInit {
     let inhibits: boolean = this.filterOptions[3].checked;
     let negative: boolean = this.filterOptions[4].checked;
 
-    this.filteredList = this.dataArray.filter((item) => {
-      let match: boolean = false;
+    for (let item of this.filteredList) {
+      let matchCount: number = 0;
+      let valuesCount: number = 0;
       for (let value in item.values) {
+        valuesCount++;
         let itemVal = Number(item.values[value]);
         if (itemVal !== NaN) {
           if ((beneficial && itemVal === 1) ||
@@ -266,12 +272,33 @@ export class BenefitsTableComponent implements OnInit {
             (mixed && itemVal === 0) ||
             (inhibits && itemVal === -2) ||
             (negative && itemVal === -1)) {
-            match = true;
+            matchCount++;
           }
         }
       }
-      return match;
-    });
+      if (matchCount === valuesCount) {
+        item.hidden = true;
+      } else {
+        
+      }
+    }
+
+    // this.filteredList = this.dataArray.filter((item) => {
+    //   let match: boolean = false;
+    //   for (let value in item.values) {
+    //     let itemVal = Number(item.values[value]);
+    //     if (itemVal !== NaN) {
+    //       if ((beneficial && itemVal === 1) ||
+    //         (assist && itemVal === 2) ||
+    //         (mixed && itemVal === 0) ||
+    //         (inhibits && itemVal === -2) ||
+    //         (negative && itemVal === -1)) {
+    //         match = true;
+    //       }
+    //     }
+    //   }
+    //   return match;
+    // });
   }
 
   private handleError(error: Response | any) {

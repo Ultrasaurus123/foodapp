@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
-    
+    window.scrollTo(0,0);
     this.http.get('https://nourai-food-app.herokuapp.com/foods')
       .map(this.extractData)
       .catch(this.handleError)
@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
   }
 
   private showItemList(type) {
+    window.scrollTo(0,0);
     this.showFood = type === 'food';
     this.showCondition = type === 'condition';
     this.searchModel = '';
@@ -85,7 +86,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private selectItems = function (item: string) {
+  private selectItems = function () {
+    let item = (this.showFood) ? 'food' : 'condition'; 
       sessionStorage.setItem('view', item);
       if (item === 'food') {
         sessionStorage.setItem('selected', JSON.stringify(this.getSelectedItems(this.dataService.allFoods)));
@@ -106,6 +108,7 @@ export class HomeComponent implements OnInit {
     }
 
     private searchValueChanged(newValue) {
+      window.scrollTo(0,0);
       this.searchModel = newValue;
       if (this.showFood) {
         this.itemSet = this.dataService.allFoods.filter(item => {
