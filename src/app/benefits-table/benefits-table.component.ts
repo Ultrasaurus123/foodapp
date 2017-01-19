@@ -15,17 +15,14 @@ import { KeysPipe } from '../common'
   templateUrl: './benefits-table.component.html'
 })
 export class BenefitsTableComponent implements OnInit {
-
-  public parentThis = this;
-
   private selected: Array<string>;
   private view: string;
   private heading: string;
-  private filteredList: Array<any>;
   private dataArray: Array<any>;
   private currentSort: { type: string, asc: boolean };
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
   private selectedItems: Array<number> = [];
+  private customHiddenItems: Array<number> = [];
 
   constructor(private http: Http, private router: Router) { }
 
@@ -60,13 +57,6 @@ export class BenefitsTableComponent implements OnInit {
     let query = '';
     if (this.view === 'food') {
       query = 'foods=' + this.selected.join();
-      // GOOGLE IMAGE API
-
-      // var food = 'food+' + $scope.selected[0];
-      // $http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&fields=items(image)&q=' + food)
-      //   .then(function (res) {
-      //     $scope.imageData = res.data.items;
-      //   });
     } else if (this.view === 'condition') {
       query = 'conditions=' + this.selected.join();
     }
@@ -110,7 +100,7 @@ export class BenefitsTableComponent implements OnInit {
     for (let item in dataHash) {
       this.dataArray.push({ item: item, values: dataHash[item] });
     }
-    this.filteredList = this.dataArray;
+    // this.dataArray = this.dataArray;
     this.sort('az');
   }
 
@@ -129,27 +119,29 @@ export class BenefitsTableComponent implements OnInit {
 
   private resetSelection() {
     for (let i of this.selectedItems) {
-      this.filteredList[i].selected = false;
+      this.dataArray[i].selected = false;
     }
     this.selectedItems = [];
   }
 
   private removeRows() {
     for (let i of this.selectedItems) {
-      this.filteredList[i].selected = false;
-      this.filteredList[i].hidden = true;
+      this.dataArray[i].selected = false;
+      this.dataArray[i].hidden = true;
+      this.customHiddenItems.push(i);
     }
     this.selectedItems = [];
   }
 
   private showAllRows() {
-    for (let item of this.filteredList) {
+    for (let item of this.dataArray) {
       item.hidden = false;
     }
-    // this.filteredList = this.dataArray;
+    // this.dataArray = this.dataArray;
     for (let filter of this.filterOptions) {
       filter.checked = false;
     }
+    this.customHiddenItems = [];
   }
 
 
@@ -172,15 +164,15 @@ export class BenefitsTableComponent implements OnInit {
 
     switch (sortType) {
       case 'az':
-        this.filteredList.sort(this.alphabeticSort(orderFactor));
+        this.dataArray.sort(this.alphabeticSort(orderFactor));
         break;
 
       case 'benefit':
-        this.filteredList.sort(this.benefitSort(orderFactor));
+        this.dataArray.sort(this.benefitSort(orderFactor));
         break;
 
       case 'effect':
-        this.filteredList.sort(this.effectSort(orderFactor));
+        this.dataArray.sort(this.effectSort(orderFactor));
         break;
       default:
         break;
@@ -260,7 +252,7 @@ export class BenefitsTableComponent implements OnInit {
     let inhibits: boolean = this.filterOptions[3].checked;
     let negative: boolean = this.filterOptions[4].checked;
 
-    for (let item of this.filteredList) {
+    for (let item of this.dataArray) {
       let matchCount: number = 0;
       let valuesCount: number = 0;
       for (let value in item.values) {
@@ -279,26 +271,27 @@ export class BenefitsTableComponent implements OnInit {
       if (matchCount === valuesCount) {
         item.hidden = true;
       } else {
-        
+        item.hidden = false;
+        for (let i = 0; i < this.customHiddenItems.length; i++) {
+          if (this.dataArray[this.customHiddenItems[i]] === item) {
+            item.hidden = true;
+            break;
+          }
+        }
       }
     }
+  }
 
-    // this.filteredList = this.dataArray.filter((item) => {
-    //   let match: boolean = false;
-    //   for (let value in item.values) {
-    //     let itemVal = Number(item.values[value]);
-    //     if (itemVal !== NaN) {
-    //       if ((beneficial && itemVal === 1) ||
-    //         (assist && itemVal === 2) ||
-    //         (mixed && itemVal === 0) ||
-    //         (inhibits && itemVal === -2) ||
-    //         (negative && itemVal === -1)) {
-    //         match = true;
-    //       }
-    //     }
-    //   }
-    //   return match;
-    // });
+  private goToDetails(selection, i) {
+    if (this.view === 'food') {
+      let details = { food: selection, condition: this.dataArray[i].item };
+      sessionStorage.setItem('details', JSON.stringify(details));
+    }
+    else {
+      let details = { food: this.dataArray[i].item, condition: selection };
+      sessionStorage.setItem('details', JSON.stringify(details));
+    }
+    this.router.navigateByUrl('details');
   }
 
   private handleError(error: Response | any) {

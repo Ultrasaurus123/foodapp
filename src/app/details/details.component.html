@@ -1,0 +1,26 @@
+<div class="header">
+    <h1>Details</h1>
+    
+Food: {{food}}
+<br>
+Cond: {{condition}}
+
+</div>
+<div class="table-container-outer">
+    <div class="table-container-fade-top"></div>
+    <div class="table-container-fade-bottom"></div>
+    <div class="table-container">
+        <table class="benefits-table">
+            <th class="text-center" *ngFor="let heading of headings">
+                <div><span>{{heading}}</span></div>
+            </th>
+
+            <tr *ngFor="let row of dataArray; let r = index">
+                <td *ngFor="let column of row; let c = index" [class.text-center]="c === 2">
+                   <span [innerHTML]="row[c]" *ngIf="c !== 2"></span>
+                   <span *ngIf="c === 2"><img class="effect-icon" [src]="getIcon(row[c])" /></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

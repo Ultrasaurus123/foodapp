@@ -25,6 +25,7 @@ import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { HomeComponent } from './home';
 import { BenefitsTableComponent } from './benefits-table';
+import { DetailsComponent } from './details';
 import { NoContentComponent } from './no-content';
 
 import { AppState, InternalStateType } from './app.service';
@@ -56,6 +57,7 @@ type StoreType = {
     AppComponent,
     BenefitsTableComponent,
     HomeComponent,
+    DetailsComponent,
     NoContentComponent,
     KeysPipe
   ],

@@ -56,19 +56,14 @@
                 <div><span>{{selectionHeading}}</span></div>
             </th>
 
-            <tr *ngFor="let item of filteredList; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" >
+            <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" >
                 <td  (click)="selectItem(item, i)" >
                     {{item.item}}
                 </td>
-                <td class="text-center" *ngFor="let selection of selected">
+                <td class="text-center" *ngFor="let selection of selected" (click)="goToDetails(selection, i)">
                     <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
                 </td>
             </tr>
         </table>
     </div>
 </div>
-
-<!--<div class="button-container footer clearfix" [class.show]="selectedItem" [class.hide]="!selectedItem">
-    <div class="button" (click)="showItemList('food')">Details</div>
-    <div class="button" (click)="removeRow()">Hide Row</div>
-</div>-->
