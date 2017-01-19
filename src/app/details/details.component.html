@@ -1,26 +1,42 @@
 <div class="header">
     <h1>Details</h1>
-    
-Food: {{food}}
-<br>
-Cond: {{condition}}
-
 </div>
 <div class="table-container-outer">
     <div class="table-container-fade-top"></div>
     <div class="table-container-fade-bottom"></div>
     <div class="table-container">
         <table class="benefits-table">
-            <th class="text-center" *ngFor="let heading of headings">
+            <th class="text-center hidden-mobile" *ngFor="let heading of headings">
                 <div><span>{{heading}}</span></div>
             </th>
 
             <tr *ngFor="let row of dataArray; let r = index">
                 <td *ngFor="let column of row; let c = index" [class.text-center]="c === 2">
-                   <span [innerHTML]="row[c]" *ngIf="c !== 2"></span>
-                   <span *ngIf="c === 2"><img class="effect-icon" [src]="getIcon(row[c])" /></span>
+                    <span [innerHTML]="row[c]" *ngIf="c !== 2" (click)="clickColumn(row, c)"></span>
+                    <span *ngIf="c === 2"><img class="effect-icon" [src]="getIcon(row[c])" /></span>
                 </td>
             </tr>
         </table>
     </div>
 </div>
+
+<!--<div>
+    <div *ngFor="let image of images">
+        <img [src]="image.image.thumbnailLink" [width]="image.image.thumbnailWidth" [height]="image.image.thumbnailHeight" />
+    </div>
+</div>-->
+<!--
+<section id="photos">
+        <img [src]="image.image.thumbnailLink" [width]="image.image.thumbnailWidth" [height]="image.image.thumbnailHeight" *ngFor="let image of images"/>
+
+</section>-->
+
+<ul id="rig">
+    <li  *ngFor="let image of images">
+        <a class="rig-cell">
+        <img [src]="image.image.thumbnailLink" [width]="150" [height]="150"/>
+            <span class="rig-overlay"></span>
+            <span class="rig-text">Lorem Ipsum Dolor</span>
+        </a>
+    </li>
+</ul>

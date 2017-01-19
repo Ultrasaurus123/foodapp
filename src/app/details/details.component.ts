@@ -18,6 +18,7 @@ export class DetailsComponent implements OnInit {
   private condition: string;
   private headings: string;
   private dataArray: Array<any>;
+  private images: Array<any> = [];
 
   constructor(private http: Http, private router: Router) { }
 
@@ -37,17 +38,17 @@ export class DetailsComponent implements OnInit {
   }
 
   private init = function () {
-    this.heading = '';
+
+    // GOOGLE IMAGE API
+    let food = 'food+' + this.food;
+    this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=8&safe=high&fields=items(image)&q=' + food)
+      .map(res => { return res.json() })
+      .catch(this.handleError)
+      .subscribe(res => this.images = res.items,
+      error => console.error('Error getting cross reference data: ' + error)
+      );
 
     let query = 'foods=' + this.food + '&conditions=' + this.condition;
-    // GOOGLE IMAGE API
-
-    // var food = 'food+' + $scope.selected[0];
-    // $http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&fields=items(image)&q=' + food)
-    //   .then(function (res) {
-    //     $scope.imageData = res.data.items;
-    //   });
-
     this.http.get('https://nourai-food-app.herokuapp.com/getData?' + query)
       .map(res => { return res.json() })
       .catch(this.handleError)
@@ -59,6 +60,13 @@ export class DetailsComponent implements OnInit {
   private processData(data: Array<any>) {
     this.headings = data[0];
     this.dataArray = data.slice(1);
+  }
+
+  private clickColumn(row: any, index: number) {
+    // for link, open in new window/tab
+    if (index === 4) {
+      window.open(row[index], '_blank');
+    }
   }
 
   private getIcon = function (benefit: string): string {
