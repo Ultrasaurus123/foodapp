@@ -8,6 +8,7 @@ import { Router} from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { DataService } from '../common';
+import { AppSettings } from '..';
 
 @Component({
   // The selector is what angular internally uses
@@ -22,7 +23,6 @@ import { DataService } from '../common';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-
   private allFoods: Array<any>;
   private allConditions: Array<any>;
   private itemSet: Array<any>;
@@ -31,12 +31,13 @@ export class HomeComponent implements OnInit {
   private checkedFoods: number = 0;
   private checkedConditions: number = 0;
   private searchModel: string = '';
+  private maxSelections: number = AppSettings.MAX_SELECTIONS;
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
-    window.scrollTo(0,0);
-    this.http.get('https://nourai-food-app.herokuapp.com/foods')
+    window.scrollTo(0,0); 
+    this.http.get(AppSettings.API_ENDPOINT + 'foods')
       .map(this.extractData)
       .catch(this.handleError)
       .subscribe(
@@ -44,7 +45,7 @@ export class HomeComponent implements OnInit {
         error => console.error('Error getting all foods: ' + error)
       )
 
-  this.http.get('https://nourai-food-app.herokuapp.com/conditions')
+  this.http.get(AppSettings.API_ENDPOINT + 'conditions')
       .map(this.extractData)
       .catch(this.handleError)
       .subscribe(

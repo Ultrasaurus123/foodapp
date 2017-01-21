@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { AppSettings } from '..';
 
 @Component({
   selector: 'benefit-details',
@@ -49,7 +50,7 @@ export class DetailsComponent implements OnInit {
       );
 
     let query = 'foods=' + this.food + '&conditions=' + this.condition;
-    this.http.get('https://nourai-food-app.herokuapp.com/getData?' + query)
+    this.http.get(AppSettings.API_ENDPOINT + 'getData?' + query)
       .map(res => { return res.json() })
       .catch(this.handleError)
       .subscribe(data => this.processData(data),

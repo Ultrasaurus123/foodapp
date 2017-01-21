@@ -50,9 +50,12 @@
 
         <table class="benefits-table">
             <th>
-                <div><span>{{heading}}</span></div>
+                <div style="height: 100%">
+                <div style="height: 80%"></div>
+                <div style="height: 20%"><span class="first-heading">{{heading}}</span></div>
+                </div>
             </th>
-            <th class="text-center" *ngFor="let selectionHeading of selected">
+            <th class="text-vertical" *ngFor="let selectionHeading of selected">
                 <div><span>{{selectionHeading}}</span></div>
             </th>
 

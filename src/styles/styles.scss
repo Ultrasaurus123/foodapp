@@ -4,6 +4,8 @@
 
 body {
     height: auto !important;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .clearfix:after {

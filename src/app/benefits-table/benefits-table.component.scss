@@ -42,6 +42,7 @@
 {
 	position: fixed;
 	top: 120px;
+    left: 0;
 	height: 20px;
 	width: 100%;
 	background-image: -webkit-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
@@ -54,29 +55,13 @@
 {
 	position: fixed;
 	bottom: 0;
+    left: 0;
 	height: 20px;
 	width: 100%;
 	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 	background-image: -moz-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 	background-image: -ms-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 	background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-}
-
-.fade-bottom-menu-show {
-    bottom: 50px;
-    -moz-transition-duration: 0.2s;
-    -webkit-transition-duration: 0.2s;
-    -o-transition-duration: 0.2s;
-    transition-duration: 0.2s;
-    -moz-transition-timing-function: ease-in;
-    -webkit-transition-timing-function: ease-in;
-    -o-transition-timing-function: ease-in;
-    transition-timing-function: ease-in;
-    max-height: 1000px;
-    overflow: hidden;
-}
-.fade-bottom-menu-hide {
-    bottom: 0;
 }
 
 .benefits-table tr {
@@ -93,6 +78,28 @@
 
 .row-selected {
     background-color: $nav-button-color !important;
+}
+
+.first-heading {
+    text-align: left;      
+}
+
+.text-vertical {
+    height: 150px;
+    max-width: 16px !important;
+    transform: translate(69px, 55px) rotate(270deg);
+    white-space: nowrap;
+
+
+    // text-align:center;
+    // white-space:nowrap;
+    // transform-origin:50% 50%;
+    // -webkit-transform: rotate(270deg);
+    // -moz-transform: rotate(270deg);
+    // -ms-transform: rotate(270deg);
+    // -o-transform: rotate(270deg);
+    // transform: rotate(270deg);
+    
 }
 
 .effect-icon {
@@ -123,45 +130,7 @@
     width: 100%;
     background: white;
     top: 0;
+    left: 0;
+    padding-left: 10px;
     z-index: 1;
-}
-
-.footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: white;
-}
-
-.bottom-menu-margin {
-    margin-bottom: 70px;
-}
-
-.hide {
-    overflow: hidden;
-    max-height: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    -moz-transition-duration: 1s;
-    -webkit-transition-duration: 1s;
-    -o-transition-duration: 1s;
-    transition-duration: 1s;
-    -moz-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-    -webkit-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-    -o-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-}
-.show {
-    -moz-transition-duration: 1s;
-    -webkit-transition-duration: 1s;
-    -o-transition-duration: 1s;
-    transition-duration: 1s;
-    -moz-transition-timing-function: ease-in;
-    -webkit-transition-timing-function: ease-in;
-    -o-transition-timing-function: ease-in;
-    transition-timing-function: ease-in;
-    max-height: 1000px;
-    overflow: hidden;
 }

@@ -25,7 +25,7 @@
 <div class="selection-container" *ngIf="showFood">
   <div class="checkbox-container">
     <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods; let i = index">
-      <input type="checkbox" [id]="'item' + i" name="allFoods" value="{{food.item}}" (click)="onSelectItem(food, 'food')" [disabled]="checkedFoods >= 5 && !food.checked"
+      <input type="checkbox" [id]="'item' + i" name="allFoods" value="{{food.item}}" (click)="onSelectItem(food, 'food')" [disabled]="checkedFoods >= maxSelections && !food.checked"
         [(ngModel)]="food.checked" />
       <label [for]="'item' + i"><span>{{food.item}}</span></label>
     </div>
@@ -36,7 +36,7 @@
   <div class="checkbox-container">
     <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions; let i = index">
       <input type="checkbox" [id]="'item' + i" name="allConditions" value="{{condition.item}}" (click)="onSelectItem(condition, 'condition')"
-        [disabled]="checkedConditions >= 5 && !condition.checked" [(ngModel)]="condition.checked" />
+        [disabled]="checkedConditions >= maxSelections && !condition.checked" [(ngModel)]="condition.checked" />
       <label [for]="'item' + i"><span>{{condition.item}}</span></label>
     </div>
   </div>

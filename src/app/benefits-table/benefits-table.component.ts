@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { KeysPipe } from '../common'
+import { AppSettings } from '..';
 
 @Component({
   selector: 'benefits-table',
@@ -61,7 +61,7 @@ export class BenefitsTableComponent implements OnInit {
       query = 'conditions=' + this.selected.join();
     }
 
-    this.http.get('https://nourai-food-app.herokuapp.com/getCompactData?' + query)
+    this.http.get(AppSettings.API_ENDPOINT + 'getCompactData?' + query)
       .map(res => { return res.json() })
       .catch(this.handleError)
       .subscribe(data => this.processData(data),

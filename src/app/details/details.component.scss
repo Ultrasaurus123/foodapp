@@ -41,6 +41,7 @@
 {
 	position: fixed;
 	top: 60px;
+    left: 0;
 	height: 20px;
 	width: 100%;
 	background-image: -webkit-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
@@ -53,6 +54,7 @@
 {
 	position: fixed;
 	bottom: 0;
+    left: 0;
 	height: 20px;
 	width: 100%;
 	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
@@ -74,14 +76,6 @@
 }
 
 
-.footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: white;
-}
-
-
 .effect-icon {
     width: 16px;
     height: 16px;
@@ -93,6 +87,8 @@
     width: 100%;
     background: white;
     top: 0;
+    left: 0;
+    padding-left: 10px;
     z-index: 1;
     height: 60px;
 }

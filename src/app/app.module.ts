@@ -117,3 +117,9 @@ export class AppModule {
   }
 
 }
+
+// Global Application Settings
+export class AppSettings {
+  public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
+  public static MAX_SELECTIONS: number = 10;
+}
