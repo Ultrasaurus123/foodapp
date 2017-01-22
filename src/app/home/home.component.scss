@@ -3,8 +3,7 @@
 
 .selection-container {
     margin-bottom: 75px;
-    margin-top: 170px;
-    width: 100%;
+    margin-top: 150px;
 }
 
 .selection-container > select {
@@ -24,6 +23,11 @@
         float: left;
         width: 33.33%;
     }
+}
+
+div .checked {
+    background: $nav-button-color;
+    color: white;
 }
 
 input[id^="item"]:checked + label {
@@ -52,7 +56,7 @@ input[type="checkbox"]:disabled + label span {
     left: 0;
     padding-left: 10px;
     z-index: 1;
-    height: 190px;
+    height: 160px;
 }
 
 .footer {
@@ -74,7 +78,7 @@ input[type="checkbox"]:disabled + label span {
 .container-fade-top
 {
 	position: fixed;
-	top: 175px;
+	top: 150px;
     left: 0;
 	height: 25px;
 	width: 100%;

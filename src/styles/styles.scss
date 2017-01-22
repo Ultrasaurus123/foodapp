@@ -2,6 +2,9 @@
 /* This file is for setting global styles  */
 @import 'variables';
 
+// import boostrap
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+
 body {
     height: auto !important;
     width: 100%;
@@ -18,12 +21,11 @@ body {
   background-color: $nav-button-color;
   color: white;
   padding: 8px 16px;
-  margin: 8px;
   vertical-align: middle;
   line-height: 1.25;
   text-align: center;
-  text-decoration: none;
   border-radius: 4px;
+  width: 100%;
 }
 
 .btn-disabled {
@@ -38,11 +40,15 @@ body {
   text-align: center !important;
 }
 
+.text-right {
+  text-align: right !important;
+}
+
 // Drop down buttons
 .dropbtn {
     background-color: $nav-button-color;
     color: white;
-    width: 100px;
+    width: 100%;
     padding: 10px;
     font-size: 16px;
     border: none;
@@ -50,7 +56,6 @@ body {
     vertical-align: middle;
     line-height: 1.25;
     text-align: center;
-    text-decoration: none;
     border-radius: 4px;
 
     // padding: 8px 16px;
@@ -64,16 +69,12 @@ body {
 .dropdown {
     position: relative;
     display: inline-block;
-    margin: 0px 5px 0px 5px;
-    float: left;
-
-    + .right-align {
-        float: right;
-    }
+    // margin: 0px 5px 0px 5px;
+    // float: left;
 }
 
-.dropdown+.right-align .dropdown-content {
-    right: 0;
+.text-right .dropdown-content {
+    right: 5px;
 }
 
 .dropdown-content {
@@ -86,7 +87,7 @@ body {
 }
 
 .dropdown-content a {
-    color: white;
+    color: white !important;
     padding: 3px 10px 3px 10px;
     text-decoration: none;
     display: block;
@@ -105,3 +106,5 @@ body {
 .dropdown:hover .dropbtn {
     background-color: $nav-button-selected;
 }
+
+

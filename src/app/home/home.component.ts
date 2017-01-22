@@ -71,8 +71,7 @@ export class HomeComponent implements OnInit {
   }
 
   private onSelectItem(item: any, type: string) {
-    // if checked is false, we are just now checking the box
-    if (item.checked === false) {
+    if (item.checked === true) {
       if (type === 'food') {
         this.checkedFoods++;
       } else if (type === 'condition') {
@@ -88,7 +87,8 @@ export class HomeComponent implements OnInit {
   }
 
   private selectItems = function () {
-    let item = (this.showFood) ? 'food' : 'condition'; 
+    if ((this.showCondition && this.checkedConditions > 0) || (this.showFood && this.checkedFoods > 0)) {
+      let item = (this.showFood) ? 'food' : 'condition';
       sessionStorage.setItem('view', item);
       if (item === 'food') {
         sessionStorage.setItem('selected', JSON.stringify(this.getSelectedItems(this.dataService.allFoods)));
@@ -96,6 +96,7 @@ export class HomeComponent implements OnInit {
         sessionStorage.setItem('selected', JSON.stringify(this.getSelectedItems(this.dataService.allConditions)));
       }
       this.router.navigateByUrl('benefits');
+    }
     }
 
     private getSelectedItems(allItems: Array<any>) {

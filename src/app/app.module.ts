@@ -35,6 +35,7 @@ import { KeysPipe } from './common';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
+import '../styles/margins.scss';
 
 // Application wide providers
 const APP_PROVIDERS = [

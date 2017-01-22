@@ -113,16 +113,14 @@
     padding: 2px 0 2px 0;
     margin-left: 10px;
     color: white;
+    text-align: left;
 }
 
 .button-container {
     height: 50px;
     padding-right: 15px;
 
-    .button {
-        float: left;
-        width: 33.33%;
-    }
+
 }
 
 .header {
@@ -133,4 +131,22 @@
     left: 0;
     padding-left: 10px;
     z-index: 1;
+}
+
+input[id^="item"]:checked + label {
+    background: $nav-button-color;
+    color: white;
+}
+
+input[type="checkbox"] {
+    display:none;
+}
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width: 100%;
+}
+
+div .checked {
+    background: $nav-button-color;
+    color: white;
 }
