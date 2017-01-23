@@ -107,4 +107,13 @@ body {
     background-color: $nav-button-selected;
 }
 
-
+@media (max-width: 767px) { 
+   .hidden-mobile {
+        display: none;   
+    }
+}
+@media (min-width: 768px) { 
+   .hidden-desktop {
+        display: none;   
+    }
+}

@@ -17,6 +17,7 @@ import { AppSettings } from '..';
 export class DetailsComponent implements OnInit {
   private food: string;
   private condition: string;
+  private view: string;
   private headings: string;
   private dataArray: Array<any>;
   private images: Array<any> = [];
@@ -26,12 +27,13 @@ export class DetailsComponent implements OnInit {
   public ngOnInit() {
     window.scrollTo(0, 0);
     //get state of this page
+    this.view = sessionStorage.getItem('view');
     let detailsString: string = sessionStorage.getItem('details');
     let details: any = JSON.parse(detailsString);
     this.food = details.food;
     this.condition = details.condition;
 
-    if (!this.food || !this.condition) {
+    if (!this.food || !this.condition || !this.view) {
       this.router.navigateByUrl('benefits');
     } else {
       this.init();
@@ -41,8 +43,8 @@ export class DetailsComponent implements OnInit {
   private init = function () {
 
     // GOOGLE IMAGE API
-    let food = 'food+' + this.food;
-    this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=8&safe=high&fields=items(image)&q=' + food)
+    let imageQuery = (this.view === 'food') ? 'food+' + this.food : 'condition+' + this.condition;
+    this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=8&safe=high&fields=items(image)&q=' + imageQuery)
       .map(res => { return res.json() })
       .catch(this.handleError)
       .subscribe(res => this.images = res.items,
@@ -63,11 +65,17 @@ export class DetailsComponent implements OnInit {
     this.dataArray = data.slice(1);
   }
 
-  private clickColumn(row: any, index: number) {
-    // for link, open in new window/tab
-    if (index === 4) {
-      window.open(row[index], '_blank');
+  private getItemText(detailItem: boolean): string {
+    if (this.view === 'food') {
+      return (detailItem) ? this.food : this.condition;
+    } else if (this.view === 'condition') {
+      return (detailItem) ? this.condition : this.food;
     }
+  }
+
+  private clickLink(link: string) {
+    // for link, open in new window/tab
+    window.open(link, '_blank');
   }
 
   private getIcon = function (benefit: string): string {

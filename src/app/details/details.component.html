@@ -1,18 +1,20 @@
-<div class="header">
-    <h1>Details</h1>
+<div class="row">
+    <div class="header col-12 p-t-10">
+        <h1>Details for <span [innerHTML]="getItemText(true)"></span></h1>
+    </div>
 </div>
-<div class="table-container-outer">
+<div class="table-container-outer hidden-mobile">
     <div class="table-container-fade-top"></div>
     <div class="table-container-fade-bottom"></div>
     <div class="table-container">
         <table class="benefits-table">
-            <th class="text-center hidden-mobile" *ngFor="let heading of headings">
+            <th class="text-center" *ngFor="let heading of headings">
                 <div><span>{{heading}}</span></div>
             </th>
 
             <tr *ngFor="let row of dataArray; let r = index">
                 <td *ngFor="let column of row; let c = index" [class.text-center]="c === 2">
-                    <span [innerHTML]="row[c]" *ngIf="c !== 2" (click)="clickColumn(row, c)"></span>
+                    <span [innerHTML]="row[c]" *ngIf="c !== 2" (click)="c === 4 && clickLink(row[c])"></span>
                     <span *ngIf="c === 2"><img class="effect-icon" [src]="getIcon(row[c])" /></span>
                 </td>
             </tr>
@@ -20,23 +22,53 @@
     </div>
 </div>
 
-<!--<div>
-    <div *ngFor="let image of images">
-        <img [src]="image.image.thumbnailLink" [width]="image.image.thumbnailWidth" [height]="image.image.thumbnailHeight" />
+<!--Portrait-->
+<div class="table-container hidden-desktop">
+    <div class="table-container-fade-top"></div>
+    <div class="table-container-fade-bottom"></div>
+    <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
+        <div class="row">
+            <div class="col-6">
+                <img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">
+                
+            </div>
+            <div class="col-6">
+                <strong>
+                <div class="row col-12" [innerHTML]="getItemText(true)">
+                </div> 
+                <div class="row col-12" [innerHTML]="getItemText(false)">
+                </div> 
+                <div class="row col-12">
+                    Effect:
+                </div>
+                <div class="row col-12 text-center m-t-10">
+                    <span style="width: 100%"><img class="effect-icon" [src]="getIcon(row[2])" /></span>
+                </div> 
+            </strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 description">
+                {{row[3]}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 reference-link" (click)="clickLink(row[4])">
+                Source: {{row[4]}}
+            </div>
+        </div>
     </div>
-</div>-->
+</div>
+
+
+
 <!--
-<section id="photos">
-        <img [src]="image.image.thumbnailLink" [width]="image.image.thumbnailWidth" [height]="image.image.thumbnailHeight" *ngFor="let image of images"/>
-
-</section>-->
-
 <ul id="rig">
-    <li  *ngFor="let image of images">
+    <li *ngFor="let image of images">
         <a class="rig-cell">
-        <img [src]="image.image.thumbnailLink" [width]="150" [height]="150"/>
+            <img [src]="image.image.thumbnailLink" [width]="150" [height]="150" />
             <span class="rig-overlay"></span>
             <span class="rig-text">Lorem Ipsum Dolor</span>
         </a>
     </li>
-</ul>
+</ul>-->
