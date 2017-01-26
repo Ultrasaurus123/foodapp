@@ -3,7 +3,7 @@
     <h1>Welcome to Food App</h1>
     <hr>
     <div class="row">
-      <div class="col-12" [hidden]="dataService.allFoods.length > 0 && dataService.allConditions.length > 0">Loading...</div>
+      <div class="loader" [hidden]="dataService.allFoods.length > 0 && dataService.allConditions.length > 0">Loading...</div>
 
       <div class="col-12" [hidden]="dataService.allFoods.length === 0 || dataService.allConditions.length === 0">
         <div class="row ">

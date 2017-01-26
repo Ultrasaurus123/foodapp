@@ -23,6 +23,7 @@ import { ROUTES } from './app.routes';
 // App is our top level component
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
+import { AgreementComponent } from './agreement';
 import { HomeComponent } from './home';
 import { BenefitsTableComponent } from './benefits-table';
 import { DetailsComponent } from './details';
@@ -30,17 +31,19 @@ import { NoContentComponent } from './no-content';
 
 import { AppState, InternalStateType } from './app.service';
 import { DataService } from './common';
+import { CanActivateAgreement } from './common';
 
 import { KeysPipe } from './common';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
 import '../styles/margins.scss';
+import '../styles/loader.scss';
 
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState, DataService
+  AppState, DataService, CanActivateAgreement
 ];
 
 type StoreType = {
@@ -56,8 +59,9 @@ type StoreType = {
   bootstrap: [ AppComponent ],
   declarations: [
     AppComponent,
-    BenefitsTableComponent,
+    AgreementComponent,
     HomeComponent,
+    BenefitsTableComponent,
     DetailsComponent,
     NoContentComponent,
     KeysPipe
