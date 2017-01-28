@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
   private checkedConditions: number = 0;
   private searchModel: string = '';
   private maxSelections: number = AppSettings.MAX_SELECTIONS;
+  private started: boolean = false;
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 

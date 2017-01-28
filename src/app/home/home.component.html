@@ -2,8 +2,20 @@
   <div class="header col-12 p-t-10">
     <h1>Welcome to Food App</h1>
     <hr>
-    <div class="row">
-      <div class="loader" [hidden]="dataService.allFoods.length > 0 && dataService.allConditions.length > 0">Loading...</div>
+    <div class="row" *ngIf="!started">
+      <div class="col-12">
+        This site identifies the impact of health foods on multiple but coexisting health concerns that is unique for each person.
+        Similarly, it identifies multiple medical conditions affected by your unique personal diet. You can customize this
+        application for your unique set of medical or health food needs.
+        <div class="row">
+          <div class="col-12">
+            <button class="button" (click)="started = true">Get Started!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="started">
+      <div class="loader" [hidden]="(dataService.allFoods.length > 0 && dataService.allConditions.length > 0)">Loading...</div>
 
       <div class="col-12" [hidden]="dataService.allFoods.length === 0 || dataService.allConditions.length === 0">
         <div class="row ">
@@ -16,20 +28,21 @@
         </div>
       </div>
     </div>
-    <div [hidden]="!showFood && !showCondition" class="m-t-10">
+    <div *ngIf="started" [hidden]="!showFood && !showCondition" class="m-t-10">
       Search: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
     </div>
   </div>
 </div>
 
 <br>
-<div class="container-outer">
+<div class="container-outer" *ngIf="started">
   <div class="container-fade-top"></div>
   <div class="container-fade-bottom"></div>
 
   <div class="selection-container" *ngIf="showFood">
     <div class="checkbox-container">
-      <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods; let i = index" [class.checked]="food.checked" class="p-l-15">
+      <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods; let i = index" [class.checked]="food.checked"
+        class="p-l-15">
         <input type="checkbox" [id]="'item' + i" name="allFoods" value="{{food.item}}" (change)="onSelectItem(food, 'food')" [disabled]="checkedFoods >= maxSelections && !food.checked"
           [(ngModel)]="food.checked" />
         <label class="m-b-0" [for]="'item' + i"><span>{{food.item}}</span></label>
@@ -39,7 +52,8 @@
 
   <div class="selection-container" *ngIf="showCondition">
     <div class="checkbox-container">
-      <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions; let i = index" [class.checked]="condition.checked" class="p-l-15">
+      <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions; let i = index" [class.checked]="condition.checked"
+        class="p-l-15">
         <input type="checkbox" [id]="'item' + i" name="allConditions" value="{{condition.item}}" (change)="onSelectItem(condition, 'condition')"
           [disabled]="checkedConditions >= maxSelections && !condition.checked" [(ngModel)]="condition.checked" />
         <label class="m-b-0" [for]="'item' + i"><span>{{condition.item}}</span></label>
@@ -48,9 +62,9 @@
   </div>
 </div>
 
-<div class="row">
-<div class="footer col-12" *ngIf="showFood || showCondition">
-  <button class="button" [class.btn-disabled]="(showCondition && checkedConditions === 0) || (showFood && checkedFoods === 0)"
-    (click)="selectItems()">Continue</button>
-</div>
+<div class="row" *ngIf="started">
+  <div class="footer col-12" *ngIf="showFood || showCondition">
+    <button class="button" [class.btn-disabled]="(showCondition && checkedConditions === 0) || (showFood && checkedFoods === 0)"
+      (click)="selectItems()">Continue</button>
+  </div>
 </div>
