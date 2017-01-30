@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { DataService } from '../common';
@@ -37,41 +37,35 @@ export class HomeComponent implements OnInit {
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
-    window.scrollTo(0,0); 
+    window.scrollTo(0, 0);
+    this.dataService.currentPage = 'Home';
+
     this.http.get(AppSettings.API_ENDPOINT + 'foods')
       .map(this.extractData)
       .catch(this.handleError)
       .subscribe(
-        foods => this.dataService.allFoods = foods,
-        error => console.error('Error getting all foods: ' + error)
+      foods => this.dataService.allFoods = foods,
+      error => console.error('Error getting all foods: ' + error)
       )
 
-  this.http.get(AppSettings.API_ENDPOINT + 'conditions')
+    this.http.get(AppSettings.API_ENDPOINT + 'conditions')
       .map(this.extractData)
       .catch(this.handleError)
       .subscribe(
-        conditions => this.dataService.allConditions = conditions,
-        error => console.error('Error getting all conditions: ' + error)
+      conditions => this.dataService.allConditions = conditions,
+      error => console.error('Error getting all conditions: ' + error)
       )
   }
 
-  private getItemList(): Array<any> {
-    if (this.showFood) {
-      return (this.searchModel) ? this.itemSet : this.dataService.allFoods;
-    } else if (this.showCondition) {
-      return (this.searchModel) ? this.itemSet : this.dataService.allConditions;
-    }
-    return [];
-  }
-
   private showItemList(type) {
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
+    this.searchModel = '';
     this.showFood = type === 'food';
     this.showCondition = type === 'condition';
-    this.searchModel = '';
   }
 
   private onSelectItem(item: any, type: string) {
+    item.checked = !item.checked;
     if (item.checked === true) {
       if (type === 'food') {
         this.checkedFoods++;
@@ -79,7 +73,7 @@ export class HomeComponent implements OnInit {
         this.checkedConditions++;
       }
     } else {
-    if (type === 'food') {
+      if (type === 'food') {
         this.checkedFoods--
       } else if (type === 'condition') {
         this.checkedConditions--;
@@ -98,38 +92,38 @@ export class HomeComponent implements OnInit {
       }
       this.router.navigateByUrl('benefits');
     }
-    }
+  }
 
-    private getSelectedItems(allItems: Array<any>) {
-      let selectedItems = [];
-      for (let item of allItems) {
-        if (item.checked) {
-          selectedItems.push(item.item);
-        }
-      }
-      return selectedItems;
-    }
-
-    private searchValueChanged(newValue) {
-      window.scrollTo(0,0);
-      this.searchModel = newValue;
-      if (this.showFood) {
-        this.itemSet = this.dataService.allFoods.filter(item => {
-           return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
-        });
-      } else if (this.showCondition) {
-        this.itemSet = this.dataService.allConditions.filter(item => {
-           return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
-        });
+  private getSelectedItems(allItems: Array<any>) {
+    let selectedItems = [];
+    for (let item of allItems) {
+      if (item.checked) {
+        selectedItems.push(item.item);
       }
     }
+    return selectedItems;
+  }
+
+  private searchValueChanged(newValue) {
+    window.scrollTo(0, 0);
+    this.searchModel = newValue;
+    if (this.showFood) {
+      this.itemSet = this.dataService.allFoods.filter(item => {
+        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
+      });
+    } else if (this.showCondition) {
+      this.itemSet = this.dataService.allConditions.filter(item => {
+        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
+      });
+    }
+  }
 
 
   private extractData(res: Response) {
     let body = res.json();
     let returnData = [];
     for (let item of body) {
-      returnData.push({item: item, checked: false});        
+      returnData.push({ item: item, checked: false });
     }
     return returnData || {};
   }

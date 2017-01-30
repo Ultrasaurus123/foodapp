@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { DataService } from '../common';
 import { Router } from '@angular/router';
+import { PageHeaderComponent } from '../common';
 
 @Component({
   selector: 'agreement',
@@ -15,9 +16,11 @@ export class AgreementComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
+    this.dataService.currentPage = 'Disclaimer';
   }
 
   private clickAgree() {
+    localStorage.setItem('agreement', 'true');
     this.dataService.agreement = true;
     this.router.navigateByUrl('home');
   }

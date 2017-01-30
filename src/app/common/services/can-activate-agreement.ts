@@ -7,7 +7,8 @@ export class CanActivateAgreement implements CanActivate {
   constructor(private dataService: DataService, private router: Router) {}
   
   canActivate(): boolean {
-    if (this.dataService.agreement) {
+    let savedAgreement = localStorage.getItem('agreement');
+    if (savedAgreement || this.dataService.agreement) {
       return true;
     } else {
       this.router.navigateByUrl('');

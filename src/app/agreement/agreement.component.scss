@@ -3,48 +3,6 @@
 
 .selection-container {
     margin-bottom: 10px;
-    margin-top: 110px;
-}
-
-.header {
-    position: fixed;
-    width: 100%;
-    background: white;
-    top: 50px;
-    left: 0;
-    padding-left: 10px;
-    z-index: 1;
-    height: 60px;
-}
-
-.container-outer { position: relative; }
-
-.container-fade-top
-{
-	position: fixed;
-	top: 110px;
-    left: 0;
-	height: 25px;
-	width: 100%;
-    z-index: 1;
-	background-image: -webkit-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-	background-image: -moz-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-	background-image: -ms-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-	background-image: -o-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-}
-
-.container-fade-bottom
-{
-	position: fixed;
-	bottom: 0px;
-    left: 0;
-	height: 20px;
-	width: 100%;
-    z-index: 1;
-	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -moz-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -ms-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 }
 
 .button {

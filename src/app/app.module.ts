@@ -23,6 +23,7 @@ import { ROUTES } from './app.routes';
 // App is our top level component
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
+import { PageHeaderComponent } from './common';
 import { AgreementComponent } from './agreement';
 import { HomeComponent } from './home';
 import { BenefitsTableComponent } from './benefits-table';
@@ -36,7 +37,7 @@ import { CanActivateAgreement } from './common';
 import { KeysPipe } from './common';
 
 import '../styles/styles.scss';
-import '../styles/headings.css';
+import '../styles/headings.scss';
 import '../styles/margins.scss';
 import '../styles/loader.scss';
 
@@ -56,9 +57,10 @@ type StoreType = {
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
 @NgModule({
-  bootstrap: [ AppComponent ],
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent,
+    PageHeaderComponent,
     AgreementComponent,
     HomeComponent,
     BenefitsTableComponent,
@@ -82,7 +84,7 @@ export class AppModule {
   constructor(
     public appRef: ApplicationRef,
     public appState: AppState
-  ) {}
+  ) { }
 
   public hmrOnInit(store: StoreType) {
     if (!store || !store.state) {
@@ -110,7 +112,7 @@ export class AppModule {
     // recreate root elements
     store.disposeOldHosts = createNewHosts(cmpLocation);
     // save input values
-    store.restoreInputValues  = createInputTransfer();
+    store.restoreInputValues = createInputTransfer();
     // remove styles
     removeNgStyles();
   }
@@ -127,4 +129,9 @@ export class AppModule {
 export class AppSettings {
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   public static MAX_SELECTIONS: number = 10;
+  public static NAV_MENU: Array<{ name: string, link: string }> = [
+    { name: 'Home', link: 'home' },
+    { name: 'Settings', link: 'settings' },
+    { name: 'Help', link: 'help' },
+    { name: 'About', link: 'about' }];
 }

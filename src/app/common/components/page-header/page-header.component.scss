@@ -1,0 +1,40 @@
+@import '../../../../styles/variables';
+
+.header {
+    position: fixed;
+    width: 100%;
+    background: $nav-button-selected;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    height: 50px;
+    color: $nav-button-color;
+}
+
+.container-fade-top
+{
+	position: fixed;
+	top: 50px;
+    left: 0;
+	height: 20px;
+	width: 100%;
+    z-index: 1;
+	background-image: -webkit-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+	background-image: -moz-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+	background-image: -ms-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+	background-image: -o-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+}
+
+.container-fade-bottom
+{
+	position: fixed;
+	bottom: 0px;
+    left: 0;
+	height: 20px;
+	width: 100%;
+    z-index: 1;
+	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+	background-image: -moz-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+	background-image: -ms-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+	background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+}

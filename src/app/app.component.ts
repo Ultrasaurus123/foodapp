@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { AppSettings } from '.';
 
 /*
  * App Component
@@ -15,44 +16,34 @@ import { Router} from '@angular/router';
   styleUrls: [
     './app.component.css'
   ],
-  // <nav>
-  //   <a [routerLink]=" ['./'] " routerLinkActive="active">
-  //     Home
-  //   </a>
-  //   <a [routerLink]=" ['./benefits'] " routerLinkActive="active">
-  //     Benefits Table
-  //   </a>
-  // </nav>
   template: `
     <main>
-    <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
-  <li><a (click)="clickMenuLink('home')">Home</a></li>
-  <li><a (click)="clickMenuLink('settings')">Settings</a></li>
-  <li><a (click)="clickMenuLink('help')">Help</a></li>
-  <li><a (click)="clickMenuLink('about')">About</a></li>
-  <li class="icon">
-    <a style="font-size:15px;" (click)="toggleMenu()">☰</a>
-  </li>
-</ul>
+      <page-header></page-header>
+      <div  class="m-t-70">
       <router-outlet></router-outlet>
+      </div>
     </main>
   `
 })
 export class AppComponent implements OnInit {
 
-  public menuOpen: boolean: false;
+  public menuOpen: boolean = false;
+  public pageTitle: string = '';
+  public menuItems: Array<{ name: string, link: string }>;
 
   constructor(private router: Router) { }
 
   public ngOnInit() {
+    this.menuItems = AppSettings.NAV_MENU;
   }
 
   public toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
 
-  public clickMenuLink(link: string) {
+  public clickMenuLink(menuItem: { name: string, link: string }) {
+    this.pageTitle = menuItem.name;
     this.menuOpen = false;
-    this.router.navigateByUrl(link)
+    this.router.navigateByUrl(menuItem.link)
   }
 }
