@@ -23,11 +23,13 @@ export class DetailsComponent implements OnInit {
   private view: string;
   private dataArray: Array<any>;
   private images: Array<any> = [];
+  private pageHeader: string;
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
+    this.dataService.currentPage = 'Effect Information';
     //get state of this page
     this.view = sessionStorage.getItem('view');
     this.detailIndex = (this.view === 'food') ? 1 : 0;
@@ -42,7 +44,8 @@ export class DetailsComponent implements OnInit {
     if (!this.detailItem || !this.view || !this.selectedItems) {
       this.router.navigateByUrl('benefits');
     } else {
-      this.dataService.currentPage = 'Details for '.concat(this.detailItem);      
+      this.pageHeader = (this.view === 'food') ? 'Diet for ' : 'Health effects of ';
+      this.pageHeader += this.detailItem;
       this.init();
     }
   }
@@ -58,7 +61,7 @@ export class DetailsComponent implements OnInit {
       error => console.error('Error getting cross reference data: ' + error)
       );
 
-    let query = '';    
+    let query = '';
     if (this.view === 'food') {
       query = 'foods=' + this.selectedItems.join() + '&conditions=' + this.detailItem;
     } else if (this.view === 'condition') {

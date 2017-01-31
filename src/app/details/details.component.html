@@ -1,15 +1,21 @@
-
-<!--Portrait-->
-<div class="table-container hidden-desktop">
+<div class="table-container">
+<div class="col-12">
+<span class="detail-header">{{pageHeader}}</span>
+<hr>
+</div>
     <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
         <div class="row">
             <div class="col-12">
-                <strong><span>Effects of {{row[selectedIndex]}} on {{row[detailIndex]}}</span></strong>
+                <span class="benefit-title">Effects of {{row[0]}} on {{row[1]}}</span>
             </div>
-            <ul>
-                <!--<img class="effect-icon" [src]="getIcon(row[2])" />-->
+            <div class="col-12">
+                <div class="bullet-point"><img class="effect-icon" [src]="getIcon(row[2])" /></div>
+                <div class="description"><span>{{row[3]}}</span></div>
+            </div>
+
+            <!--<ul>
                 <li class="description">{{row[3]}}</li>
-            </ul>
+            </ul>-->
         </div>
         <div class="row">
             <div class="col-12 reference-link" (click)="clickLink(row[4])">
