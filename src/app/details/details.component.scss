@@ -99,8 +99,8 @@
 
 
 .effect-icon {
-    width: 32px;
-    height: 32px;
+    width: 16px;
+    height: 16px;
     vertical-align: middle;
 }
 
@@ -109,21 +109,25 @@
 }
 
 .description {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
-    line-height: normal;
 }
 
-.header {
-    position: fixed;
-    width: 100%;
-    background: white;
-    top: 0;
-    left: 0;
-    padding-left: 10px;
-    z-index: 1;
-    height: 80px;
+// ul {
+//     list-style-image: url('../../assets/img/beneficial.png');
+// }
+
+li{
+   list-style: none;
 }
+li:before{
+   content: '';
+   display: inline-block;
+   height: 16px;
+   width: 16px;
+   background-image: url('../../assets/img/beneficial.png');
+}
+
 
 
 // images

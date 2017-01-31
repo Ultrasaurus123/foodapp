@@ -1,58 +1,15 @@
-<div class="row">
-    <div class="header col-12 p-t-10">
-        <h1>Details for <span [innerHTML]="getItemText(true)"></span></h1>
-            <hr>
-    </div>
-</div>
-<div class="table-container-outer hidden-mobile">
-    <div class="table-container-fade-top"></div>
-    <div class="table-container-fade-bottom"></div>
-    <div class="table-container">
-        <table class="benefits-table">
-            <th class="text-center" *ngFor="let heading of headings">
-                <div><span>{{heading}}</span></div>
-            </th>
-
-            <tr *ngFor="let row of dataArray; let r = index">
-                <td *ngFor="let column of row; let c = index" [class.text-center]="c === 2">
-                    <span [innerHTML]="row[c]" *ngIf="c !== 2" (click)="c === 4 && clickLink(row[c])"></span>
-                    <span *ngIf="c === 2"><img class="effect-icon" [src]="getIcon(row[c])" /></span>
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
 
 <!--Portrait-->
 <div class="table-container hidden-desktop">
-    <div class="table-container-fade-top"></div>
-    <div class="table-container-fade-bottom"></div>
     <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
         <div class="row">
-            <div class="col-6">
-                <img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">
-                
+            <div class="col-12">
+                <strong><span>Effects of {{row[selectedIndex]}} on {{row[detailIndex]}}</span></strong>
             </div>
-            <div class="col-6">
-                <strong>
-                <div class="row col-12" [innerHTML]="getItemText(true)">
-                </div> 
-                <div class="row col-12" [innerHTML]="getItemText(false)">
-                </div> 
-                <div class="row col-12">
-                    Effect:
-                </div>
-                <div class="row col-12 text-center m-t-10">
-                    <span style="width: 100%"><img class="effect-icon" [src]="getIcon(row[2])" /></span>
-                </div> 
-            </strong>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-12 description">
-                {{row[3]}}
-            </div>
+            <ul>
+                <!--<img class="effect-icon" [src]="getIcon(row[2])" />-->
+                <li class="description">{{row[3]}}</li>
+            </ul>
         </div>
         <div class="row">
             <div class="col-12 reference-link" (click)="clickLink(row[4])">
@@ -63,6 +20,7 @@
     </div>
 </div>
 
+                <!--<img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">-->
 
 
 <!--

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
+import { DataService } from '../common';
 
 @Component({
   selector: 'benefit-details',
@@ -15,27 +16,33 @@ import { AppSettings } from '..';
   templateUrl: './details.component.html'
 })
 export class DetailsComponent implements OnInit {
-  private food: string;
-  private condition: string;
+  private detailItem: string;
+  private selectedItems: Array<string>;
+  private detailIndex: number;
+  private selectedIndex: number;
   private view: string;
-  private headings: string;
   private dataArray: Array<any>;
   private images: Array<any> = [];
 
-  constructor(private http: Http, private router: Router) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
     //get state of this page
     this.view = sessionStorage.getItem('view');
+    this.detailIndex = (this.view === 'food') ? 1 : 0;
+    this.selectedIndex = (this.view === 'food') ? 0 : 1;
     let detailsString: string = sessionStorage.getItem('details');
     let details: any = JSON.parse(detailsString);
-    this.food = details.food;
-    this.condition = details.condition;
+    this.detailItem = (this.view === 'condition') ? details.food : details.condition;
+    let selectedString: string = sessionStorage.getItem('selected');
+    this.selectedItems = JSON.parse(selectedString);
 
-    if (!this.food || !this.condition || !this.view) {
+
+    if (!this.detailItem || !this.view || !this.selectedItems) {
       this.router.navigateByUrl('benefits');
     } else {
+      this.dataService.currentPage = 'Details for '.concat(this.detailItem);      
       this.init();
     }
   }
@@ -43,7 +50,7 @@ export class DetailsComponent implements OnInit {
   private init = function () {
 
     // GOOGLE IMAGE API
-    let imageQuery = (this.view === 'food') ? 'food+' + this.food : 'condition+' + this.condition;
+    let imageQuery = this.detailItem;
     this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=8&safe=high&fields=items(image)&q=' + imageQuery)
       .map(res => { return res.json() })
       .catch(this.handleError)
@@ -51,7 +58,12 @@ export class DetailsComponent implements OnInit {
       error => console.error('Error getting cross reference data: ' + error)
       );
 
-    let query = 'foods=' + this.food + '&conditions=' + this.condition;
+    let query = '';    
+    if (this.view === 'food') {
+      query = 'foods=' + this.selectedItems.join() + '&conditions=' + this.detailItem;
+    } else if (this.view === 'condition') {
+      query = 'foods=' + this.detailItem + '&conditions=' + this.selectedItems.join();
+    }
     this.http.get(AppSettings.API_ENDPOINT + 'getData?' + query)
       .map(res => { return res.json() })
       .catch(this.handleError)
@@ -61,16 +73,7 @@ export class DetailsComponent implements OnInit {
   };
 
   private processData(data: Array<any>) {
-    this.headings = data[0];
     this.dataArray = data.slice(1);
-  }
-
-  private getItemText(detailItem: boolean): string {
-    if (this.view === 'food') {
-      return (detailItem) ? this.food : this.condition;
-    } else if (this.view === 'condition') {
-      return (detailItem) ? this.condition : this.food;
-    }
   }
 
   private clickLink(link: string) {

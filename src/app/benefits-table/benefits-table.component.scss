@@ -31,37 +31,7 @@
 }
 
 .table-container {
-    margin-top: 140px;
     margin-bottom: 20px;
-
-}
-
-.table-container-outer { position: relative; }
-
-.table-container-fade-top
-{
-	position: fixed;
-	top: 120px;
-    left: 0;
-	height: 20px;
-	width: 100%;
-	background-image: -webkit-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-	background-image: -moz-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-	background-image: -ms-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-	background-image: -o-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-}
-
-.table-container-fade-bottom
-{
-	position: fixed;
-	bottom: 0;
-    left: 0;
-	height: 20px;
-	width: 100%;
-	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -moz-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -ms-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 }
 
 .benefits-table tr {
@@ -121,16 +91,6 @@
     padding-right: 15px;
 
 
-}
-
-.header {
-    position: fixed;
-    width: 100%;
-    background: white;
-    top: 0;
-    left: 0;
-    padding-left: 10px;
-    z-index: 1;
 }
 
 input[id^="item"]:checked + label {

@@ -1,58 +1,49 @@
-<div class="row">
-    <div class="header col-12 p-t-10">
-        <h1>Table of Benefits</h1>
-        <hr>
-        <div class="button-container row">
-            <div class="dropdown col-4">
-                <button class="dropbtn">Sort</button>
-                <div class="dropdown-content">
-                    <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
-                    <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
-                    <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
-                </div>
+<div class="">
+    <div class="row col-12 button-container ">
+        <div class="dropdown col-4" [class.selected]="showSort">
+            <button class="dropbtn" (click)="showSort = !showSort; showFilter = showLegend = false;">Sort</button>
+            <div class="dropdown-content">
+                <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
+                <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
+                <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
             </div>
-            <!-- filter drop down -->
-            <div class="dropdown col-4">
-                <button class="dropbtn">Filter</button>
-                <div class="dropdown-content">
-                    <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
-                    <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i"
-                    (ngModelChange)="onFilterChange(i, $event)"[disabled]="false" [ngModel]="option.checked"/>
-                        <label class="m-b-0" [for]="'item' + i">
+        </div>
+        <!-- filter drop down -->
+        <div class="dropdown col-4" [class.selected]="showFilter">
+            <button class="dropbtn" (click)="showFilter = !showFilter; showSort = showLegend = false;">Filter</button>
+            <div class="dropdown-content">
+                <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
+                    <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event)"
+                        [disabled]="false" [ngModel]="option.checked" />
+                    <label class="m-b-0" [for]="'item' + i">
                     {{option.name}}
                 </label>
-                    </div>
-                    <hr>
-                    <a (click)="removeRows()">Hide Selected</a>
-                    <a (click)="showAllRows()">Unhide All</a>
                 </div>
+                <hr>
+                <a (click)="removeRows()">Hide Selected</a>
+                <a (click)="showAllRows()">Unhide All</a>
             </div>
+        </div>
 
-            <!-- spacer -->
-            <div class="col-2">
-            </div>
+        <!-- spacer -->
+        <div class="col-2">
+        </div>
 
-            <!-- legend drop down -->
-            <div class="dropdown col-2 text-right">
-                <button class="dropbtn btn-icon">?</button>
-                <div class="dropdown-content">
-                    <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</div>
-                    <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</div>
-                    <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</div>
-                    <div class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</div>
-                    <div class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</div>
-                </div>
+        <!-- legend drop down -->
+        <div class="dropdown col-2 text-right" [class.selected]="showLegend">
+            <button class="dropbtn btn-icon" (click)="showLegend = !showLegend; showFilter = showSort = false;">?</button>
+            <div class="dropdown-content">
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</div>
             </div>
         </div>
     </div>
 </div>
 <div class="table-container-outer">
-    <div class="table-container-fade-top"></div>
-    <div class="table-container-fade-bottom"></div>
     <div class="table-container">
-
-        <!--<div class="table-container-fade-bottom" [class.fade-bottom-menu-show]="selectedItem" [class.fade-bottom-menu-hide]="!selectedItem"></div>
-    <div class="table-container" [class.bottom-menu-margin]="selectedItem">-->
 
         <table class="benefits-table">
             <th>
@@ -74,5 +65,4 @@
     </td>
 </tr>
 </table>
-</div>
 </div>

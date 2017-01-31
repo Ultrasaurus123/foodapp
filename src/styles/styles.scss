@@ -84,6 +84,7 @@ body {
     background-color: $nav-button-selected;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10;
 }
 
 .dropdown-content a {
@@ -99,11 +100,11 @@ body {
 
 // .dropdown-content a:hover {background-color: #f1f1f1}
 
-.dropdown:hover .dropdown-content {
+.dropdown.selected .dropdown-content {
     display: block;
 }
 
-.dropdown:hover .dropbtn {
+.dropdown.selected .dropbtn {
     background-color: $nav-button-selected;
 }
 

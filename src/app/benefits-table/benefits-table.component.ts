@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
+import { DataService } from '../common';
 
 @Component({
   selector: 'benefits-table',
@@ -24,10 +25,11 @@ export class BenefitsTableComponent implements OnInit {
   private selectedItems: Array<number> = [];
   private customHiddenItems: Array<number> = [];
 
-  constructor(private http: Http, private router: Router) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
+    this.dataService.currentPage = 'Benefits Table';
     //get state of this page
     let selectedString: string = sessionStorage.getItem('selected');
     this.selected = JSON.parse(selectedString);
