@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.currentPage = 'Home';
+    this.dataService.footerMargin = false;
 
     this.http.get(AppSettings.API_ENDPOINT + 'foods')
       .map(this.extractData)
@@ -62,6 +63,7 @@ export class HomeComponent implements OnInit {
     this.searchModel = '';
     this.showFood = type === 'food';
     this.showCondition = type === 'condition';
+    this.dataService.footerMargin = true;
   }
 
   private onSelectItem(item: any, type: string) {
@@ -79,6 +81,11 @@ export class HomeComponent implements OnInit {
         this.checkedConditions--;
       }
     }
+  }
+
+  private clickBack = function () {
+    this.showFood = this.showCondition = false;
+    this.dataService.footerMargin = false;
   }
 
   private selectItems = function () {

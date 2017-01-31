@@ -15,6 +15,7 @@ export class PageHeaderComponent implements OnInit {
 
   private pageTitle: string;
   private footerMargin: boolean;
+  private temp: string;
 
   constructor(private dataService: DataService) { }
 
@@ -24,7 +25,7 @@ export class PageHeaderComponent implements OnInit {
   public ngDoCheck() {
     this.pageTitle = this.dataService.currentPage;
     this.footerMargin = false;
-    if (this.pageTitle === 'Home') {
+    if (this.pageTitle === 'Home' && this.dataService.footerMargin) {
       this.footerMargin = true;
     }
   }

@@ -8,11 +8,11 @@ export class DataService {
   public allConditions: Array<any> = [];
   public agreement: boolean = false;
   public currentPage: string;
+  public footerMargin: boolean = false;
 
   private static _instance: DataService;
 
   constructor() {
-    console.log(this.appName);
     return DataService._instance = DataService._instance || this;
   }  
 

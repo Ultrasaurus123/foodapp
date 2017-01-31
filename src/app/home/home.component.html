@@ -1,4 +1,4 @@
-<div class="" *ngIf="!showFood && !showCondition">
+<div class="home-container" *ngIf="!showFood && !showCondition">
   <div class="col-12">
     <h3>Welcome to {{dataService.appName}}!</h3>
     <hr>
@@ -48,7 +48,7 @@
       Search: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
     </div>
     <div class="col-6">
-      <button class="button" (click)="showFood = showCondition = false;">Back</button>
+      <button class="button" (click)="clickBack()">Back</button>
     </div>
     <div class="col-6">
       <button class="button" [class.btn-disabled]="(showCondition && checkedConditions === 0) || (showFood && checkedFoods === 0)"
