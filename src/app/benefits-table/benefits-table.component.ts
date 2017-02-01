@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { DataService } from '../common';
+import { DataService, PromptModalComponent } from '../common';
+import { DialogService } from "ng2-bootstrap-modal";
 
 @Component({
   selector: 'benefits-table',
@@ -25,20 +26,32 @@ export class BenefitsTableComponent implements OnInit {
   private selectedItems: Array<number> = [];
   private customHiddenItems: Array<number> = [];
 
-  constructor(private http: Http, private router: Router, private dataService: DataService) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService, private dialogService: DialogService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.currentPage = 'Benefits Table';
-    //get state of this page
-    let selectedString: string = sessionStorage.getItem('selected');
-    this.selected = JSON.parse(selectedString);
-    this.view = sessionStorage.getItem('view');
 
-    if (!this.selected || !this.view) {
-      this.router.navigateByUrl('home');
-    } else {
+    //check if it's a custom MyChart
+    if (this.dataService.selectedChart && this.dataService.selectedChart.selected) {
       this.init();
+      this.view = this.dataService.selectedChart.view;
+      this.selected = this.dataService.selectedChart.selected;
+      this.dataArray = this.dataService.selectedChart.dataArray;
+      this.dataService.selectedChart = {};
+    } else {
+
+      //get state of this page
+      let selectedString: string = sessionStorage.getItem('selected');
+      this.selected = JSON.parse(selectedString);
+      this.view = sessionStorage.getItem('view');
+
+      if (!this.selected || !this.view) {
+        this.router.navigateByUrl('home');
+      } else {
+        this.init();
+        this.initServiceCall();
+      }
     }
   }
 
@@ -55,7 +68,9 @@ export class BenefitsTableComponent implements OnInit {
       { name: 'Inhibits', checked: false },
       { name: 'Negative Effect', checked: false }
     ];
+  };
 
+  private initServiceCall = function () {
     let query = '';
     if (this.view === 'food') {
       query = 'foods=' + this.selected.join();
@@ -69,23 +84,8 @@ export class BenefitsTableComponent implements OnInit {
       .subscribe(data => this.processData(data),
       error => console.error('Error getting all conditions: ' + error)
       );
-  };
 
-  private getIcon = function (benefit): string {
-    let icon = '../../assets/img/';
-    if (benefit === '1') {
-      icon += 'beneficial.png';
-    } else if (benefit === '-1') {
-      icon += 'negative.png';
-    } else if (benefit === '2') {
-      icon += 'assist.png';
-    } else if (benefit === '-2') {
-      icon += 'inhibit.png';
-    } else if (benefit === 0) {
-      icon += 'mixed.png';
-    }
-    return icon;
-  };
+  }
 
   private processData(data: Array<any>) {
     let hIndex: number = (this.view === 'food') ? 0 : 1;
@@ -105,6 +105,22 @@ export class BenefitsTableComponent implements OnInit {
     // this.dataArray = this.dataArray;
     this.sort('az');
   }
+
+  private getIcon = function (benefit): string {
+    let icon = '../../assets/img/';
+    if (benefit === '1') {
+      icon += 'beneficial.png';
+    } else if (benefit === '-1') {
+      icon += 'negative.png';
+    } else if (benefit === '2') {
+      icon += 'assist.png';
+    } else if (benefit === '-2') {
+      icon += 'inhibit.png';
+    } else if (benefit === 0) {
+      icon += 'mixed.png';
+    }
+    return icon;
+  };
 
   private selectItem(item: any, index: number) {
     item.selected = !item.selected;
@@ -285,18 +301,31 @@ export class BenefitsTableComponent implements OnInit {
   }
 
   private saveChart() {
-    let c: string = localStorage.getItem('myCharts');
-    let charts: Array<any> = [];
-    if (c) {
-      charts = JSON.parse(c);
-    }
-    let chartData = {
-      name: 'my chart ' + (charts.length + 1),
-      dataArray: this.dataArray.filter(item => { return !item.hidden }),
-      selected: this.selected
-    };
-    charts.push(chartData);
-    localStorage.setItem('myCharts', JSON.stringify(charts));
+    let disposable = this.dialogService.addDialog(PromptModalComponent, {
+      title: 'Save Chart',
+      question: 'Chart Name:'
+    })
+      .subscribe((message) => {
+        if (message) {
+          let c: string = localStorage.getItem('myCharts');
+          let charts: Array<any> = [];
+          if (c) {
+            charts = JSON.parse(c);
+          }
+          for (let i = 0; i < this.dataArray.length; i++) {
+            this.dataArray[i].selected = false;
+          }
+          let chartData = {
+            name: message,
+            dataArray: this.dataArray,
+            selected: this.selected,
+            view: this.view
+          };
+          charts.push(chartData);
+          localStorage.setItem('myCharts', JSON.stringify(charts));
+        }
+      })
+
   }
 
   private goToDetails(selection, i) {

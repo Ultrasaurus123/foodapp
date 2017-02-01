@@ -10,6 +10,7 @@ export class DataService {
   public currentPage: string;
   public footerMargin: boolean = false;
   public myCharts: Array<any> = [];
+  public selectedChart: any = {};
 
   private static _instance: DataService;
 

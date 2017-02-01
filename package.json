@@ -125,6 +125,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "2.0.1",
     "ng-router-loader": "^1.0.2",
+    "ng2-bootstrap-modal": "0.0.2",
     "ngc-webpack": "1.1.0",
     "node-sass": "^4.2.0",
     "npm-run-all": "^4.0.0",

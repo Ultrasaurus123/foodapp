@@ -15,6 +15,8 @@ import {
   PreloadAllModules
 } from '@angular/router';
 
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -26,9 +28,13 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { PageHeaderComponent } from './common';
 import { AgreementComponent } from './agreement';
 import { HomeComponent } from './home';
+import { MyChartsComponent } from './my-charts';
 import { BenefitsTableComponent } from './benefits-table';
 import { DetailsComponent } from './details';
 import { NoContentComponent } from './no-content';
+
+import { ConfirmModalComponent } from './common';
+import { PromptModalComponent } from './common';
 
 import { AppState, InternalStateType } from './app.service';
 import { DataService } from './common';
@@ -40,6 +46,7 @@ import '../styles/styles.scss';
 import '../styles/headings.scss';
 import '../styles/margins.scss';
 import '../styles/loader.scss';
+import '../styles/modals.scss';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -63,16 +70,24 @@ type StoreType = {
     PageHeaderComponent,
     AgreementComponent,
     HomeComponent,
+    MyChartsComponent,
     BenefitsTableComponent,
     DetailsComponent,
     NoContentComponent,
-    KeysPipe
+    KeysPipe,
+    ConfirmModalComponent,
+    PromptModalComponent
   ],
-  imports: [ // import Angular's modules
+  imports: [ // import Angular's modules  
     BrowserModule,
     FormsModule,
     HttpModule,
+    BootstrapModalModule,
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
+  ],
+  entryComponents: [
+    ConfirmModalComponent,
+    PromptModalComponent
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

@@ -1,0 +1,16 @@
+<div class="col-12 selection-container">
+    <div>
+        <p *ngIf="!myCharts || myCharts.length === 0">
+            You have no saved charts.
+        </p>
+        <p *ngIf="myCharts && myCharts.length > 0">
+            Select a saved chart to load your customized benefits table.
+        </p>
+    </div>
+</div>
+<div class="row m-b-20">
+    <div class="col-12">
+        <div *ngFor="let chart of myCharts; let i = index;" class="p-l-15">
+            <span (click)="selectMyChart(chart)">{{chart.name}}</span><span (click)="deleteMyChart(i)" class="remove-icon">&#215;</span>
+        </div>
+    </div>
