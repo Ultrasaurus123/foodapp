@@ -284,6 +284,21 @@ export class BenefitsTableComponent implements OnInit {
     }
   }
 
+  private saveChart() {
+    let c: string = localStorage.getItem('myCharts');
+    let charts: Array<any> = [];
+    if (c) {
+      charts = JSON.parse(c);
+    }
+    let chartData = {
+      name: 'my chart ' + (charts.length + 1),
+      dataArray: this.dataArray.filter(item => { return !item.hidden }),
+      selected: this.selected
+    };
+    charts.push(chartData);
+    localStorage.setItem('myCharts', JSON.stringify(charts));
+  }
+
   private goToDetails(selection, i) {
     if (this.view === 'food') {
       let details = { food: selection, condition: this.dataArray[i].item };

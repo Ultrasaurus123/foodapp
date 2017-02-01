@@ -131,6 +131,7 @@ export class AppSettings {
   public static MAX_SELECTIONS: number = 10;
   public static NAV_MENU: Array<{ name: string, link: string }> = [
     { name: 'Home', link: 'home' },
+    { name: 'My Charts', link: 'my-charts' },
     { name: 'Settings', link: 'settings' },
     { name: 'Help', link: 'help' },
     { name: 'About', link: 'about' }];

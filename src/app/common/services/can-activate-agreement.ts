@@ -11,7 +11,7 @@ export class CanActivateAgreement implements CanActivate {
     if (savedAgreement || this.dataService.agreement) {
       return true;
     } else {
-      this.router.navigateByUrl('');
+      this.router.navigateByUrl('disclaimer');
       return false;
     }
   }

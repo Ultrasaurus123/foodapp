@@ -9,6 +9,7 @@ export class DataService {
   public agreement: boolean = false;
   public currentPage: string;
   public footerMargin: boolean = false;
+  public myCharts: Array<any> = [];
 
   private static _instance: DataService;
 

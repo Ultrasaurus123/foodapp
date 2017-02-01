@@ -9,9 +9,10 @@ import { NoContentComponent } from './no-content';
 import { DataResolver } from './app.resolver';
 
 export const ROUTES: Routes = [
-  { path: '',      component: AgreementComponent, data: {name: 'Disclaimer'} },
-  { path: 'home',  component: HomeComponent, canActivate: [CanActivateAgreement], data: {name: 'Home'}  },
+  { path: '', component: HomeComponent, canActivate: [CanActivateAgreement]  },
+  { path: 'disclaimer', component: AgreementComponent },
+  { path: 'home', component: HomeComponent, canActivate: [CanActivateAgreement] },
   { path: 'benefits', component: BenefitsTableComponent, canActivate: [CanActivateAgreement] },
   { path: 'details', component: DetailsComponent, canActivate: [CanActivateAgreement] },
-  { path: '**',    component: NoContentComponent},
+  { path: '**', component: NoContentComponent },
 ];
