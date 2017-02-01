@@ -79,11 +79,6 @@ export class DetailsComponent implements OnInit {
     this.dataArray = data.slice(1);
   }
 
-  private clickLink(link: string) {
-    // for link, open in new window/tab
-    window.open(link, '_blank');
-  }
-
   private getIcon = function (benefit: string): string {
     let icon = '../../assets/img/';
     if (benefit === '1') {

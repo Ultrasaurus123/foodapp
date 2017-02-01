@@ -18,8 +18,10 @@
             </ul>-->
         </div>
         <div class="row">
-            <div class="col-12 reference-link" (click)="clickLink(row[4])">
+            <div class="col-12 reference-link">
+                <a [href]="row[4]" target="_blank">
                 Source: {{row[4]}}
+                </a>
             </div>
         </div>
         <hr>
