@@ -1,7 +1,7 @@
 <div class="">
     <div class="row col-12 button-container ">
         <div class="dropdown col-4" [class.selected]="showSort">
-            <button class="dropbtn" (click)="showSort = !showSort; showFilter = showLegend = false;">Sort</button>
+            <button class="dropbtn" (click)="showSort = !showSort" (focusout)="showSort = false">Sort</button>
             <div class="dropdown-content">
                 <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
                 <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
@@ -10,7 +10,7 @@
         </div>
         <!-- filter drop down -->
         <div class="dropdown col-4" [class.selected]="showFilter">
-            <button class="dropbtn" (click)="showFilter = !showFilter; showSort = showLegend = false;">Filter</button>
+            <button class="dropbtn" (click)="showFilter = !showFilter" (focusout)="showFilter = false">Filter</button>
             <div class="dropdown-content">
                 <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
                     <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event)"
@@ -32,7 +32,7 @@
 
         <!-- legend drop down -->
         <div class="dropdown col-2 text-right" [class.selected]="showLegend">
-            <button class="dropbtn btn-icon" (click)="showLegend = !showLegend; showFilter = showSort = false;">?</button>
+            <button class="dropbtn btn-icon" (click)="showLegend = !showLegend" (focusout)="showLegend = false">?</button>
             <div class="dropdown-content">
                 <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</div>
                 <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</div>
