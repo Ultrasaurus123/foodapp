@@ -9,11 +9,11 @@
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
   <li><a>{{pageTitle}}</a></li>
   <template ngFor let-item [ngForOf]="menuItems"> 
-  <li *ngIf="item.name !== pageTitle">
+  <li *ngIf="item.name !== pageTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
     <a [class.disabled]="item.name === 'My Charts' && !myChartsActive" (click)="clickMenuLink(item)">{{item.name}}</a>
   </li>
   </template>
-  <li class="icon">
-    <a style="font-size:15px;" (click)="toggleMenu()" (focusout)="menuOpen = false;">&#9776;</a>
+  <li class="icon no-hover">
+    <a style="font-size:15px;" class="no-hover" (click)="toggleMenu()" (focusout)="menuOpen = false;">&#9776;</a>
 </li>
 </ul>

@@ -148,7 +148,7 @@ ul.topnav li a {
 
 ul.topnav li a.active {background-color: $nav-button-color}
 
-ul.topnav li:not(:first-child) a:hover {background-color: $nav-button-color}
+ul.topnav li:not(:first-child):not(.no-hover):not(.disabled) a:hover:not(.no-hover):not(.disabled) {background-color: $nav-button-color}
 
 ul.topnav li.icon {display: none;}
 
@@ -179,6 +179,6 @@ ul.topnav li.icon {display: none;}
     display: block;
     text-align: left;
   }
-  ul.topnav li:not(:first-child) a:hover {background-color: $nav-button-color}
+  ul.topnav li:not(:first-child):not(.no-hover):not(.disabled) a:hover:not(.no-hover):not(.disabled) {background-color: $nav-button-color}
 
 }

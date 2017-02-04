@@ -42,6 +42,8 @@ import { CanActivateAgreement } from './common';
 
 import { KeysPipe } from './common';
 
+import { FocusDirective } from './common';
+
 import '../styles/styles.scss';
 import '../styles/headings.scss';
 import '../styles/margins.scss';
@@ -76,7 +78,8 @@ type StoreType = {
     NoContentComponent,
     KeysPipe,
     ConfirmModalComponent,
-    PromptModalComponent
+    PromptModalComponent,
+    FocusDirective
   ],
   imports: [ // import Angular's modules  
     BrowserModule,

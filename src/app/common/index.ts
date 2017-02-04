@@ -6,3 +6,5 @@ export * from './services/data.service';
 export * from './services/can-activate-agreement';
 
 export * from './pipes/keys-iterator.pipe';
+
+export * from './directives/focus.directive';

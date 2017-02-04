@@ -9,6 +9,7 @@
                 <span class="benefit-title">Effects of {{row[0][0]}} on {{row[0][1]}}</span>
             </div>
             <div class="col-12" *ngFor="let detail of row">
+                <br>
                 <div class="bullet-point"><img class="effect-icon" [src]="getIcon(detail[2])" /></div>
                 <div class="description"><span>{{detail[3]}}</span></div>
             <div class="col-12 reference-link">

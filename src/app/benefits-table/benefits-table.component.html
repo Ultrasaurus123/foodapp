@@ -1,8 +1,8 @@
 <div class="">
     <div class="row col-12 button-container ">
         <div class="dropdown col-4" [class.selected]="showSort">
-            <button class="dropbtn" (click)="showSort = !showSort" (focusout)="showSort = false">Sort</button>
-            <div class="dropdown-content">
+            <button class="dropbtn" (click)="showSort = !showSort">Sort</button>
+            <div class="dropdown-content" tabindex="-1" [focus]="showSort" (focusin)="showLegend=true"(focusout)="showSort = false">
                 <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
                 <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
                 <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
@@ -10,8 +10,8 @@
         </div>
         <!-- filter drop down -->
         <div class="dropdown col-4" [class.selected]="showFilter">
-            <button class="dropbtn" (click)="showFilter = !showFilter" (focusout)="showFilter = false">Filter</button>
-            <div class="dropdown-content">
+            <button class="dropbtn" (click)="showFilter = !showFilter">Filter</button>
+            <div class="dropdown-content" tabindex="-1" [focus]="showFilter" (focusout)="showFilter = false">
                 <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
                     <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event)"
                         [disabled]="false" [ngModel]="option.checked" />
@@ -32,8 +32,8 @@
 
         <!-- legend drop down -->
         <div class="dropdown col-2 text-right" [class.selected]="showLegend">
-            <button class="dropbtn btn-icon" (click)="showLegend = !showLegend" (focusout)="showLegend = false">?</button>
-            <div class="dropdown-content">
+            <button class="dropbtn btn-icon" (click)="showLegend = !showLegend">?</button>
+            <div class="dropdown-content" tabindex="-1" [focus]="showLegend" (focusout)="showLegend = false">
                 <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</div>
                 <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</div>
                 <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</div>
@@ -53,7 +53,7 @@
                 <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</span><br>
                 <span class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</span><br>
                 <span class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</span><br>
-
+                <br>
                 <span class="first-heading">{{heading}}</span>
             </th>
             <th class="text-vertical" *ngFor="let selectionHeading of selected">
