@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { DataService } from '../common';
+import { KeysPipe, DataService } from '../common';
 
 @Component({
   selector: 'benefit-details',
@@ -24,6 +24,7 @@ export class DetailsComponent implements OnInit {
   private dataArray: Array<any>;
   private images: Array<any> = [];
   private pageHeader: string;
+  private dataObject: any = {};
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
@@ -76,7 +77,17 @@ export class DetailsComponent implements OnInit {
   };
 
   private processData(data: Array<any>) {
-    this.dataArray = data.slice(1);
+    this.dataArray = [];
+    data = data.slice(1);
+    for (let i = 0; i < data.length; i++) {
+      this.dataObject[data[i][this.selectedIndex]] = this.dataObject[data[i][this.selectedIndex]] || [];
+      this.dataObject[data[i][this.selectedIndex]].push(data[i]);
+    }
+    let keys = Object.keys(this.dataObject);
+    for (let k = 0; k < keys.length; k++) {
+      this.dataArray.push(this.dataObject[keys[k]]);
+    }
+    console.log(this.dataArray);
   }
 
   private getIcon = function (benefit: string): string {

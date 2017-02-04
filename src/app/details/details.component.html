@@ -1,34 +1,28 @@
 <div class="table-container">
-<div class="col-12">
-<span class="detail-header">{{pageHeader}}</span>
-<hr>
-</div>
+    <div class="col-12">
+        <span class="detail-header">{{pageHeader}}</span>
+        <hr>
+    </div>
     <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
         <div class="row">
             <div class="col-12">
-                <span class="benefit-title">Effects of {{row[0]}} on {{row[1]}}</span>
+                <span class="benefit-title">Effects of {{row[0][0]}} on {{row[0][1]}}</span>
             </div>
-            <div class="col-12">
-                <div class="bullet-point"><img class="effect-icon" [src]="getIcon(row[2])" /></div>
-                <div class="description"><span>{{row[3]}}</span></div>
-            </div>
-
-            <!--<ul>
-                <li class="description">{{row[3]}}</li>
-            </ul>-->
-        </div>
-        <div class="row">
+            <div class="col-12" *ngFor="let detail of row">
+                <div class="bullet-point"><img class="effect-icon" [src]="getIcon(detail[2])" /></div>
+                <div class="description"><span>{{detail[3]}}</span></div>
             <div class="col-12 reference-link">
-                <a [href]="row[4]" target="_blank">
-                Source: {{row[4]}}
+                <a [href]="detail[4]" target="_blank">
+                Source: {{detail[4]}}
                 </a>
+            </div>
             </div>
         </div>
         <hr>
     </div>
 </div>
 
-                <!--<img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">-->
+<!--<img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">-->
 
 
 <!--

@@ -47,23 +47,26 @@
     <div class="table-container">
 
         <table class="benefits-table">
-            <th>
-                <div style="height: 100%">
-<div style="height: 80%"></div>
-<div style="height: 20%"><span class="first-heading">{{heading}}</span></div>
-</div>
-</th>
-<th class="text-vertical" *ngFor="let selectionHeading of selected">
-    <div><span>{{selectionHeading}}</span></div>
-</th>
+            <th style="vertical-align: bottom">
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</span><br>
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</span><br>
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</span><br>
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</span><br>
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</span><br>
 
-<tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
-    <td (click)="selectItem(item, i)">
-        {{item.item}}
-    </td>
-    <td class="text-center" *ngFor="let selection of selected" (click)="goToDetails(selection, i)">
-        <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
-    </td>
-</tr>
-</table>
-</div>
+                <span class="first-heading">{{heading}}</span>
+            </th>
+            <th class="text-vertical" *ngFor="let selectionHeading of selected">
+                <div><span>{{selectionHeading}}</span></div>
+            </th>
+
+            <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
+                <td (click)="selectItem(item, i)">
+                    {{item.item}}
+                </td>
+                <td class="text-center" *ngFor="let selection of selected" (click)="goToDetails(selection, i)">
+                    <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
+                </td>
+            </tr>
+        </table>
+    </div>

@@ -26,24 +26,8 @@ import { AppSettings } from '.';
   `
 })
 export class AppComponent implements OnInit {
-
-  public menuOpen: boolean = false;
-  public pageTitle: string = '';
-  public menuItems: Array<{ name: string, link: string }>;
-
   constructor(private router: Router) { }
 
   public ngOnInit() {
-    this.menuItems = AppSettings.NAV_MENU;
-  }
-
-  public toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
-
-  public clickMenuLink(menuItem: { name: string, link: string }) {
-    this.pageTitle = menuItem.name;
-    this.menuOpen = false;
-    this.router.navigateByUrl(menuItem.link)
   }
 }
