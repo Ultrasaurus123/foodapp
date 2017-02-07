@@ -1,3 +1,4 @@
+<div [class.menu-backdrop]="showSort || showFilter || showLegend" (click)="showSort = showFilter = showLegend = false"></div>
 <div>
     <div class="row col-12 button-container ">
         <div class="dropdown col-4" [class.selected]="showSort">
