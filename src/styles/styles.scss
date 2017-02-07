@@ -181,4 +181,8 @@ ul.topnav li.icon {display: none;}
   }
   ul.topnav li:not(:first-child):not(.no-hover):not(.disabled) a:hover:not(.no-hover):not(.disabled) {background-color: $nav-button-color}
 
+  .hide-mobile {
+    display: none !important;
+  }
+
 }
