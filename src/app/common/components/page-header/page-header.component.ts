@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
+import { TextService } from '../../services/text.service';
 import { AppSettings } from '../../../';
 
 @Component({
@@ -15,16 +16,25 @@ import { AppSettings } from '../../../';
 export class PageHeaderComponent implements OnInit {
 
   public menuOpen: boolean = false;
-  public menuItems: Array<{ name: string, link: string }>;
+  public menuItems: Array<{ name: string, display: string, link: string }>;
 
   private pageTitle: string;
   private footerMargin: boolean;
   private myChartsActive: boolean;
+  private self: any;
 
-  constructor(private router: Router, private dataService: DataService) { }
+  constructor(private router: Router, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
     this.menuItems = AppSettings.NAV_MENU;
+    let displays = this.menuItems.map(elem => { return elem.display; });
+    this.textService.getText(displays).subscribe(
+      text => {
+        for (let i = 0; i < this.menuItems.length; i++) {
+          this.menuItems[i].display = text[i];
+        }
+      }
+    )
   }
 
   public ngDoCheck() {

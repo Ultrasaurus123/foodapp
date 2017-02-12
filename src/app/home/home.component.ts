@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { DataService } from '../common';
+import { DataService, TextService } from '../common';
 import { AppSettings } from '..';
 
 @Component({
@@ -33,29 +33,51 @@ export class HomeComponent implements OnInit {
   private searchModel: string = '';
   private maxSelections: number = AppSettings.MAX_SELECTIONS;
   private started: boolean = false;
+  private pageText: any = {};
 
-  constructor(private http: Http, private router: Router, private dataService: DataService) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'Home';
     this.dataService.footerMargin = false;
+    this.textService.getText(['Home']).subscribe(
+      text => this.dataService.currentPage = text[0]);
+    this.textService.getText(['Welcome to ' + this.dataService.appName]).subscribe(
+      text => this.pageText.headline = text);
+    this.textService.getText([`This site identifies the impact of health foods on multiple but coexisting health concerns that is unique for each person.
+      Similarly, it identifies multiple medical conditions affected by your unique personal diet. You can customize this
+      application for your unique set of medical or health food needs.`]).subscribe(
+      text => this.pageText.pageInfo = text);
+    this.textService.getText(['To get started, choose what you want to search by:']).subscribe(
+      text => this.pageText.getStarted = text);
+    this.textService.getText(['Foods', 'Conditions', 'Back', 'Continue', 'Search:']).subscribe(text => { 
+      this.pageText.foods = text[0];
+      this.pageText.conditions = text[1];
+      this.pageText.back = text[2]
+      this.pageText.continue = text[3];
+      this.pageText.search = text[4];
+    });
 
     this.http.get(AppSettings.API_ENDPOINT + 'foods')
       .map(this.extractData)
       .catch(this.handleError)
       .subscribe(
-      foods => this.dataService.allFoods = foods,
-      error => console.error('Error getting all foods: ' + error)
-      )
+      foods => {
+        this.dataService.allFoods = foods; this.textService.getText(this.dataService.allFoods.map(function (elem) {
+          return elem.item;
+        })).subscribe(
+          data => console.log(data)
+          );
+      },
+      error => console.error('Error getting all foods: ' + error));
 
     this.http.get(AppSettings.API_ENDPOINT + 'conditions')
       .map(this.extractData)
       .catch(this.handleError)
       .subscribe(
       conditions => this.dataService.allConditions = conditions,
-      error => console.error('Error getting all conditions: ' + error)
-      )
+      error => console.error('Error getting all conditions: ' + error));
+
   }
 
   private showItemList(type) {
@@ -125,7 +147,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
   private extractData(res: Response) {
     let body = res.json();
     let returnData = [];
@@ -134,6 +155,7 @@ export class HomeComponent implements OnInit {
     }
     return returnData || {};
   }
+
   private handleError(error: Response | any) {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string;

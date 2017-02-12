@@ -1,0 +1,43 @@
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { DataService, TextService } from '../common';
+import { AppSettings } from '..';
+
+@Component({
+  selector: 'language',
+  styleUrls: ['./language.component.scss'],
+  templateUrl: './language.component.html'
+})
+export class LanguageComponent implements OnInit {
+  private pageText: any = {};
+  private languageSet: Array<{ name: string, code: string }> = [];
+  private searchModel: string = '';
+
+  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService) { }
+
+  public ngOnInit() {
+    window.scrollTo(0, 0);
+    this.dataService.footerMargin = false;
+    this.textService.getText(['Language']).subscribe(
+      text => this.dataService.currentPage = text[0]);
+    this.textService.getText(['Search:']).subscribe(
+      text => this.pageText.search = text);
+    this.languageSet = AppSettings.LANGUAGES;
+  }
+
+  private searchValueChanged(newValue) {
+    window.scrollTo(0, 0);
+    this.searchModel = newValue;
+  //  console.log(this.textService.getLanguages());
+    //this.languageSet = AppSettings.LANGUAGES.filter(item => {
+    //  return item.name.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
+    //});
+  }
+}

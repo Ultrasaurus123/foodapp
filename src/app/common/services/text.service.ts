@@ -1,162 +1,60 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import {
-  NgModule,
-  ApplicationRef
-} from '@angular/core';
-import {
-  removeNgStyles,
-  createNewHosts,
-  createInputTransfer
-} from '@angularclass/hmr';
-import {
-  RouterModule,
-  PreloadAllModules
-} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { DataService } from './data.service';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs';
 
-import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+@Injectable()
+export class TextService {
+    private language: string = 'fr';
 
-/*
- * Platform and Environment providers/directives/pipes
- */
-import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
-// App is our top level component
-import { AppComponent } from './app.component';
-import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { PageHeaderComponent } from './common';
-import { AgreementComponent } from './agreement';
-import { HomeComponent } from './home';
-import { MyChartsComponent } from './my-charts';
-import { BenefitsTableComponent } from './benefits-table';
-import { DetailsComponent } from './details';
-import { LanguageComponent } from './language';
-import { NoContentComponent } from './no-content';
+    private static _instance: TextService;
+    private static _languages: Array<{ name: string, code: string }>;
 
-import { ConfirmModalComponent } from './common';
-import { PromptModalComponent } from './common';
-
-import { AppState, InternalStateType } from './app.service';
-import { DataService, TextService } from './common';
-import { CanActivateAgreement } from './common';
-
-import { KeysPipe } from './common';
-
-import { FocusDirective } from './common';
-
-import '../styles/styles.scss';
-import '../styles/headings.scss';
-import '../styles/margins.scss';
-import '../styles/loader.scss';
-import '../styles/modals.scss';
-
-// Application wide providers
-const APP_PROVIDERS = [
-  ...APP_RESOLVER_PROVIDERS,
-  AppState, DataService, TextService, CanActivateAgreement
-];
-
-type StoreType = {
-  state: InternalStateType,
-  restoreInputValues: () => void,
-  disposeOldHosts: () => void
-};
-
-/**
- * `AppModule` is the main entry point into Angular2's bootstraping process
- */
-@NgModule({
-  bootstrap: [AppComponent],
-  declarations: [
-    AppComponent,
-    PageHeaderComponent,
-    AgreementComponent,
-    HomeComponent,
-    MyChartsComponent,
-    BenefitsTableComponent,
-    DetailsComponent,
-    LanguageComponent,
-    NoContentComponent,
-    KeysPipe,
-    ConfirmModalComponent,
-    PromptModalComponent,
-    FocusDirective
-  ],
-  imports: [ // import Angular's modules  
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    BootstrapModalModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
-  ],
-  entryComponents: [
-    ConfirmModalComponent,
-    PromptModalComponent
-  ],
-  providers: [ // expose our Services and Providers into Angular's dependency injection
-    ENV_PROVIDERS,
-    APP_PROVIDERS
-  ]
-})
-export class AppModule {
-
-  constructor(
-    public appRef: ApplicationRef,
-    public appState: AppState
-  ) { }
-
-  public hmrOnInit(store: StoreType) {
-    if (!store || !store.state) {
-      return;
-    }
-    console.log('HMR store', JSON.stringify(store, null, 2));
-    // set state
-    this.appState._state = store.state;
-    // set input values
-    if ('restoreInputValues' in store) {
-      let restoreInputValues = store.restoreInputValues;
-      setTimeout(restoreInputValues);
+    constructor(private http: Http, private dataService: DataService) {
+        if (!TextService._languages || TextService.length === 0) {
+            this.initLanguages();
+        }
+        return TextService._instance = TextService._instance || this;
     }
 
-    this.appRef.tick();
-    delete store.state;
-    delete store.restoreInputValues;
-  }
+    public getText(source: Array<string>): Observable<Array<string>> {
+        if (!source || source.length === 0) {
+            return null;
+        }
+        if (this.language === 'en') {
+            return Observable.create(source);
+        }
+        let queryString = source.join(' %% ');
 
-  public hmrOnDestroy(store: StoreType) {
-    const cmpLocation = this.appRef.components.map((cmp) => cmp.location.nativeElement);
-    // save state
-    const state = this.appState._state;
-    store.state = state;
-    // recreate root elements
-    store.disposeOldHosts = createNewHosts(cmpLocation);
-    // save input values
-    store.restoreInputValues = createInputTransfer();
-    // remove styles
-    removeNgStyles();
-  }
+        return this.http.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + this.language + '&dt=t&q=' + encodeURI(queryString))
+            .map(res => {
+                let text = res.text();
+                while (text.indexOf(',,') > -1) {
+                    text = text.replace(',,', ',');
+                }
+                let translation = JSON.parse(text)[0][0][0];
+                if (translation.indexOf(' %% ') === -1) {
+                    return [translation];
+                }
+                let parsedStrings: Array<string> = [];
+                let parseIndex = translation.indexOf(' %% ');
+                while (parseIndex > -1) {
+                    parsedStrings.push(translation.substring(0, parseIndex));
+                    translation = translation.slice(parseIndex + 4);
+                    parseIndex = translation.indexOf(' %% ');
+                }
+                parsedStrings.push(translation);
+                return parsedStrings;
+            });
+        //   .catch(this.handleError)
+    }
 
-  public hmrAfterDestroy(store: StoreType) {
-    // display new elements
-    store.disposeOldHosts();
-    delete store.disposeOldHosts;
-  }
+    public getLanguages(): Array<{name: string, code: string}> {
+        return TextService._languages;
+    }
 
-}
-
-// Global Application Settings
-export class AppSettings {
-  public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
-  public static MAX_SELECTIONS: number = 10;
-  public static NAV_MENU: Array<{ name: string, display: string, link: string }> = [
-    { name: 'Home', display: 'Home', link: 'home' },
-    { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
-    { name: 'Language', display: 'Language', link: 'language' },
-    { name: 'Help', display: 'Help', link: 'help' },
-    { name: 'About', display: 'About', link: 'about' }];
-  
-  public static LANGUAGES: Array<{ name: string, code: string }> = [
+    private initLanguages(): void {
+        TextService._languages = [
             { name: 'Afrikaans', code: 'af' },
             { name: 'Albanian', code: 'sq' },
             { name: 'Amharic', code: 'am' },
@@ -261,5 +159,7 @@ export class AppSettings {
             { name: 'Yiddish', code: 'yi' },
             { name: 'Yoruba', code: 'yo' },
             { name: 'Zulu', code: 'zu' }
-  ];
+        ]
+
+    }
 }

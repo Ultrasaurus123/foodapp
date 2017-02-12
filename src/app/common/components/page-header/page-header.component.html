@@ -10,7 +10,7 @@
   <li><a>{{pageTitle}}</a></li>
   <template ngFor let-item [ngForOf]="menuItems"> 
   <li [class.hide-mobile]="item.name === pageTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
-    <a [class.disabled]="item.name === 'My Charts' && !myChartsActive" (click)="clickMenuLink(item)">{{item.name}}</a>
+    <a [class.disabled]="item.name === 'My Charts' && !myChartsActive" (click)="clickMenuLink(item)">{{item.display}}</a>
   </li>
   </template>
   <li class="icon no-hover">

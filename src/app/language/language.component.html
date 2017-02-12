@@ -1,0 +1,15 @@
+<div class="selection-container">
+  <div class="checkbox-container">
+    <div *ngFor="let lang of languageSet"
+     class="p-l-15">
+      <span [id]="'item-' + language.code">{{lang.name}}</span>
+  </div>
+</div>
+
+<div class="col-12">
+  <div class="row footer">
+    <div class="col-12">
+      {{pageText.search}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+    </div>
+  </div>
+</div>

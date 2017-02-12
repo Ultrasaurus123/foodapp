@@ -5,6 +5,7 @@ import { HomeComponent } from './home';
 import { MyChartsComponent } from './my-charts';
 import { BenefitsTableComponent } from './benefits-table';
 import { DetailsComponent } from './details';
+import { LanguageComponent } from './language';
 import { NoContentComponent } from './no-content';
 
 import { DataResolver } from './app.resolver';
@@ -16,5 +17,6 @@ export const ROUTES: Routes = [
   { path: 'my-charts', component: MyChartsComponent, canActivate: [CanActivateAgreement] },
   { path: 'benefits', component: BenefitsTableComponent, canActivate: [CanActivateAgreement] },
   { path: 'details', component: DetailsComponent, canActivate: [CanActivateAgreement] },
+  { path: 'language', component: LanguageComponent },
   { path: '**', component: NoContentComponent },
 ];
