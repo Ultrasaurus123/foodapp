@@ -39,9 +39,10 @@ export class HomeComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
+    this.dataService.currentPage = 'Home';
     this.dataService.footerMargin = false;
     this.textService.getText(['Home']).subscribe(
-      text => this.dataService.currentPage = text[0]);
+      text => this.dataService.currentPageText = text[0]);
     this.textService.getText(['Welcome to ' + this.dataService.appName]).subscribe(
       text => this.pageText.headline = text);
     this.textService.getText([`This site identifies the impact of health foods on multiple but coexisting health concerns that is unique for each person.
@@ -51,6 +52,7 @@ export class HomeComponent implements OnInit {
     this.textService.getText(['To get started, choose what you want to search by:']).subscribe(
       text => this.pageText.getStarted = text);
     this.textService.getText(['Foods', 'Conditions', 'Back', 'Continue', 'Search:']).subscribe(text => { 
+      console.log(text);
       this.pageText.foods = text[0];
       this.pageText.conditions = text[1];
       this.pageText.back = text[2]

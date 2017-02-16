@@ -1,8 +1,8 @@
 <div class="selection-container">
   <div class="checkbox-container">
-    <div *ngFor="let lang of languageSet"
-     class="p-l-15">
-      <span [id]="'item-' + language.code">{{lang.name}}</span>
+    <div *ngFor="let lang of languageSet" class="p-l-15" [class.checked]="lang.code === selectedLang" (click)="lang.code !== selectedLang && changeLanguage(lang.code)">
+      <span [id]="'item-' + lang.code">{{lang.name}}</span>
+    </div>
   </div>
 </div>
 

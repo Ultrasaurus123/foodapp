@@ -30,6 +30,7 @@ export class BenefitsTableComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
+    this.dataService.currentPageText = 'Benefits Table';
     this.dataService.currentPage = 'Benefits Table';
 
     //check if it's a custom MyChart

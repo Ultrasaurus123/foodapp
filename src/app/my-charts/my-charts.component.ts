@@ -18,6 +18,7 @@ export class MyChartsComponent implements OnInit {
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.currentPage = 'My Charts';
+    this.dataService.currentPageText = 'My Charts';
     this.myCharts = this.dataService.myCharts;
   }
 

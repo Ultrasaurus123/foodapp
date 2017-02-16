@@ -6,15 +6,15 @@
     <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
         <div class="row">
             <div class="col-12">
-                <span class="benefit-title">Effects of {{row[0][0]}} on {{row[0][1]}}</span>
+                <span class="benefit-title">Effects of {{row[0][0]}} on {{row[0][2]}}</span>
             </div>
             <div class="col-12" *ngFor="let detail of row">
                 <br>
-                <div class="bullet-point"><img class="effect-icon" [src]="getIcon(detail[2])" /></div>
-                <div class="description"><span>{{detail[3]}}</span></div>
+                <div class="bullet-point"><img class="effect-icon" [src]="getIcon(detail[4])" /></div>
+                <div class="description"><span>{{detail[5]}}</span></div>
             <div class="col-12 reference-link">
-                <a [href]="detail[4]" target="_blank">
-                Source: {{detail[4]}}
+                <a [href]="detail[6]" target="_blank">
+                Source: {{detail[6]}}
                 </a>
             </div>
             </div>

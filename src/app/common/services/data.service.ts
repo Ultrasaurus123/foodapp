@@ -7,6 +7,7 @@ export class DataService {
   public allFoods: Array<any> = [];
   public allConditions: Array<any> = [];
   public agreement: boolean = false;
+  public currentPageText: string;
   public currentPage: string;
   public footerMargin: boolean = false;
   public myCharts: Array<any> = [];

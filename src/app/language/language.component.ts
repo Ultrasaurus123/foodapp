@@ -10,13 +10,18 @@ import 'rxjs/add/operator/catch';
 import { DataService, TextService } from '../common';
 import { AppSettings } from '..';
 
+declare var google: any;  
+
 @Component({
   selector: 'language',
   styleUrls: ['./language.component.scss'],
   templateUrl: './language.component.html'
 })
+
+  
 export class LanguageComponent implements OnInit {
   private pageText: any = {};
+  private selectedLang: string;
   private languageSet: Array<{ name: string, code: string }> = [];
   private searchModel: string = '';
 
@@ -24,12 +29,15 @@ export class LanguageComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.footerMargin = false;
+    this.selectedLang = this.textService.language;
+    this.dataService.currentPage = 'Language';
     this.textService.getText(['Language']).subscribe(
-      text => this.dataService.currentPage = text[0]);
+      text => this.dataService.currentPageText = text[0]);
     this.textService.getText(['Search:']).subscribe(
       text => this.pageText.search = text);
     this.languageSet = AppSettings.LANGUAGES;
+
+    new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
   }
 
   private searchValueChanged(newValue) {
@@ -39,5 +47,10 @@ export class LanguageComponent implements OnInit {
     //this.languageSet = AppSettings.LANGUAGES.filter(item => {
     //  return item.name.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
     //});
+  }
+
+  private changeLanguage(languageCode: string): void {
+    this.textService.language = languageCode;
+    this.router.navigateByUrl('home');
   }
 }

@@ -19,6 +19,7 @@ export class PageHeaderComponent implements OnInit {
   public menuItems: Array<{ name: string, display: string, link: string }>;
 
   private pageTitle: string;
+  private displays: Array<string>;
   private footerMargin: boolean;
   private myChartsActive: boolean;
   private self: any;
@@ -27,8 +28,12 @@ export class PageHeaderComponent implements OnInit {
 
   public ngOnInit() {
     this.menuItems = AppSettings.NAV_MENU;
-    let displays = this.menuItems.map(elem => { return elem.display; });
-    this.textService.getText(displays).subscribe(
+    this.displays = this.menuItems.map(elem => { return elem.display; });   
+    this.updateMenuItems();
+  }
+
+  public updateMenuItems() {
+     this.textService.getText(this.displays).subscribe(
       text => {
         for (let i = 0; i < this.menuItems.length; i++) {
           this.menuItems[i].display = text[i];
@@ -38,9 +43,13 @@ export class PageHeaderComponent implements OnInit {
   }
 
   public ngDoCheck() {
-    this.pageTitle = this.dataService.currentPage;
+    if (this.textService.languageChanged) {
+      this.updateMenuItems();
+      this.textService.languageChanged = false;
+    } 
+    this.pageTitle = this.dataService.currentPageText;
     this.footerMargin = false;
-    if (this.pageTitle === 'Home' && this.dataService.footerMargin) {
+    if (this.dataService.currentPage === 'Home' && this.dataService.footerMargin) {
       this.footerMargin = true;
     }
     let myCharts = localStorage.getItem('myCharts');

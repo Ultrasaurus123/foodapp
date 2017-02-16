@@ -16,6 +16,7 @@ export class AgreementComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
+    this.dataService.currentPageText = 'Disclaimer';
     this.dataService.currentPage = 'Disclaimer';
   }
 

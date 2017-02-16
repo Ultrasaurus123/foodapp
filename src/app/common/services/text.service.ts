@@ -5,8 +5,16 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class TextService {
-    private language: string = 'fr';
+    public languageChanged: boolean = false;
 
+    private _language: string = 'en';
+    get language(): string {
+        return this._language;
+    }
+    set language(code: string) {
+        this._language = code;
+        this.languageChanged = true;
+    }
     private static _instance: TextService;
     private static _languages: Array<{ name: string, code: string }>;
 
@@ -17,14 +25,16 @@ export class TextService {
         return TextService._instance = TextService._instance || this;
     }
 
+    get
+
     public getText(source: Array<string>): Observable<Array<string>> {
         if (!source || source.length === 0) {
             return null;
         }
         if (this.language === 'en') {
-            return Observable.create(source);
+            return Observable.of(source);
         }
-        let queryString = source.join(' %% ');
+        let queryString = source.join('. ');
 
         return this.http.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + this.language + '&dt=t&q=' + encodeURI(queryString))
             .map(res => {
@@ -32,24 +42,45 @@ export class TextService {
                 while (text.indexOf(',,') > -1) {
                     text = text.replace(',,', ',');
                 }
-                let translation = JSON.parse(text)[0][0][0];
-                if (translation.indexOf(' %% ') === -1) {
-                    return [translation];
-                }
+                console.log(JSON.parse(text));
+
+                let translations = JSON.parse(text)[0];
                 let parsedStrings: Array<string> = [];
-                let parseIndex = translation.indexOf(' %% ');
-                while (parseIndex > -1) {
-                    parsedStrings.push(translation.substring(0, parseIndex));
-                    translation = translation.slice(parseIndex + 4);
-                    parseIndex = translation.indexOf(' %% ');
+                console.log(translations);
+                for (let i = 0; i < translations.length; i++) {
+                    let translation = translations[i][0];
+                                    console.log(translation);
+
+                    if (translation.indexOf('. ') === -1) {
+                        parsedStrings.push(translation);
+                        continue;
+                    }
+                    let parseIndex = translation.indexOf('. ');
+                    while (parseIndex > -1) {
+                        parsedStrings.push(translation.substring(0, parseIndex));
+                        translation = translation.slice(parseIndex + 4);
+                        parseIndex = translation.indexOf('. ');
+                    }
                 }
-                parsedStrings.push(translation);
+                console.log(parsedStrings);
+                // let translation = JSON.parse(text)[0][0][0];
+                // if (translation.indexOf('. ') === -1) {
+                //     return [translation];
+                // }
+                // let parsedStrings: Array<string> = [];
+                // let parseIndex = translation.indexOf('. ');
+                // while (parseIndex > -1) {
+                //     parsedStrings.push(translation.substring(0, parseIndex));
+                //     translation = translation.slice(parseIndex + 4);
+                //     parseIndex = translation.indexOf('. ');
+                // }
+                // parsedStrings.push(translation);
                 return parsedStrings;
             });
         //   .catch(this.handleError)
     }
 
-    public getLanguages(): Array<{name: string, code: string}> {
+    public getLanguages(): Array<{ name: string, code: string }> {
         return TextService._languages;
     }
 

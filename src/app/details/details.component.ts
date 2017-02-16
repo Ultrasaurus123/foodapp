@@ -30,7 +30,8 @@ export class DetailsComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'Effect Information';
+    this.dataService.currentPage = 'Benefits Table';
+    this.dataService.currentPageText = 'Benefits Table';
     //get state of this page
     this.view = sessionStorage.getItem('view');
     this.detailIndex = (this.view === 'food') ? 1 : 0;
