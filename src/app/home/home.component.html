@@ -1,4 +1,4 @@
-<div class="home-container" *ngIf="!showFood && !showCondition">
+<div class="home-container">
   <div class="col-12">
     <h3>{{pageText.headline}}</h3>
     <hr>
@@ -12,43 +12,5 @@
         <button class="button" [class.btn-selected]="showCondition" (click)="showItemList('condition')">{{pageText.conditions}}</button>
       </div>
     </div>
-  </div>
-</div>
-
-<div *ngIf="showFood || showCondition" class="m-t-10">
-
-  <div class="selection-container" *ngIf="showFood">
-    <div class="checkbox-container">
-      <div *ngFor="let food of (searchModel.length > 0) ? itemSet : dataService.allFoods" (click)="(checkedFoods < maxSelections || food.checked) && onSelectItem(food, 'food')" 
-      [class.checked]="food.checked" [class.disabled]="checkedFoods >= maxSelections && !food.checked" class="p-l-15">
-        <span [id]="'item-' + food.item">{{food.item}}</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="selection-container" *ngIf="showCondition">
-    <div class="checkbox-container">
-      <div *ngFor="let condition of (searchModel.length > 0) ? itemSet : dataService.allConditions" [class.checked]="condition.checked" 
-        [class.disabled]="checkedConditions >= maxSelections && !condition.checked" class="p-l-15"
-        (click)="(checkedConditions < maxSelections || condition.checked) && onSelectItem(condition, 'condition')">
-        <span [id]="'item-' + condition.item">{{condition.item}}</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="col-12" *ngIf="showFood || showCondition">
-  <div class="row footer">
-    <div class="col-12">
-      {{pageText.search}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
-    </div>
-    <div class="col-6">
-      <button class="button" (click)="clickBack()">{{pageText.back}}</button>
-    </div>
-    <div class="col-6">
-      <button class="button" [class.btn-disabled]="(showCondition && checkedConditions === 0) || (showFood && checkedFoods === 0)"
-        (click)="selectItems()">{{pageText.continue}}</button>
-    </div>
-
   </div>
 </div>

@@ -1,0 +1,13 @@
+<div class="table-container">
+    <div class="col-12">
+        <span class="detail-header">{{pageHeader}}</span>
+        <hr>
+    </div>
+            <div class="col-12 warnings-section" *ngIf="warningsObject[item.toLowerCase()]">
+                <ul>
+                    <li class="warning" *ngFor="let warning of warningsObject[item.toLowerCase()].warnings; let index = index;">
+                         {{warning}} <a [href]="warningsObject[item.toLowerCase()].sources[index]" target="_blank">(Source)</a>
+                    </li>
+                </ul>
+            </div>
+</div>

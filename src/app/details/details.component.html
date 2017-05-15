@@ -8,6 +8,9 @@
             <div class="col-12">
                 <span class="benefit-title">Effects of {{row[0][0]}} on {{row[0][2]}}</span>
             </div>
+            <div class="col-12" *ngIf="warningsObject[row[0][0].toLowerCase()]">
+                <a [routerLink]="['/warnings']" [queryParams]="{food: row[0][0]}"><span class="warnings-title">See warnings regarding {{row[0][0]}}</span></a>
+            </div>
             <div class="col-12" *ngFor="let detail of row">
                 <br>
                 <div class="bullet-point"><img class="effect-icon" [src]="getIcon(detail[4])" /></div>
@@ -25,14 +28,16 @@
 
 <!--<img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">-->
 
-
-<!--
-<ul id="rig">
-    <li *ngFor="let image of images">
-        <a class="rig-cell">
-            <img [src]="image.image.thumbnailLink" [width]="150" [height]="150" />
-            <span class="rig-overlay"></span>
-            <span class="rig-text">Lorem Ipsum Dolor</span>
-        </a>
-    </li>
-</ul>-->
+<div class="col-12">
+    <span style="font-size: 14px">
+        Images of {{searchItem}} (<a [href]="getImageSearchURL()" target="_blank">Source: Google search</a>)
+    </span>
+    <ul id="rig">
+        <li *ngFor="let image of images">
+            <a class="rig-cell">
+                <img [src]="image.image.thumbnailLink" [width]="150" [height]="150" />
+                <span class="rig-overlay"></span>
+            </a>
+        </li>
+    </ul>    
+</div>

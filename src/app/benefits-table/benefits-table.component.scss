@@ -16,7 +16,7 @@
     font-size: 12px;
 }
 
-.benefits-table th, .benefits-table tbody td {
+.benefits-table thead th, .benefits-table tbody td {
     border: 1px solid #ccc;
     font-size: 12px;
 
@@ -50,26 +50,34 @@
     background-color: $nav-button-color !important;
 }
 
+tr:hover {
+    background-color: $nav-button-color !important;
+}
+
 .first-heading {
     text-align: left;      
 }
 
-.text-vertical {
-    height: 150px;
-    max-width: 16px !important;
-    transform: translate(69px, 55px) rotate(270deg);
-    white-space: nowrap;
+.table-headings {
+    @media (max-width: 414px) { 
+        height: 150px;
+        max-width: 16px !important;
+        transform: translate(0px, 30px) rotate(270deg);
+        white-space: nowrap;
 
-
-    // text-align:center;
-    // white-space:nowrap;
-    // transform-origin:50% 50%;
-    // -webkit-transform: rotate(270deg);
-    // -moz-transform: rotate(270deg);
-    // -ms-transform: rotate(270deg);
-    // -o-transform: rotate(270deg);
-    // transform: rotate(270deg);
-    
+        // text-align:center;
+        // white-space:nowrap;
+        // transform-origin:50% 50%;
+        // -webkit-transform: rotate(270deg);
+        // -moz-transform: rotate(270deg);
+        // -ms-transform: rotate(270deg);
+        // -o-transform: rotate(270deg);
+        // transform: rotate(270deg);    
+    }
+    @media (min-width: 415px) {    
+        text-align: center;
+        vertical-align: bottom;
+    }
 }
 
 .effect-icon {
@@ -79,7 +87,7 @@
 }
 
 .legend-text {
-    font-size: 12px;
+    font-size: 9px;
     padding: 2px 0 2px 0;
     margin-left: 10px;
     // color: white;

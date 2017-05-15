@@ -48,10 +48,7 @@ export class PageHeaderComponent implements OnInit {
       this.textService.languageChanged = false;
     } 
     this.pageTitle = this.dataService.currentPageText;
-    this.footerMargin = false;
-    if (this.dataService.currentPage === 'Home' && this.dataService.footerMargin) {
-      this.footerMargin = true;
-    }
+    this.footerMargin = (this.dataService.currentPage === 'Search');
     let myCharts = localStorage.getItem('myCharts');
     if (myCharts) {
       this.dataService.myCharts = JSON.parse(myCharts);

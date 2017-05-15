@@ -74,9 +74,9 @@ export class BenefitsTableComponent implements OnInit {
   private initServiceCall = function () {
     let query = '';
     if (this.view === 'food') {
-      query = 'foods=' + this.selected.join();
+      query = 'foods=' + encodeURIComponent(this.selected.join());
     } else if (this.view === 'condition') {
-      query = 'conditions=' + this.selected.join();
+      query = 'conditions=' + encodeURIComponent(this.selected.join());
     }
 
     this.http.get(AppSettings.API_ENDPOINT + 'getCompactData?' + query)

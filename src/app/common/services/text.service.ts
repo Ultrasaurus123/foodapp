@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DataService } from './data.service';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 
@@ -18,7 +17,7 @@ export class TextService {
     private static _instance: TextService;
     private static _languages: Array<{ name: string, code: string }>;
 
-    constructor(private http: Http, private dataService: DataService) {
+    constructor(private http: Http) {
         if (!TextService._languages || TextService.length === 0) {
             this.initLanguages();
         }

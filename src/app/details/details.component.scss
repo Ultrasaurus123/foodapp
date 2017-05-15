@@ -13,7 +13,12 @@
 .table-container {
     margin-top: 70px;
     margin-bottom: 20px;
+}
 
+.warnings-title {
+    padding-left: 16px;
+    font-size: 10px;
+    color: #FF0000;
 }
 
 .table-container-outer { 
@@ -144,8 +149,8 @@
         
 /* The wrapper for each item */
 .rig-cell {
-    /*margin:12px;
-    box-shadow:0 0 6px rgba(0,0,0,0.3);*/
+    margin:12px;
+    // box-shadow:0 0 6px rgba(0,0,0,0.3);
     display:block;
     overflow:hidden;
 }

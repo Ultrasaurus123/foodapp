@@ -25,17 +25,19 @@ export class DetailsComponent implements OnInit {
   private images: Array<any> = [];
   private pageHeader: string;
   private dataObject: any = {};
+  private warningsObject: any = {};
+  private searchItem: string;
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'Benefits Table';
-    this.dataService.currentPageText = 'Benefits Table';
+    this.dataService.currentPage = 'Details';
+    this.dataService.currentPageText = 'Explanation of Benefits and Effects';
     //get state of this page
     this.view = sessionStorage.getItem('view');
-    this.detailIndex = (this.view === 'food') ? 1 : 0;
-    this.selectedIndex = (this.view === 'food') ? 0 : 1;
+    this.detailIndex = (this.view === 'food') ? 2 : 0;
+    this.selectedIndex = (this.view === 'food') ? 0 : 2;
     let detailsString: string = sessionStorage.getItem('details');
     let details: any = JSON.parse(detailsString);
     this.detailItem = (this.view === 'condition') ? details.food : details.condition;
@@ -53,34 +55,32 @@ export class DetailsComponent implements OnInit {
   }
 
   private init = function () {
-
-    // GOOGLE IMAGE API
-    let imageQuery = this.detailItem;
-    this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=8&safe=high&fields=items(image)&q=' + imageQuery)
-      .map(res => { return res.json() })
-      .catch(this.handleError)
-      .subscribe(res => this.images = res.items,
-      error => console.error('Error getting cross reference data: ' + error)
-      );
-
     let query = '';
     if (this.view === 'food') {
-      query = 'foods=' + this.selectedItems.join() + '&conditions=' + this.detailItem;
+      query = 'foods=' + encodeURIComponent(this.selectedItems.join()) + '&conditions=' + encodeURIComponent(this.detailItem);
     } else if (this.view === 'condition') {
-      query = 'foods=' + this.detailItem + '&conditions=' + this.selectedItems.join();
+      query = 'foods=' + encodeURIComponent(this.detailItem) + '&conditions=' + encodeURIComponent(this.selectedItems.join());
     }
     this.http.get(AppSettings.API_ENDPOINT + 'getData?' + query)
       .map(res => { return res.json() })
       .catch(this.handleError)
       .subscribe(data => this.processData(data),
       error => console.error('Error getting cross reference data: ' + error)
+    );
+    
+    let warningQuery = 'foods=';
+    warningQuery += (this.view === 'food') ? encodeURIComponent(this.selectedItems.join()) : encodeURIComponent(this.detailItem);
+    this.http.get(AppSettings.API_ENDPOINT + 'getWarnings?' + warningQuery)
+      .map(res => { return res.json() })
+      .catch(this.handleError)
+      .subscribe(data => this.processWarningsData(data),
+      error => console.error('Error getting warnings data: ' + error)
       );
   };
 
   private processData(data: Array<any>) {
     this.dataArray = [];
-    data = data.slice(1);
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 1; i < data.length; i++) {
       this.dataObject[data[i][this.selectedIndex]] = this.dataObject[data[i][this.selectedIndex]] || [];
       this.dataObject[data[i][this.selectedIndex]].push(data[i]);
     }
@@ -89,6 +89,42 @@ export class DetailsComponent implements OnInit {
       this.dataArray.push(this.dataObject[keys[k]]);
     }
     console.log(this.dataArray);
+    this.getImages();
+  }
+  
+  private processWarningsData(data: Array<any>) {
+    // skip headings
+    for (let i = 1; i < data.length; i++) {
+      let item = data[i][0].toLowerCase();
+      this.warningsObject[item] = this.warningsObject[item] || { warnings: [], sources: [] };
+      this.warningsObject[item].warnings.push(data[i][1]);
+      this.warningsObject[item].sources.push(data[i][2]);
+    }
+    console.log(this.warningsObject);
+  }
+
+  private getImages() {
+    // GOOGLE IMAGE API
+    this.searchItem = this.detailItem;
+    let searchTermIndex = this.detailIndex + 1;
+    if (this.view === 'food') {
+      this.searchItem = this.selectedItems[0];
+      searchTermIndex = this.selectedIndex + 1;
+    }
+    let imageQuery = this.searchItem
+    if (this.dataArray.length > 0 && this.dataArray[0].length > 0) {
+      imageQuery += ' ' + this.dataArray[0][0][searchTermIndex];
+    }
+    this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
+      .map(res => { return res.json() })
+      .catch(this.handleError)
+      .subscribe(res => this.images = res.items,
+      error => console.error('Error getting cross reference data: ' + error)
+      );
+  }
+
+  private getImageSearchURL() {
+    return 'https://www.google.com/search?safe=active&q=' + encodeURIComponent(this.detailItem);
   }
 
   private getIcon = function (benefit: string): string {

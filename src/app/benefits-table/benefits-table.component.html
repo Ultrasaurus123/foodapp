@@ -4,26 +4,26 @@
         <div class="dropdown col-4" [class.selected]="showSort">
             <button class="dropbtn" (click)="showSort = !showSort">Sort</button>
             <div class="dropdown-content" >
-                <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
-                <a (click)="sort('benefit')">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
-                <a (click)="sort('effect')">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+                <a (click)="sort('az'); showSort = false;">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
+                <a (click)="sort('benefit'); showSort = false;">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
+                <a (click)="sort('effect'); showSort = false;">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
             </div>
         </div>
         <!-- filter drop down -->
         <div class="dropdown col-4" [class.selected]="showFilter">
-            <button class="dropbtn" (click)="showFilter = !showFilter">Filter</button>
+            <button class="dropbtn" (click)="showFilter = !showFilter">Hide</button>
             <div class="dropdown-content">
                 <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
-                    <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event)"
+                    <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event); showFilter = false;"
                         [disabled]="false" [ngModel]="option.checked" />
                     <label class="m-b-0" [for]="'item' + i">
                     {{option.name}}
                 </label>
                 </div>
-                <hr>
-                <a (click)="removeRows()">Hide Selected</a>
-                <a (click)="showAllRows()">Unhide All</a>
-                <a (click)="saveChart()">Save Chart</a>
+                <hr (click)="showFilter = false">
+                <a (click)="removeRows(); showFilter = false;">Hide Selected</a>
+                <a (click)="showAllRows(); showFilter = false;">Unhide All</a>
+                <a (click)="saveChart(); showFilter = false;">Save Chart</a>
             </div>
         </div>
 
@@ -34,32 +34,32 @@
         <!-- legend drop down -->
         <div class="dropdown col-2 text-right" [class.selected]="showLegend">
             <button class="dropbtn btn-icon" (click)="showLegend = !showLegend">?</button>
-            <div class="dropdown-content">
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</div>
+            <div class="dropdown-content" (click)="showLegend = false">
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial or healing</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Enhances or assists benefits</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed health effects</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits or reduces benefits</div>
+                <div class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Harmful or undesirable side effects</div>
             </div>
         </div>
     </div>
-<div class="table-container-outer">
     <div class="table-container">
-
         <table class="benefits-table">
-            <th style="vertical-align: bottom">
-                <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial Effect</span><br>
+            <thead>
+            <th style="vertical-align: middle">
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial</span><br>
                 <span class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</span><br>
-                <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed Effects</span><br>
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed</span><br>
                 <span class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</span><br>
-                <span class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative Effect</span><br>
-                <br>
-                <span class="first-heading">{{heading}}</span>
+                <span class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative</span><br>
+                <!--<br>
+                <span class="first-heading">{{heading}}</span>-->
             </th>
-            <th class="text-vertical" *ngFor="let selectionHeading of selected">
+            <th class="table-headings" *ngFor="let selectionHeading of selected">
                 <div><span>{{selectionHeading}}</span></div>
             </th>
-
+            </thead>
+            <tbody>
             <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
                 <td (click)="selectItem(item, i)">
                     {{item.item}}
@@ -68,6 +68,6 @@
                     <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
                 </td>
             </tr>
+            </tbody>
         </table>
     </div>
-</div>

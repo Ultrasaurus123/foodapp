@@ -51,43 +51,48 @@ export class HomeComponent implements OnInit {
       text => this.pageText.pageInfo = text);
     this.textService.getText(['To get started, choose what you want to search by:']).subscribe(
       text => this.pageText.getStarted = text);
-    this.textService.getText(['Foods', 'Conditions', 'Back', 'Continue', 'Search:']).subscribe(text => { 
+    this.textService.getText(['Foods', 'Conditions', 'Deselect All', 'Continue', 'Search:']).subscribe(text => { 
       console.log(text);
       this.pageText.foods = text[0];
       this.pageText.conditions = text[1];
-      this.pageText.back = text[2]
+      this.pageText.deselectAll = text[2]
       this.pageText.continue = text[3];
       this.pageText.search = text[4];
     });
 
-    this.http.get(AppSettings.API_ENDPOINT + 'foods')
-      .map(this.extractData)
-      .catch(this.handleError)
-      .subscribe(
-      foods => {
-        this.dataService.allFoods = foods; this.textService.getText(this.dataService.allFoods.map(function (elem) {
-          return elem.item;
-        })).subscribe(
-          data => console.log(data)
-          );
-      },
-      error => console.error('Error getting all foods: ' + error));
+    this.dataService.loadFoods();
+    this.dataService.loadConditions();
 
-    this.http.get(AppSettings.API_ENDPOINT + 'conditions')
-      .map(this.extractData)
-      .catch(this.handleError)
-      .subscribe(
-      conditions => this.dataService.allConditions = conditions,
-      error => console.error('Error getting all conditions: ' + error));
+  //   this.http.get(AppSettings.API_ENDPOINT + 'foods')
+  //     .map(this.extractData)
+  //     .catch(this.handleError)
+  //     .subscribe(
+  //     foods => {
+  //       this.dataService.allFoods = foods; this.textService.getText(this.dataService.allFoods.map(function (elem) {
+  //         return elem.item;
+  //       })).subscribe(
+  //         data => console.log(data)
+  //         );
+  //     },
+  //     error => console.error('Error getting all foods: ' + error));
 
+  //   this.http.get(AppSettings.API_ENDPOINT + 'conditions')
+  //     .map(this.extractData)
+  //     .catch(this.handleError)
+  //     .subscribe(
+  //     conditions => this.dataService.allConditions = conditions,
+  //     error => console.error('Error getting all conditions: ' + error));
   }
 
   private showItemList(type) {
-    window.scrollTo(0, 0);
-    this.searchModel = '';
-    this.showFood = type === 'food';
-    this.showCondition = type === 'condition';
-    this.dataService.footerMargin = true;
+    sessionStorage.setItem('view', type);
+    this.router.navigateByUrl('search');
+
+    // window.scrollTo(0, 0);
+    // this.searchModel = '';
+    // this.showFood = type === 'food';
+    // this.showCondition = type === 'condition';
+    // this.dataService.footerMargin = true;
   }
 
   private onSelectItem(item: any, type: string) {
@@ -107,7 +112,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private clickBack = function () {
+  private deselectAll = function () {
     this.showFood = this.showCondition = false;
     this.dataService.footerMargin = false;
   }

@@ -1,0 +1,47 @@
+/*styles for home content only*/
+@import '../../styles/variables';
+
+.selection-container {
+    margin-bottom: 105px;
+}
+
+.selection-container > select {
+  height: 100%;
+}
+
+.checkbox-container {
+    height: 100%;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+.button-container {
+    height: 60px;
+
+    .button {
+        float: left;
+        width: 33.33%;
+    }
+}
+
+div .checked {
+    background: $nav-button-color;
+    color: white;
+}
+
+div .disabled {
+    color: lightgray;
+}
+
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    height: 85px;
+
+    .button {
+        margin: 0 25px 0 0;
+    }
+}

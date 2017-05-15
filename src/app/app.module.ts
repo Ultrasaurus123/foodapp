@@ -28,9 +28,11 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { PageHeaderComponent } from './common';
 import { AgreementComponent } from './agreement';
 import { HomeComponent } from './home';
+import { SearchComponent } from './search';
 import { MyChartsComponent } from './my-charts';
 import { BenefitsTableComponent } from './benefits-table';
 import { DetailsComponent } from './details';
+import { WarningsComponent } from './warnings';
 import { LanguageComponent } from './language';
 import { NoContentComponent } from './no-content';
 
@@ -73,9 +75,11 @@ type StoreType = {
     PageHeaderComponent,
     AgreementComponent,
     HomeComponent,
+    SearchComponent,
     MyChartsComponent,
     BenefitsTableComponent,
     DetailsComponent,
+    WarningsComponent,
     LanguageComponent,
     NoContentComponent,
     KeysPipe,
@@ -88,7 +92,7 @@ type StoreType = {
     FormsModule,
     HttpModule,
     BootstrapModalModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   entryComponents: [
     ConfirmModalComponent,
@@ -147,10 +151,14 @@ export class AppModule {
 
 // Global Application Settings
 export class AppSettings {
-  public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
+  //public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
+  // LOCAL TESTING
+  public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static MAX_SELECTIONS: number = 10;
   public static NAV_MENU: Array<{ name: string, display: string, link: string }> = [
     { name: 'Home', display: 'Home', link: 'home' },
+    { name: 'Search by food', display: 'Search by food', link: 'search#food' },
+    { name: 'Search by condition', display: 'Search by condition', link: 'search#condition' },
     { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
     { name: 'Language', display: 'Language', link: 'language' },
     { name: 'Help', display: 'Help', link: 'help' },
