@@ -10,7 +10,7 @@ import { TextService } from './text.service';
 @Injectable()
 export class DataService {
 
-  public appName: string = 'Food App';
+  public appName: string = 'Health Food Matrix';
   public allFoods: Array<any> = [];
   public allConditions: Array<any> = [];
   public agreement: boolean = false;

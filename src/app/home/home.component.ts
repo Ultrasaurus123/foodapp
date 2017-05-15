@@ -45,9 +45,9 @@ export class HomeComponent implements OnInit {
       text => this.dataService.currentPageText = text[0]);
     this.textService.getText(['Welcome to ' + this.dataService.appName]).subscribe(
       text => this.pageText.headline = text);
-    this.textService.getText([`This site identifies the impact of health foods on multiple but coexisting health concerns that is unique for each person.
-      Similarly, it identifies multiple medical conditions affected by your unique personal diet. You can customize this
-      application for your unique set of medical or health food needs.`]).subscribe(
+    this.textService.getText([`Have you ever wondered whether a health food you like for a specific medical reason could actually 
+    hurt you in other areas? ` + this.dataService.appName + ` helps you find the foods that could help you in multiple health areas while warning
+     you about side effects in other areas.`]).subscribe(
       text => this.pageText.pageInfo = text);
     this.textService.getText(['To get started, choose what you want to search by:']).subscribe(
       text => this.pageText.getStarted = text);

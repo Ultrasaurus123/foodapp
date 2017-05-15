@@ -28,6 +28,18 @@
     }
 }
 
+.btn-food {
+    background: $nav-button-food;
+    font-weight: 900;
+    color: $nav-button-food-text;
+}
+
+.btn-condition {
+    background: $nav-button-condition;
+    font-weight: 900;
+    color: $nav-button-condition-text;
+}
+
 div .checked {
     background: $nav-button-color;
     color: white;
