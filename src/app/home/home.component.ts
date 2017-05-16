@@ -45,10 +45,11 @@ export class HomeComponent implements OnInit {
       text => this.dataService.currentPageText = text[0]);
     this.textService.getText(['Welcome to ' + this.dataService.appName]).subscribe(
       text => this.pageText.headline = text);
-    this.textService.getText([`Have you ever wondered whether a health food you like for a specific medical reason could actually 
-    hurt you in other areas? ` + this.dataService.appName + ` helps you find the foods that could help you in multiple health areas while warning
-     you about side effects in other areas.`]).subscribe(
+    this.textService.getText([this.dataService.appName + 
+    ` helps you find foods that can help with certain medical conditions while warning you about potential side effects they may have on other conditions.`]).subscribe(
       text => this.pageText.pageInfo = text);
+    this.textService.getText(['Click here for a quick guide on using this application']).subscribe(
+      text => this.pageText.helpLink = text);
     this.textService.getText(['To get started, choose what you want to search by:']).subscribe(
       text => this.pageText.getStarted = text);
     this.textService.getText(['Foods', 'Conditions', 'Deselect All', 'Continue', 'Search:']).subscribe(text => { 

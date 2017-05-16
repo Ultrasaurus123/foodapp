@@ -52,12 +52,12 @@ export class SearchComponent implements OnInit {
     } else {
       this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
       this.dataService.currentPage = 'Search';
-      this.dataService.currentPageText = 'Search by ' + this.view;
+      this.dataService.currentPageText = 'Search by ' + (this.view === 'food' ? 'Health Food' : 'Medical Condition');
       this.dataService.footerMargin = true;
 
-      this.textService.getText(['Search by ' + this.view]).subscribe(
+      this.textService.getText([this.dataService.currentPageText]).subscribe(
         text => this.dataService.currentPageText = text[0]);
-      this.textService.getText(['Deselect All', 'Continue', 'Find:']).subscribe(text => {
+      this.textService.getText(['Deselect All', 'Search', 'Find:']).subscribe(text => {
         this.pageText.deselectAll = text[0]
         this.pageText.continue = text[1];
         this.pageText.search = text[2];

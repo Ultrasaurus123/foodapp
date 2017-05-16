@@ -19,6 +19,7 @@ export class DataService {
   public footerMargin: boolean = false;
   public myCharts: Array<any> = [];
   public selectedChart: any = {};
+  public disclaimerRedirectUrl: string;
 
   private static _instance: DataService;
 

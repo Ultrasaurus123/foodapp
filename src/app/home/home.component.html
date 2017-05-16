@@ -1,11 +1,12 @@
 <div class="home-container">
   <div class="col-12">
-    <h4>{{pageText.headline}}</h4>
+    <span class="page-header">{{pageText.headline}}</span>
     <hr>
-    <p>{{pageText.pageInfo}}</p>
+    <p style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
     <div style="text-align: center">
-    <img style="max-height: 300px; max-width: 100%" src="../../assets/img/screenshot.png" />
+    <img class="screen-shot" src="../../assets/img/screenshot.png" />
     </div>
+    <p class="help-link"><a [routerLink]="['/help']">{{pageText.helpLink}}</a></p>
     <p>{{pageText.getStarted}}</p>
     <div class="row">
       <div class="col-6">

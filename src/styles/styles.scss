@@ -18,9 +18,12 @@ body {
 }
 
 .button-icon {
-  height: 24px;
+  @media (max-width: 359px) { 
+    display: none
+  }
   padding-right: 5px;
   float: left;
+  height: 24px;
 }
 
 .button-label {
@@ -163,11 +166,11 @@ ul.topnav li:not(:first-child):not(.no-hover):not(.disabled) a:hover:not(.no-hov
 
 ul.topnav li.icon {display: none;}
 
-@media (min-width: 681px) {
+@media (min-width: 768px) {
     ul.topnav li:first-child {display: none;}
 }
 
-@media screen and (max-width:680px) {
+@media screen and (max-width: 767px) {
   ul.topnav li:not(:first-child) {display: none;}
   ul.topnav li.icon {
     float: right;
@@ -175,7 +178,7 @@ ul.topnav li.icon {display: none;}
   }
 }
 
-@media screen and (max-width:680px) {
+@media screen and (max-width: 767px) {
 //   ul.topnav.responsive {position: relative;}
   ul.topnav.responsive li.icon {
     position: absolute;

@@ -61,3 +61,29 @@ div .disabled {
         margin: 0 25px 0 0;
     }
 }
+
+.screen-shot {
+    max-height: 275px;
+    max-width: 100%;
+    
+    @media (max-width: 359px) { 
+        max-height: 250px;
+    }
+}
+
+p {
+    font-size: 14px;
+    
+    @media (max-width: 359px) { 
+    font-size: 12px;
+    }
+}
+
+p.help-link {
+    font-size: 12px;
+    font-weight: 900;
+    
+    @media (max-width: 359px) { 
+    font-size: 10px;
+    }
+}

@@ -33,6 +33,7 @@ import { MyChartsComponent } from './my-charts';
 import { BenefitsTableComponent } from './benefits-table';
 import { DetailsComponent } from './details';
 import { WarningsComponent } from './warnings';
+import { HelpComponent } from './help';
 import { LanguageComponent } from './language';
 import { NoContentComponent } from './no-content';
 
@@ -80,6 +81,7 @@ type StoreType = {
     BenefitsTableComponent,
     DetailsComponent,
     WarningsComponent,
+    HelpComponent,
     LanguageComponent,
     NoContentComponent,
     KeysPipe,
@@ -152,7 +154,7 @@ export class AppModule {
 // Global Application Settings
 export class AppSettings {
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
-  // // LOCAL TESTING
+  // LOCAL TESTING
   // public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static MAX_SELECTIONS: number = 10;
   public static NAV_MENU: Array<{ name: string, display: string, link: string }> = [

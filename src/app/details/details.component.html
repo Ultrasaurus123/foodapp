@@ -1,6 +1,6 @@
 <div class="table-container">
     <div class="col-12">
-        <span class="detail-header">{{pageHeader}}</span>
+        <span class="page-header">{{pageHeader}}</span>
         <hr>
     </div>
     <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
@@ -30,7 +30,7 @@
 
 <div class="col-12">
     <span style="font-size: 14px">
-        Images of {{searchItem}} (<a [href]="getImageSearchURL()" target="_blank">Source: Google search</a>)
+        Images of {{detailItem}} (<a [href]="getImageSearchURL()" target="_blank">Source: Google search</a>)
     </span>
     <ul id="rig">
         <li *ngFor="let image of images">

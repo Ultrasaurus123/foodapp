@@ -31,16 +31,9 @@
         <div class="col-2">
         </div>
 
-        <!-- legend drop down -->
-        <div class="dropdown col-2 text-right" [class.selected]="showLegend">
-            <button class="dropbtn btn-icon" (click)="showLegend = !showLegend">?</button>
-            <div class="dropdown-content" (click)="showLegend = false">
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial or healing</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Enhances or assists benefits</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed health effects</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits or reduces benefits</div>
-                <div class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Harmful or undesirable side effects</div>
-            </div>
+        <!-- help button -->
+        <div class="col-2 text-right">
+            <button class="dropbtn btn-icon" (click)="goToHelp()">?</button>
         </div>
     </div>
     <div class="table-container">

@@ -26,7 +26,6 @@ export class DetailsComponent implements OnInit {
   private pageHeader: string;
   private dataObject: any = {};
   private warningsObject: any = {};
-  private searchItem: string;
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
@@ -105,15 +104,10 @@ export class DetailsComponent implements OnInit {
 
   private getImages() {
     // GOOGLE IMAGE API
-    this.searchItem = this.detailItem;
-    let searchTermIndex = this.detailIndex + 1;
-    if (this.view === 'food') {
-      this.searchItem = this.selectedItems[0];
-      searchTermIndex = this.selectedIndex + 1;
-    }
-    let imageQuery = this.searchItem
+
+    let imageQuery = this.detailItem;
     if (this.dataArray.length > 0 && this.dataArray[0].length > 0) {
-      imageQuery += ' ' + this.dataArray[0][0][searchTermIndex];
+      imageQuery += ' ' + this.dataArray[0][0][this.detailIndex + 1];
     }
     this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
       .map(res => { return res.json() })

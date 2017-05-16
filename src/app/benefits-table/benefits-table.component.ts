@@ -341,6 +341,10 @@ export class BenefitsTableComponent implements OnInit {
     this.router.navigateByUrl('details');
   }
 
+  private goToHelp() {
+    this.router.navigateByUrl('help');
+  }
+
   private handleError(error: Response | any) {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string;

@@ -23,6 +23,6 @@ export class AgreementComponent implements OnInit {
   private clickAgree() {
     localStorage.setItem('agreement', 'true');
     this.dataService.agreement = true;
-    this.router.navigateByUrl('home');
+    this.router.navigateByUrl(this.dataService.disclaimerRedirectUrl);
   }
 }
