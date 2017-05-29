@@ -40,7 +40,7 @@ export class DetailsComponent implements OnInit {
     let detailsString: string = sessionStorage.getItem('details');
     let details: any = JSON.parse(detailsString);
     this.detailItem = (this.view === 'condition') ? details.food : details.condition;
-    let selectedString: string = sessionStorage.getItem('selected');
+    let selectedString: string = sessionStorage.getItem('selected' + this.view);
     this.selectedItems = JSON.parse(selectedString);
 
 

@@ -33,10 +33,7 @@ export class SearchComponent implements OnInit {
   }
   
   public ngDoCheck() {
-    let hash = window.location.hash.substring(1);
-    if (hash && hash !== this.view) {
-      this.init();
-    }
+    this.init();
   }
 
   private init() {
@@ -62,8 +59,8 @@ export class SearchComponent implements OnInit {
         this.pageText.continue = text[1];
         this.pageText.search = text[2];
       });
+      this.checkedItems = 0;
       let selectedItems = sessionStorage.getItem('selected' + this.view);
-      console.log(selectedItems);
       if (selectedItems) {
         this.initSelectedItems(JSON.parse(selectedItems));
       }
@@ -77,6 +74,9 @@ export class SearchComponent implements OnInit {
   private onSelectItem(item: any) {
     item.checked = !item.checked;
     this.checkedItems += (item.checked) ? 1 : -1;
+    let selectedItems = this.getSelectedItems();
+    let itemName = 'selected' + this.view;
+    sessionStorage.setItem(itemName, JSON.stringify(selectedItems));
   }
 
   private deselectAll = function () {
@@ -94,7 +94,6 @@ export class SearchComponent implements OnInit {
       let selectedItems = this.getSelectedItems();
       let itemName = 'selected' + this.view;
       sessionStorage.setItem(itemName, JSON.stringify(selectedItems));
-      sessionStorage.setItem('selected', JSON.stringify(selectedItems));
       this.router.navigateByUrl('benefits');
     }
   }

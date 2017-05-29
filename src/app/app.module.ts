@@ -162,9 +162,9 @@ export class AppSettings {
     { name: 'Search by food', display: 'Search by food', link: 'search#food' },
     { name: 'Search by condition', display: 'Search by condition', link: 'search#condition' },
     { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
-    { name: 'Language', display: 'Language', link: 'language' },
+ //   { name: 'Language', display: 'Language', link: 'language' },
     { name: 'Help', display: 'Help', link: 'help' },
-    { name: 'About', display: 'About', link: 'about' }];
+    { name: 'Disclaimer', display: 'Disclaimer', link: 'disclaimer' }];
   
   public static LANGUAGES: Array<{ name: string, code: string }> = [
             { name: 'Afrikaans', code: 'af' },

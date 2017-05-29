@@ -18,6 +18,8 @@ export class AgreementComponent implements OnInit {
     window.scrollTo(0, 0);
     this.dataService.currentPageText = 'Disclaimer';
     this.dataService.currentPage = 'Disclaimer';
+    let agreement = localStorage.getItem('agreement');
+    this.dataService.agreement = agreement === 'true';
   }
 
   private clickAgree() {

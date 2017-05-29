@@ -11,6 +11,6 @@
 <div class="row m-b-20">
     <div class="col-12">
         <div *ngFor="let chart of myCharts; let i = index;" class="p-l-15">
-            <span (click)="selectMyChart(chart)">{{chart.name}}</span><span (click)="deleteMyChart(i)" class="remove-icon">&#215;</span>
+            <span (click)="selectMyChart(chart)">{{chart.name}}</span><span (click)="deleteMyChart(i)" class="remove-icon">&#215;</span><span (click)="shareMyChart(i)" class="remove-icon">share</span>
         </div>
     </div>

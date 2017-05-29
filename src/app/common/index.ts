@@ -9,3 +9,5 @@ export * from './services/can-activate-agreement';
 export * from './pipes/keys-iterator.pipe';
 
 export * from './directives/focus.directive';
+
+export * from './interfaces/chart.interface';

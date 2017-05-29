@@ -1,19 +1,22 @@
 <div class="col-12 selection-container">
+    <span class="page-header">Disclaimer</span>
     <p>
-        The contents of this web site are provided for general information and are not intended to offer medical advice, diagnose
-        health problems or for treatment purposes. The information on this website is periodically updated but there is no
-        guarantee it is correct or up-to-date. Health-Foods-for-Coexistent-Medical-Conditions.com does not accept any responsibility
-        for any loss, which may arise from reliance on information contained on this site. The contents of this website are
-        protected by copyright under international conventions and, apart from certain information that is allowed to be
-        saved personal use, the reproduction of this website is prohibited without the prior written consent of Health-Foods-for-Coexistent-Medical-Conditions.com.
-        Links are provided to the other websites cited as sources of information. These links are provided for your convenience
-        and they do not imply a responsibility for or endorsement of the linked sites, their operators, or their contents.
-        Health-Foods-for-Coexistent-Medical-Conditions.com takes no responsibility due to mistranslation of the text from
-        English into other languages done by Google.
+        {{dataService.appName}} provides this website as a service.<br>
+        While the information contained within the site is periodically updated, no guarantee is given that the information provided in this website is correct, complete, and/or up-to-date.
+        The materials contained on this website are provided for general information purposes only and do not constitute legal or other professional advice on any subject matter. Nutrition-and-you.com does not accept any responsibility for any loss, which may arise from reliance on information contained on this site.
+        Permission may be given for the downloading and temporary storage of one or two of these pages for viewing on a personal computer. The contents of this site are protected by copyright under international conventions and, apart from the permission stated, the reproduction, permanent storage, or retransmission of the contents of this site is prohibited without the prior written consent of nutrition-and-you.com.
+        Some links within this website may lead to other websites, including those operated and maintained by third parties. Nutrition-and-you.com includes these links solely as a convenience to you, and the presence of such a link does not imply a responsibility for the linked site or an endorsement of the linked site, its operator, or its contents (exceptions may apply).
+        This website and its contents are provided ""AS IS"" without warranty of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+        Reproduction, distribution, republication, and/or retransmission of material contained within this website are prohibited unless the prior written permission of {{dataService.appName}} has been obtained.
+    </p>
+    <span class="page-header">Medical Disclaimer</span>
+    <p>
+        The information and reference guides in this website are intended solely for the general information for the reader. The contents of this web site are not intended to offer personal medical advice, diagnose health problems or for treatment purposes. It is not a substitute for medical care provided by a licensed and qualified health professional. Please consult your health care provider for any advice on medications. 
+        The information in the site does not mention brand names, nor does it endorse any particular products
     </p>
 </div>
 
-<div class="row m-b-20">
+<div class="row m-b-20" *ngIf="!dataService.agreement">
     <div class="col-12 text-center">
         <button class="button" (click)="clickAgree()">I Agree</button>
     </div>

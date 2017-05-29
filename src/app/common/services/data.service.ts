@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Http, Response } from '@angular/http';
 import { AppSettings } from '../..';
+import { Chart } from '..';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { TextService } from './text.service';
@@ -17,8 +18,8 @@ export class DataService {
   public currentPageText: string;
   public currentPage: string;
   public footerMargin: boolean = false;
-  public myCharts: Array<any> = [];
-  public selectedChart: any = {};
+  public myCharts: Array<Chart> = [];
+  public selectedChart: Chart = null;
   public disclaimerRedirectUrl: string;
 
   private static _instance: DataService;

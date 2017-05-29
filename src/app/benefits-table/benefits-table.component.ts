@@ -4,11 +4,11 @@ import {
 } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { DataService, PromptModalComponent } from '../common';
+import { DataService, PromptModalComponent, Chart } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 
 @Component({
@@ -25,27 +25,48 @@ export class BenefitsTableComponent implements OnInit {
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
   private selectedItems: Array<number> = [];
   private customHiddenItems: Array<number> = [];
+  private sub: any;
 
-  constructor(private http: Http, private router: Router, private dataService: DataService, private dialogService: DialogService) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService,
+    private dialogService: DialogService, private route: ActivatedRoute) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.currentPageText = 'Benefits Table';
     this.dataService.currentPage = 'Benefits Table';
-
+    this.sub = this.route
+      .queryParams
+      .subscribe(params => {
+        let customTable = params['customtable'] || '';
+        if (customTable) {
+          try {
+            let parsedChart = <Chart>JSON.parse(atob(customTable));
+            this.dataService.selectedChart = parsedChart;
+          } catch (e) {
+            console.error('Could not load custom chart, data malformed.');
+            this.router.navigateByUrl('home');
+          }
+        }
+        this.initNoParams();
+      });
+  }
+  
+  private initNoParams() {
     //check if it's a custom MyChart
     if (this.dataService.selectedChart && this.dataService.selectedChart.selected) {
       this.init();
       this.view = this.dataService.selectedChart.view;
       this.selected = this.dataService.selectedChart.selected;
       this.dataArray = this.dataService.selectedChart.dataArray;
-      this.dataService.selectedChart = {};
+      this.dataService.selectedChart = null;
+      if (!this.dataArray || this.dataArray.length === 0) {
+        this.initServiceCall();
+      }
     } else {
-
       //get state of this page
-      let selectedString: string = sessionStorage.getItem('selected');
-      this.selected = JSON.parse(selectedString);
       this.view = sessionStorage.getItem('view');
+      let selectedString: string = sessionStorage.getItem('selected' + this.view);
+      this.selected = JSON.parse(selectedString);
 
       if (!this.selected || !this.view) {
         this.router.navigateByUrl('home');
@@ -165,7 +186,7 @@ export class BenefitsTableComponent implements OnInit {
 
 
   private getSortOrderIcon = function (sortType): string {
-    if (this.currentSort.type === sortType) {
+    if (this.currentSort && this.currentSort.type === sortType) {
       if (this.currentSort.asc) {
         return '&#8593;';
       } else {
