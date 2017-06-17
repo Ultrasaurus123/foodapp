@@ -18,6 +18,7 @@ import { DialogService } from "ng2-bootstrap-modal";
 })
 export class BenefitsTableComponent implements OnInit {
   private selected: Array<string>;
+  private selectedHeadings: Array<string>;
   private view: string;
   private heading: string;
   private dataArray: Array<any>;
@@ -32,8 +33,8 @@ export class BenefitsTableComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Benefits Table';
-    this.dataService.currentPage = 'Benefits Table';
+    this.dataService.currentPageText = 'Benefits Matrix';
+    this.dataService.currentPage = 'Benefits Matrix';
     this.sub = this.route
       .queryParams
       .subscribe(params => {
@@ -72,7 +73,7 @@ export class BenefitsTableComponent implements OnInit {
         this.router.navigateByUrl('home');
       } else {
         this.init();
-        this.initServiceCall();
+        this.initServiceCall();      
       }
     }
   }
@@ -109,7 +110,8 @@ export class BenefitsTableComponent implements OnInit {
 
   }
 
-  private processData(data: Array<any>) {
+  private processData(data: Array<any>, defaultSort: string) {
+    this.processSelected();
     let hIndex: number = (this.view === 'food') ? 0 : 1;
     let dIndex: number = (this.view === 'food') ? 1 : 0;
     let dataHash = {};
@@ -124,8 +126,32 @@ export class BenefitsTableComponent implements OnInit {
     for (let item in dataHash) {
       this.dataArray.push({ item: item, values: dataHash[item] });
     }
-    // this.dataArray = this.dataArray;
-    this.sort('az');
+    this.sort('benefit');
+  }
+
+  private processSelected() {
+    this.selectedHeadings = [];
+    let center = 15;
+    for (let s = 0; s < this.selected.length; s++) {
+      this.selectedHeadings.push(this.selected[s]);
+      if (this.selected[s].length > center) {
+        let spaces = [], i = -1, closestToCenter = 0;
+        while ((i = this.selected[s].indexOf(' ', i+1)) != -1) {
+          spaces.push(i);
+          closestToCenter = (Math.abs(center - i) < Math.abs(center - closestToCenter)) ? i : closestToCenter;
+        }
+        //if there are any spaces, break on space closest to center
+        if (spaces.length > 0) {
+          let left = this.selected[s].slice(0, closestToCenter);
+          let right = this.selected[s].slice(closestToCenter + 1);
+          this.selectedHeadings[s] = left + '<br>' + right;
+        }
+        //otherwise hyphenate
+        else {
+
+        }
+      }
+    }
   }
 
   private getIcon = function (benefit): string {
@@ -144,6 +170,19 @@ export class BenefitsTableComponent implements OnInit {
     return icon;
   };
 
+  private getTableHeadingClass = function (selectionHeading): string {
+    let className: string = "table-headings";
+    if (selectionHeading.indexOf('<br>') > -1) {
+      className += '-two-line';  
+    }
+
+    if (this.selected.length > 1) {
+      let numbers: string[] = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+      className += ' ' + numbers[this.selected.length] + '-col';
+    }
+    return className;
+  };
+
   private selectItem(item: any, index: number) {
     item.selected = !item.selected;
 
@@ -153,8 +192,6 @@ export class BenefitsTableComponent implements OnInit {
       let i = this.selectedItems.indexOf(index);
       this.selectedItems.splice(i, 1);
     }
-
-    console.log(this.selectedItems);
   }
 
   private resetSelection() {
@@ -196,7 +233,7 @@ export class BenefitsTableComponent implements OnInit {
     return '';
   };
 
-  private sort(sortType: string) {
+  private sort(sortType: string, column?: string) {
     this.resetSelection();
     this.currentSort.asc = (this.currentSort.type === sortType) ? !this.currentSort.asc : true;
     this.currentSort.type = sortType;
@@ -213,6 +250,10 @@ export class BenefitsTableComponent implements OnInit {
 
       case 'effect':
         this.dataArray.sort(this.effectSort(orderFactor));
+        break;
+        
+      case 'column':
+        this.dataArray.sort(this.columnSort(orderFactor, column));
         break;
       default:
         break;
@@ -283,6 +324,21 @@ export class BenefitsTableComponent implements OnInit {
     }
   }
 
+  private columnSort(orderFactor: number, column: string): any {
+    orderFactor = 1;
+    let columnName = column.replace('<br>', ' ');
+    return function (a, b) {
+      let aValue = a.values[columnName] || -3;
+      let bValue = b.values[columnName] || -3;
+      if (aValue > bValue) {
+        return -1 * orderFactor;
+      } else if (aValue < bValue) {
+        return 1 * orderFactor;
+      }
+      return 0;
+    }
+  }
+
   private onFilterChange(index, newValue): void {
     this.resetSelection();
     this.filterOptions[index].checked = newValue;
@@ -330,7 +386,7 @@ export class BenefitsTableComponent implements OnInit {
       .subscribe((message) => {
         if (message) {
           let c: string = localStorage.getItem('myCharts');
-          let charts: Array<any> = [];
+          let charts: Array<Chart> = [];
           if (c) {
             charts = JSON.parse(c);
           }

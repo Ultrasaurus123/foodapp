@@ -122,12 +122,12 @@ body {
     background-color: $nav-button-selected;
 }
 
-@media (max-width: 767px) { 
+@media (max-width: 1023px) { 
    .hidden-mobile {
         display: none;   
     }
 }
-@media (min-width: 768px) { 
+@media (min-width: 1024px) { 
    .hidden-desktop {
         display: none;   
     }
@@ -166,11 +166,11 @@ ul.topnav li:not(:first-child):not(.no-hover):not(.disabled) a:hover:not(.no-hov
 
 ul.topnav li.icon {display: none;}
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     ul.topnav li:first-child {display: none;}
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1023px) {
   ul.topnav li:not(:first-child) {display: none;}
   ul.topnav li.icon {
     float: right;
@@ -178,7 +178,7 @@ ul.topnav li.icon {display: none;}
   }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1023px) {
 //   ul.topnav.responsive {position: relative;}
   ul.topnav.responsive li.icon {
     position: absolute;
@@ -198,5 +198,4 @@ ul.topnav li.icon {display: none;}
   .hide-mobile {
     display: none !important;
   }
-
 }

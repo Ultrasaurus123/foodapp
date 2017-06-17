@@ -30,9 +30,9 @@ export class MyChartsComponent implements OnInit {
   private shareMyChart(chartIndex: number) {
     let chart = this.myCharts[chartIndex];
     chart.dataArray = [];
-    let link = window.location.origin + '/benefits?customtable=' + new Buffer(JSON.stringify(this.myCharts[chartIndex])).toString('base64');
-    let subject = encodeURI('Check out my custom ' + this.dataService.appName + ' chart!');
-    let body = encodeURI('I created a custom health chart using' + this.dataService.appName +
+    let link = window.location.origin + '/#/benefits?customtable=' + new Buffer(JSON.stringify(chart)).toString('base64');
+    let subject = encodeURIComponent('Check out my custom ' + this.dataService.appName + ' chart!');
+    let body = encodeURIComponent('I created a custom health chart using' + this.dataService.appName +
       '.  You can view it by clicking the link below.\n' + chart.name + ': ' + link);
     window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
   }

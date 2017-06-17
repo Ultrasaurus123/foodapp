@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { DataService, TextService } from '../common';
@@ -25,45 +25,60 @@ export class SearchComponent implements OnInit {
   private maxSelections: number = AppSettings.MAX_SELECTIONS;
   private started: boolean = false;
   private pageText: any = {};
+  private loaded: boolean = false;
+  private sub: any;
 
-  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService, private route: ActivatedRoute) { }
 
   public ngOnInit() {
-    this.init();
+    this.sub = this.route
+      .params
+      .subscribe((data: any) => {
+        let dataView = (data) ? data.view : null;
+        if (dataView && this.verifyView(dataView)) {
+          this.view = dataView;
+          this.init();
+        } else {
+          this.view = sessionStorage.getItem('view');
+          if (this.view && this.verifyView(this.view)) {
+            this.init();
+          } else {
+            this.router.navigateByUrl('home');
+          }
+        }
+      });
   }
   
   public ngDoCheck() {
-    this.init();
+    this.sub = this.route.params.subscribe(data => {
+      let dataView = (data) ? data['view'] : null;
+      if (dataView && dataView != this.view) {
+        this.view = dataView;
+        this.init();
+      }
+    });
   }
 
   private init() {
     window.scrollTo(0, 0);
-    this.view = sessionStorage.getItem('view');
-    let hash = window.location.hash.substring(1);
-    if (this.verifyView(hash) && hash !== this.view) {
-      this.view = hash;
-      sessionStorage.setItem('view', hash);
-    }
-    if (!this.verifyView(this.view)) {
-      this.router.navigateByUrl('home');
-    } else {
-      this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
-      this.dataService.currentPage = 'Search';
-      this.dataService.currentPageText = 'Search by ' + (this.view === 'food' ? 'Health Food' : 'Medical Condition');
-      this.dataService.footerMargin = true;
+    this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
+    this.dataService.currentPage = 'Search';
+    this.dataService.currentPageText = 'Search by ' + (this.view === 'food' ? 'Health Food' : 'Medical Condition');
+    this.dataService.footerMargin = true;
 
-      this.textService.getText([this.dataService.currentPageText]).subscribe(
-        text => this.dataService.currentPageText = text[0]);
-      this.textService.getText(['Deselect All', 'Search', 'Find:']).subscribe(text => {
-        this.pageText.deselectAll = text[0]
-        this.pageText.continue = text[1];
-        this.pageText.search = text[2];
-      });
-      this.checkedItems = 0;
-      let selectedItems = sessionStorage.getItem('selected' + this.view);
-      if (selectedItems) {
-        this.initSelectedItems(JSON.parse(selectedItems));
-      }
+    this.textService.getText([this.dataService.currentPageText]).subscribe(
+      text => this.dataService.currentPageText = text[0]);
+    this.textService.getText(['Deselect All', 'Search', 'Find:']).subscribe(text => {
+      this.pageText.deselectAll = text[0]
+      this.pageText.continue = text[1];
+      this.pageText.search = text[2];
+    });
+    this.checkedItems = 0;
+    let selectedItems = sessionStorage.getItem('selected' + this.view);
+    if (selectedItems) {
+      this.initSelectedItems(JSON.parse(selectedItems));
+    } else {
+      this.loaded = true;
     }
   }
 
@@ -79,13 +94,14 @@ export class SearchComponent implements OnInit {
     sessionStorage.setItem(itemName, JSON.stringify(selectedItems));
   }
 
-  private deselectAll = function () {
+  private deselectAll() {
     let allItems = (this.view === 'food') ? this.dataService.allFoods : this.dataService.allConditions;
     for (let item of allItems) {
       item.checked = false;
     }
-
     this.checkedItems = 0;
+    let itemName = 'selected' + this.view;
+    sessionStorage.setItem(itemName, JSON.stringify([]));
   }
 
   private selectItems = function () {
@@ -94,6 +110,7 @@ export class SearchComponent implements OnInit {
       let selectedItems = this.getSelectedItems();
       let itemName = 'selected' + this.view;
       sessionStorage.setItem(itemName, JSON.stringify(selectedItems));
+      sessionStorage.setItem('view', this.view);
       this.router.navigateByUrl('benefits');
     }
   }
@@ -113,7 +130,8 @@ export class SearchComponent implements OnInit {
           break;
         }
       } 
-    }  
+    }
+    this.loaded = true;
   }
 
   private getSelectedItems() {

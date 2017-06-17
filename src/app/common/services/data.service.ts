@@ -40,7 +40,7 @@ export class DataService {
         this.allFoods = foods; this.textService.getText(this.allFoods.map(function (elem) {
           return elem.item;
         })).subscribe(
-          data => console.log(data)
+          data => {}
           );
       },
       error => console.error('Error getting all foods: ' + error));
@@ -58,7 +58,7 @@ export class DataService {
         this.allConditions = conditions; this.textService.getText(this.allConditions.map(function (elem) {
           return elem.item;
         })).subscribe(
-          data => console.log(data)
+          data => {}
           );
       },
       error => console.error('Error getting all conditions: ' + error));

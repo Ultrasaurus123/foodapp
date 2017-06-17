@@ -27,6 +27,7 @@ import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { PageHeaderComponent } from './common';
 import { AgreementComponent } from './agreement';
+import { PrivacyPolicyComponent } from './privacy-policy';
 import { HomeComponent } from './home';
 import { SearchComponent } from './search';
 import { MyChartsComponent } from './my-charts';
@@ -36,6 +37,7 @@ import { WarningsComponent } from './warnings';
 import { HelpComponent } from './help';
 import { LanguageComponent } from './language';
 import { NoContentComponent } from './no-content';
+import { DataMonitorComponent } from './data-monitor';
 
 import { ConfirmModalComponent } from './common';
 import { PromptModalComponent } from './common';
@@ -51,6 +53,7 @@ import { FocusDirective } from './common';
 import '../styles/styles.scss';
 import '../styles/headings.scss';
 import '../styles/margins.scss';
+import '../styles/page-loading.scss';
 import '../styles/loader.scss';
 import '../styles/modals.scss';
 
@@ -75,6 +78,7 @@ type StoreType = {
     AppComponent,
     PageHeaderComponent,
     AgreementComponent,
+    PrivacyPolicyComponent,
     HomeComponent,
     SearchComponent,
     MyChartsComponent,
@@ -87,14 +91,15 @@ type StoreType = {
     KeysPipe,
     ConfirmModalComponent,
     PromptModalComponent,
-    FocusDirective
+    FocusDirective,
+    DataMonitorComponent
   ],
   imports: [ // import Angular's modules  
     BrowserModule,
     FormsModule,
     HttpModule,
     BootstrapModalModule,
-    RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
   ],
   entryComponents: [
     ConfirmModalComponent,
@@ -157,14 +162,15 @@ export class AppSettings {
   // LOCAL TESTING
   // public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static MAX_SELECTIONS: number = 10;
-  public static NAV_MENU: Array<{ name: string, display: string, link: string }> = [
+  public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Home', display: 'Home', link: 'home' },
-    { name: 'Search by food', display: 'Search by food', link: 'search#food' },
-    { name: 'Search by condition', display: 'Search by condition', link: 'search#condition' },
+    { name: 'Search by Health Food', display: 'Search by Health Food', link: 'search', data: { view: 'food' } },
+    { name: 'Search by Medical Condition', display: 'Search by Medical Condition', link: 'search', data: { view: 'condition' }  },
     { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
  //   { name: 'Language', display: 'Language', link: 'language' },
     { name: 'Help', display: 'Help', link: 'help' },
-    { name: 'Disclaimer', display: 'Disclaimer', link: 'disclaimer' }];
+    { name: 'Terms and Conditions', display: 'Terms and Conditions', link: 'disclaimer' },
+    { name: 'Privacy Policy', display: 'Privacy Policy', link: 'privacy' }];
   
   public static LANGUAGES: Array<{ name: string, code: string }> = [
             { name: 'Afrikaans', code: 'af' },

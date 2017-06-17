@@ -37,7 +37,7 @@ export class LanguageComponent implements OnInit {
       text => this.pageText.search = text);
     this.languageSet = AppSettings.LANGUAGES;
 
-    new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+    //new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
   }
 
   private searchValueChanged(newValue) {

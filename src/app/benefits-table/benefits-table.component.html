@@ -1,6 +1,8 @@
+<div [class.page-loading]="!dataArray"></div>
+<div [hidden]="!dataArray"> 
 <div [class.menu-backdrop]="showSort || showFilter || showLegend" (click)="showSort = showFilter = showLegend = false"></div>
 <div>
-    <div class="row col-12 button-container ">
+    <div class="row col-12 button-container">
         <div class="dropdown col-4" [class.selected]="showSort">
             <button class="dropbtn" (click)="showSort = !showSort">Sort</button>
             <div class="dropdown-content" >
@@ -23,12 +25,16 @@
                 <hr (click)="showFilter = false">
                 <a (click)="removeRows(); showFilter = false;">Hide Selected</a>
                 <a (click)="showAllRows(); showFilter = false;">Unhide All</a>
-                <a (click)="saveChart(); showFilter = false;">Save Chart</a>
             </div>
         </div>
 
         <!-- spacer -->
-        <div class="col-2">
+        <!--<div class="col-2">
+        </div>-->
+
+        <!-- save chart button -->
+        <div class="col-2 text-right">
+            <button class="dropbtn btn-icon" (click)="saveChart()">+</button>
         </div>
 
         <!-- help button -->
@@ -48,8 +54,8 @@
                 <!--<br>
                 <span class="first-heading">{{heading}}</span>-->
             </th>
-            <th class="table-headings" *ngFor="let selectionHeading of selected">
-                <div><span>{{selectionHeading}}</span></div>
+            <th (click)="sort('column', selectionHeading)" *ngFor="let selectionHeading of selectedHeadings">
+                <div [ngClass]="getTableHeadingClass(selectionHeading)"><span  [innerHTML]="selectionHeading"></span></div>
             </th>
             </thead>
             <tbody>
@@ -64,3 +70,5 @@
             </tbody>
         </table>
     </div>
+</div>
+</div>

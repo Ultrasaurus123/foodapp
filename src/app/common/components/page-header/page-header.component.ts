@@ -16,9 +16,8 @@ import { AppSettings } from '../../../';
 export class PageHeaderComponent implements OnInit {
 
   public menuOpen: boolean = false;
-  public menuItems: Array<{ name: string, display: string, link: string }>;
+  public menuItems: Array<{ name: string, display: string, link: string, data?: any }>;
 
-  private pageTitle: string;
   private displays: Array<string>;
   private footerMargin: boolean;
   private myChartsActive: boolean;
@@ -47,7 +46,6 @@ export class PageHeaderComponent implements OnInit {
       this.updateMenuItems();
       this.textService.languageChanged = false;
     } 
-    this.pageTitle = this.dataService.currentPageText;
     this.footerMargin = (this.dataService.currentPage === 'Search');
     let myCharts = localStorage.getItem('myCharts');
     if (myCharts) {
@@ -60,10 +58,10 @@ export class PageHeaderComponent implements OnInit {
     this.menuOpen = !this.menuOpen;
   }
 
-  public clickMenuLink(menuItem: { name: string, link: string }) {
+  public clickMenuLink(menuItem: { name: string, link: string, data?: any }) {
     if (menuItem.name !== 'My Charts' || this.myChartsActive) {
       this.menuOpen = false;
-      this.router.navigateByUrl(menuItem.link)
+      this.router.navigate([menuItem.link, menuItem.data || {}]);
     }  
   }
 

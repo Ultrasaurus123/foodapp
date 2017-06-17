@@ -1,3 +1,4 @@
+<div [class.page-loading]="!loaded"></div>
 <div class="m-t-10">
   <div class="selection-container">
     <div class="checkbox-container">
@@ -21,6 +22,5 @@
       <button class="button" [class.btn-disabled]="checkedItems === 0"
         (click)="selectItems()">{{pageText.continue}}</button>
     </div>
-
   </div>
 </div>

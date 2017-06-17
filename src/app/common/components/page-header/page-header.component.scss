@@ -42,3 +42,21 @@
 .disabled {
 	color: gray !important;
 }
+
+.menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+.selected-hide-mobile {
+    @media screen and (max-width: 1023px) {
+        display: none !important;
+    }
+    @media screen and (min-width: 1024px) {
+        background-color: $nav-button-color;
+    }
+}

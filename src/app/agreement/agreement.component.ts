@@ -16,7 +16,7 @@ export class AgreementComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Disclaimer';
+    this.dataService.currentPageText = 'Terms and Conditions';
     this.dataService.currentPage = 'Disclaimer';
     let agreement = localStorage.getItem('agreement');
     this.dataService.agreement = agreement === 'true';

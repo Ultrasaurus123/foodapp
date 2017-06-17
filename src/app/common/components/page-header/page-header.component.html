@@ -1,15 +1,11 @@
-<div class="row">
-  <div class="header col-12 p-t-10">
-    <h1>{{pageTitle}}</h1>
-  </div>
-</div>
+<div [class.menu-backdrop]="menuOpen" (click)="menuOpen = false"></div>
 <div class="container-fade-top"></div>
 <div class="container-fade-bottom" [class.m-b-85]="footerMargin"></div>
 
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
-  <li><a>{{pageTitle}}</a></li>
+  <li><a>{{dataService.currentPageText}}</a></li>
   <template ngFor let-item [ngForOf]="menuItems"> 
-  <li [class.hide-mobile]="item.name === pageTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
+  <li [class.selected-hide-mobile]="item.name === dataService.currentPageText" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
     <a [class.disabled]="item.name === 'My Charts' && !myChartsActive" (click)="clickMenuLink(item)">{{item.display}}</a>
   </li>
   </template>
