@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { DataService, PromptModalComponent, Chart } from '../common';
+import { DataService, PromptModalComponent, Chart, TextService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 
 @Component({
@@ -27,9 +27,10 @@ export class BenefitsTableComponent implements OnInit {
   private selectedItems: Array<number> = [];
   private customHiddenItems: Array<number> = [];
   private sub: any;
+  private itemCount: number;
 
   constructor(private http: Http, private router: Router, private dataService: DataService,
-    private dialogService: DialogService, private route: ActivatedRoute) { }
+    private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
@@ -84,13 +85,17 @@ export class BenefitsTableComponent implements OnInit {
       type: '',
       asc: true
     };
-    this.filterOptions = [
-      { name: 'Beneficial Effect', checked: false },
-      { name: 'Assists', checked: false },
-      { name: 'Mixed Effects', checked: false },
-      { name: 'Inhibits', checked: false },
-      { name: 'Negative Effect', checked: false }
-    ];
+    this.textService.getText(['Beneficial Effect','Assists','Mixed Effects','Inhibits','Negative Effect']).subscribe(
+        text => {
+          this.filterOptions = [
+            { name: text[0], checked: false },
+            { name: text[1], checked: false },
+            { name: text[2], checked: false },
+            { name: text[3], checked: false },
+            { name: text[4], checked: false }
+          ];
+        }
+    );
   };
 
   private initServiceCall = function () {
@@ -123,34 +128,49 @@ export class BenefitsTableComponent implements OnInit {
     }
 
     // convert hash to array so we can sort/filter/manipulate easier
+    this.itemCount = Object.keys(dataHash).length;
+    let itemIndex = 0;
     for (let item in dataHash) {
-      this.dataArray.push({ item: item, values: dataHash[item] });
+      this.textService.getText([item]).subscribe(
+        text => {
+          itemIndex++;
+          this.dataArray.push({ item: text[0], values: dataHash[item] });
+          if (itemIndex === this.itemCount) {
+            console.log('last');
+            this.sort('benefit');
+          }
+        }
+      );
     }
-    this.sort('benefit');
   }
 
   private processSelected() {
     this.selectedHeadings = [];
     let center = 15;
     for (let s = 0; s < this.selected.length; s++) {
-      this.selectedHeadings.push(this.selected[s]);
-      if (this.selected[s].length > center) {
-        let spaces = [], i = -1, closestToCenter = 0;
-        while ((i = this.selected[s].indexOf(' ', i+1)) != -1) {
-          spaces.push(i);
-          closestToCenter = (Math.abs(center - i) < Math.abs(center - closestToCenter)) ? i : closestToCenter;
-        }
-        //if there are any spaces, break on space closest to center
-        if (spaces.length > 0) {
-          let left = this.selected[s].slice(0, closestToCenter);
-          let right = this.selected[s].slice(closestToCenter + 1);
-          this.selectedHeadings[s] = left + '<br>' + right;
-        }
-        //otherwise hyphenate
-        else {
+      this.textService.getText([this.selected[s]]).subscribe(
+        text => {
+          let selected = text[0];
+          this.selectedHeadings.push(selected);
+          if (selected.length > center) {
+            let spaces = [], i = -1, closestToCenter = 0;
+            while ((i = selected.indexOf(' ', i+1)) != -1) {
+              spaces.push(i);
+              closestToCenter = (Math.abs(center - i) < Math.abs(center - closestToCenter)) ? i : closestToCenter;
+            }
+            //if there are any spaces, break on space closest to center
+            if (spaces.length > 0) {
+              let left = selected.slice(0, closestToCenter);
+              let right = selected.slice(closestToCenter + 1);
+              this.selectedHeadings[s] = left + '<br>' + right;
+            }
+            //otherwise hyphenate
+            else {
 
+            }
+          }
         }
-      }
+      )
     }
   }
 
@@ -275,13 +295,13 @@ export class BenefitsTableComponent implements OnInit {
     return function (a, b) {
       let aCount: number = 0, bCount: number = 0;
       for (let item in a.values) {
-        if (Number(a.values[item]) !== NaN) {
-          aCount += Number(a.values[item]);
+        if (Number(a.values[item]) !== NaN && Number(a.values[item]) !== 0) {
+          aCount += (Number(a.values[item]) > 0) ? 1 : -1;
         }
       }
       for (let item in b.values) {
-        if (Number(b.values[item]) !== NaN) {
-          bCount += Number(b.values[item]);
+        if (Number(b.values[item]) !== NaN && Number(b.values[item]) !== 0) {
+          bCount += (Number(b.values[item]) > 0) ? 1 : -1;
         }
       }
       if (aCount > bCount) {
@@ -305,13 +325,13 @@ export class BenefitsTableComponent implements OnInit {
       } else {
         let aCount: number = 0, bCount: number = 0;
         for (let item in a.values) {
-          if (Number(a.values[item]) !== NaN) {
-            aCount += Number(a.values[item]);
+          if (Number(a.values[item]) !== NaN && Number(a.values[item]) !== 0) {
+            aCount += (Number(a.values[item]) > 0) ? 1 : -1;
           }
         }
         for (let item in b.values) {
-          if (Number(b.values[item]) !== NaN) {
-            bCount += Number(b.values[item]);
+          if (Number(b.values[item]) !== NaN && Number(b.values[item]) !== 0) {
+            bCount += (Number(b.values[item]) > 0) ? 1 : -1;
           }
         }
         if (aCount > bCount) {

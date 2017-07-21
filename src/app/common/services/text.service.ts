@@ -41,14 +41,11 @@ export class TextService {
                 while (text.indexOf(',,') > -1) {
                     text = text.replace(',,', ',');
                 }
-                console.log(JSON.parse(text));
 
                 let translations = JSON.parse(text)[0];
                 let parsedStrings: Array<string> = [];
-                console.log(translations);
                 for (let i = 0; i < translations.length; i++) {
                     let translation = translations[i][0];
-                                    console.log(translation);
 
                     if (translation.indexOf('. ') === -1) {
                         parsedStrings.push(translation);
@@ -61,7 +58,6 @@ export class TextService {
                         parseIndex = translation.indexOf('. ');
                     }
                 }
-                console.log(parsedStrings);
                 // let translation = JSON.parse(text)[0][0][0];
                 // if (translation.indexOf('. ') === -1) {
                 //     return [translation];
