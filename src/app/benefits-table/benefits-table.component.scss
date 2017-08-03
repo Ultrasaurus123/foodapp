@@ -2,6 +2,7 @@
 
 .button-container {
     height: 60px;
+    margin-bottom: 15px;
 }
 
 .benefits-table {
@@ -23,10 +24,12 @@
     @media (max-width: 320px) { 
         font-size: 10px;
         max-width: 40px;
+        min-width: 20px;
      }
 
     @media (min-width: 321px) and (max-width: 767px) { 
         max-width: 60px;
+        min-width: 20px;
      }
 }
 
@@ -47,12 +50,16 @@
 }
 
 .row-selected {
-    background-color: $nav-button-color !important;
+    background-color: $nav-button-light !important;
 }
 
-tr:hover {
-    background-color: $nav-button-color !important;
+.column-selected {
+    background-color: $nav-button-light !important;
 }
+
+// tr:hover {
+//     background-color: $nav-button-color !important;
+// }
 
 .first-heading {
     text-align: left;      

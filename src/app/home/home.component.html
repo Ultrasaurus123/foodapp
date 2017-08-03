@@ -3,10 +3,7 @@
     <span class="page-header">{{pageText.headline}}</span>
     <hr>
     <p style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
-    <div style="text-align: center">
-    <img class="screen-shot" src="../../assets/img/screenshot.png" />
-    </div>
-    <p class="help-link"><a [routerLink]="['/help']">{{pageText.helpLink}}</a></p>
+    <br>
     <p>{{pageText.getStarted}}</p>
     <div class="row">
       <div class="col-6">
@@ -20,5 +17,10 @@
           </button>
       </div>
     </div>
+    <br>
+    <div style="text-align: center">
+    <img class="screen-shot" src="../../assets/img/screenshot.png" />
+    </div>
+    <p class="help-link"><a [routerLink]="['/help']">{{pageText.helpLink}}</a></p>
   </div>
 </div>

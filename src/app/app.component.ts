@@ -21,6 +21,7 @@ import { AppSettings } from '.';
       <page-header></page-header>
       <div  class="m-t-70">
       <router-outlet></router-outlet>
+      <page-footer></page-footer>
       </div>
     </main>
   `

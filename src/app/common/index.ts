@@ -1,4 +1,5 @@
 export * from './components/page-header/page-header.component';
+export * from './components/page-footer/page-footer.component';
 export * from './components/modals/confirmation-modal.component';
 export * from './components/modals/prompt-modal.component';
 

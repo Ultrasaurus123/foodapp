@@ -1,4 +1,4 @@
-<div [class.page-loading]="!loaded"></div>
+<div [class.page-loading]="(view === 'food') ? dataService.allFoods.length === 0 : dataService.allConditions.length === 0"></div>
 <div class="m-t-10">
   <div class="selection-container">
     <div class="checkbox-container">

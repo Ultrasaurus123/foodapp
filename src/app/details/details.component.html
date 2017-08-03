@@ -1,15 +1,11 @@
 <div class="table-container">
-    <div class="col-12">
-        <span class="page-header">{{pageHeader}}</span>
-        <hr>
-    </div>
     <div class="p-l-15 p-r-15" *ngFor="let row of dataArray; let r = index" [class.m-t-15]="r > 0">
         <div class="row">
             <div class="col-12">
-                <span class="benefit-title">Effects of {{row[0][0]}} on {{row[0][2]}}</span>
+                <span class="page-header">Effects of {{row[0][0]}} on {{row[0][2]}}</span>
             </div>
             <div class="col-12" *ngIf="warningsObject[row[0][0].toLowerCase()]">
-                <a [routerLink]="['/warnings']" [queryParams]="{food: row[0][0]}"><span class="warnings-title">See warnings regarding {{row[0][0]}}</span></a>
+                <a [routerLink]="['/warnings']" [queryParams]="{food: row[0][0]}"><span class="warnings-title">See warnings and notes regarding {{row[0][0]}}</span></a>
             </div>
             <div class="col-12" *ngFor="let detail of row">
                 <br>
@@ -26,9 +22,48 @@
     </div>
 </div>
 
+<div *ngIf="sideEffectsList.length > 0">
+        <div class="col-12">
+            <span class="page-header">Other Considerations</span>
+        </div>
+        <div class="col-12">
+            <span class="benefit-title">{{detailItem}} may have an adverse effect on the following medical conditions:</span>
+            <br>
+            <span class="reference-link">(Click on a condition to add/remove it to your table)</span>
+        </div>
+        <div class="col-12">
+            <ul>
+                <li *ngFor="let sideEffect of sideEffectsList" (click)="addConditionToList(sideEffect[1])">
+                    <span [class.selected]="selectedItems.indexOf(sideEffect[1]) > -1" 
+                        [class.disabled]="selectedItems.length >= maxSelection && selectedItems.indexOf(sideEffect[1]) === -1"
+                        class="description">{{sideEffect[1]}}</span>
+                </li>
+            </ul>
+        </div>
+</div>
+
 <!--<img class="image-thumb" [src]="images[r % images.length].image.thumbnailLink" *ngIf="images.length > 0">-->
 
-<div class="col-12">
+<div>
+        <div class="col-12">
+            <span class="page-header">Images of {{detailItem}}</span>
+        </div>
+        <div class="col-12">
+            <span class="benefit-title"><a [href]="getImageSearchURL()" target="_blank">Source: Google search</a></span>
+        </div>
+        <div class="col-12">
+    <ul id="rig">
+        <li *ngFor="let image of images">
+            <a class="rig-cell">
+                <img [src]="image.image.thumbnailLink" [width]="150" [height]="150" />
+                <span class="rig-overlay"></span>
+            </a>
+        </li>
+    </ul>    
+        </div>
+</div>
+
+<!--<div class="col-12">
     <span style="font-size: 14px">
         Images of {{detailItem}} (<a [href]="getImageSearchURL()" target="_blank">Source: Google search</a>)
     </span>
@@ -40,4 +75,4 @@
             </a>
         </li>
     </ul>    
-</div>
+</div>-->

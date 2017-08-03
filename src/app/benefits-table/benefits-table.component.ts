@@ -28,6 +28,7 @@ export class BenefitsTableComponent implements OnInit {
   private customHiddenItems: Array<number> = [];
   private sub: any;
   private itemCount: number;
+  private filteredColumns: any = {};
 
   constructor(private http: Http, private router: Router, private dataService: DataService,
     private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService) { }
@@ -130,14 +131,21 @@ export class BenefitsTableComponent implements OnInit {
     // convert hash to array so we can sort/filter/manipulate easier
     this.itemCount = Object.keys(dataHash).length;
     let itemIndex = 0;
+    let sessionHidden: string = sessionStorage.getItem('hidden');
+    let hiddenItems: Array<string> = (sessionHidden) ? JSON.parse(sessionHidden) : [];
     for (let item in dataHash) {
       this.textService.getText([item]).subscribe(
         text => {
           itemIndex++;
-          this.dataArray.push({ item: text[0], values: dataHash[item] });
+          let hidden = false;
+          let hiddenIndex = hiddenItems.indexOf(item);
+          if (hiddenIndex > -1) {
+            hidden = true;
+            hiddenItems.splice(hiddenIndex, 1);
+          }
+          this.dataArray.push({ item: text[0], values: dataHash[item], hidden: hidden });
           if (itemIndex === this.itemCount) {
-            console.log('last');
-            this.sort('benefit');
+            this.sort('effect');
           }
         }
       );
@@ -222,12 +230,15 @@ export class BenefitsTableComponent implements OnInit {
   }
 
   private removeRows() {
+    let hiddenItems = [];
     for (let i of this.selectedItems) {
       this.dataArray[i].selected = false;
       this.dataArray[i].hidden = true;
       this.customHiddenItems.push(i);
+      hiddenItems.push(this.dataArray[i].item);
     }
     this.selectedItems = [];
+    sessionStorage.setItem('hidden', JSON.stringify(hiddenItems));
   }
 
   private showAllRows() {
@@ -239,6 +250,8 @@ export class BenefitsTableComponent implements OnInit {
       filter.checked = false;
     }
     this.customHiddenItems = [];
+    this.filteredColumns = {};
+    sessionStorage.removeItem('hidden');
   }
 
 
@@ -359,6 +372,27 @@ export class BenefitsTableComponent implements OnInit {
     }
   }
 
+  private columnFilter(column: string): any {
+    let columnName = column.replace('<br>', ' ');
+    let indicesToHide = [];
+
+    let itemsToHide = this.dataArray.filter((item, index) => {
+      if (item.values[columnName] == undefined) {
+        indicesToHide.push(index);
+        return true;
+      }
+      return false;
+    });
+
+    for (let i of indicesToHide) {
+      this.dataArray[i].selected = false;
+      this.dataArray[i].hidden = true;
+      this.customHiddenItems.push(i);
+    }
+    this.selectedItems = [];
+    this.filteredColumns[column] = true;
+  }
+
   private onFilterChange(index, newValue): void {
     this.resetSelection();
     this.filterOptions[index].checked = newValue;
@@ -384,6 +418,8 @@ export class BenefitsTableComponent implements OnInit {
           }
         }
       }
+      let sessionItems = sessionStorage.getItem('hidden');
+      let hiddenItems: Array<string> = sessionItems ? JSON.parse(sessionItems) : [];
       if (matchCount === valuesCount) {
         item.hidden = true;
       } else {
@@ -395,6 +431,13 @@ export class BenefitsTableComponent implements OnInit {
           }
         }
       }
+      let hiddenIndex: number = hiddenItems.indexOf(item.item);
+      if (item.hidden && hiddenIndex === -1) {
+        hiddenItems.push(item.item);
+      } else if (!item.hidden && hiddenIndex > -1) {
+        hiddenItems.splice(hiddenIndex, 1);
+      }
+      sessionStorage.setItem('hidden', JSON.stringify(hiddenItems));
     }
   }
 
@@ -423,7 +466,6 @@ export class BenefitsTableComponent implements OnInit {
           localStorage.setItem('myCharts', JSON.stringify(charts));
         }
       })
-
   }
 
   private goToDetails(selection, i) {

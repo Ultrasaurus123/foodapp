@@ -19,6 +19,14 @@
     position: relative; 
 }
 
+.disabled {
+    color: lightgray;
+}
+
+.selected {
+    color: $nav-button-color;
+}
+
 @media (max-width: 320px) { 
 }
 

@@ -17,6 +17,7 @@ import { KeysPipe, DataService } from '../common';
 })
 export class DetailsComponent implements OnInit {
   private detailItem: string;
+  private selectedItem: string;
   private selectedItems: Array<string>;
   private detailIndex: number;
   private selectedIndex: number;
@@ -26,6 +27,8 @@ export class DetailsComponent implements OnInit {
   private pageHeader: string;
   private dataObject: any = {};
   private warningsObject: any = {};
+  private sideEffectsList: Array<string> = [];
+  private maxSelection: number = AppSettings.MAX_SELECTIONS;
 
   constructor(private http: Http, private router: Router, private dataService: DataService) { }
 
@@ -40,6 +43,7 @@ export class DetailsComponent implements OnInit {
     let detailsString: string = sessionStorage.getItem('details');
     let details: any = JSON.parse(detailsString);
     this.detailItem = (this.view === 'condition') ? details.food : details.condition;
+    this.selectedItem = (this.view === 'condition') ? details.condition : details.food;
     let selectedString: string = sessionStorage.getItem('selected' + this.view);
     this.selectedItems = JSON.parse(selectedString);
 
@@ -55,11 +59,18 @@ export class DetailsComponent implements OnInit {
 
   private init = function () {
     let query = '';
+    // Get details for all items, not just specific selected one
+    // if (this.view === 'food') {
+    //   query = 'foods=' + encodeURIComponent(this.selectedItems.join()) + '&conditions=' + encodeURIComponent(this.detailItem);
+    // } else if (this.view === 'condition') {
+    //   query = 'foods=' + encodeURIComponent(this.detailItem) + '&conditions=' + encodeURIComponent(this.selectedItems.join());
+    // }
     if (this.view === 'food') {
-      query = 'foods=' + encodeURIComponent(this.selectedItems.join()) + '&conditions=' + encodeURIComponent(this.detailItem);
+      query = 'foods=' + encodeURIComponent(this.selectedItem) + '&conditions=' + encodeURIComponent(this.detailItem);
     } else if (this.view === 'condition') {
-      query = 'foods=' + encodeURIComponent(this.detailItem) + '&conditions=' + encodeURIComponent(this.selectedItems.join());
+      query = 'foods=' + encodeURIComponent(this.detailItem) + '&conditions=' + encodeURIComponent(this.selectedItem);
     }
+
     this.http.get(AppSettings.API_ENDPOINT + 'getData?' + query)
       .map(res => { return res.json() })
       .catch(this.handleError)
@@ -75,6 +86,17 @@ export class DetailsComponent implements OnInit {
       .subscribe(data => this.processWarningsData(data),
       error => console.error('Error getting warnings data: ' + error)
       );
+
+    if (this.view === 'condition') {
+      let sideEffectsQuery = 'food=';
+      sideEffectsQuery += encodeURIComponent(this.detailItem);
+      this.http.get(AppSettings.API_ENDPOINT + 'getSideEffects?' + sideEffectsQuery)
+        .map(res => { return res.json() })
+        .catch(this.handleError)
+        .subscribe(data => this.sideEffectsList = data,
+        error => console.error('Error getting side effects data: ' + error)
+        );
+    }
   };
 
   private processData(data: Array<any>) {
@@ -136,6 +158,17 @@ export class DetailsComponent implements OnInit {
     }
     return icon;
   };
+
+  private addConditionToList(condition: string) {
+    let conditionIndex = this.selectedItems.indexOf(condition);
+    if (conditionIndex > -1) {
+      this.selectedItems.splice(conditionIndex, 1);
+      sessionStorage.setItem('selectedcondition', JSON.stringify(this.selectedItems));  
+    } else if (this.selectedItems.length < AppSettings.MAX_SELECTIONS) {
+      this.selectedItems.push(condition);
+      sessionStorage.setItem('selectedcondition', JSON.stringify(this.selectedItems));  
+    }
+  }
 
   private handleError(error: Response | any) {
     // In a real world app, we might use a remote logging infrastructure

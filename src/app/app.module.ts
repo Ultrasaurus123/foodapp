@@ -26,6 +26,7 @@ import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { PageHeaderComponent } from './common';
+import { PageFooterComponent } from './common';
 import { AgreementComponent } from './agreement';
 import { PrivacyPolicyComponent } from './privacy-policy';
 import { HomeComponent } from './home';
@@ -77,6 +78,7 @@ type StoreType = {
   declarations: [
     AppComponent,
     PageHeaderComponent,
+    PageFooterComponent,
     AgreementComponent,
     PrivacyPolicyComponent,
     HomeComponent,

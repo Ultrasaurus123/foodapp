@@ -3,16 +3,16 @@
     <div [class.menu-backdrop]="showSort || showFilter || showLegend" (click)="showSort = showFilter = showLegend = false"></div>
     <div>
         <div class="row col-12 button-container">
-            <div class="dropdown col-4" [class.selected]="showSort">
+            <div class="dropdown col-3" [class.selected]="showSort">
                 <button class="dropbtn" (click)="showSort = !showSort">Sort</button>
                 <div class="dropdown-content" >
                     <a (click)="sort('az'); showSort = false;">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
-                    <a (click)="sort('benefit'); showSort = false;">Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
-                    <a (click)="sort('effect'); showSort = false;">Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+                    <a (click)="sort('benefit'); showSort = false;">Number of Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
+                    <a (click)="sort('effect'); showSort = false;">Number of Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
                 </div>
             </div>
             <!-- filter drop down -->
-            <div class="dropdown col-4" [class.selected]="showFilter">
+            <div class="dropdown col-3" [class.selected]="showFilter">
                 <button class="dropbtn" (click)="showFilter = !showFilter">Hide</button>
                 <div class="dropdown-content">
                     <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
@@ -33,14 +33,17 @@
             </div>-->
 
             <!-- save chart button -->
-            <div class="col-2 text-right">
-                <button class="dropbtn btn-icon" (click)="saveChart()">+</button>
+            <div class="dropdown col-3">
+                <button class="dropbtn" (click)="saveChart()">Save</button>
             </div>
 
             <!-- help button -->
-            <div class="col-2 text-right">
-                <button class="dropbtn btn-icon" (click)="goToHelp()">?</button>
+            <div class="dropdown col-3">
+                <button class="dropbtn" (click)="goToHelp()">?</button>
             </div>
+        </div>
+        <div class="row col-12">
+            <span class="text-right">Click a column heading to hide empty rows. Use HIDE menu to unhide rows.</span>
         </div>
         <div class="table-container">
             <table class="benefits-table">
@@ -54,8 +57,8 @@
                     <!--<br>
                     <span class="first-heading">{{heading}}</span>-->
                 </th>
-                <th (click)="sort('column', selectionHeading)" *ngFor="let selectionHeading of selectedHeadings">
-                    <div [ngClass]="getTableHeadingClass(selectionHeading)"><span  [innerHTML]="selectionHeading"></span></div>
+                <th (click)="columnFilter(selectionHeading)" *ngFor="let selectionHeading of selectedHeadings" [class.column-selected]="filteredColumns[selectionHeading]">
+                    <div [ngClass]="getTableHeadingClass(selectionHeading)"><span [innerHTML]="selectionHeading"></span></div>
                 </th>
                 </thead>
                 <tbody>
