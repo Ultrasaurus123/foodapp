@@ -24,7 +24,6 @@ export class SearchComponent implements OnInit {
   private searchModel: string = '';
   private maxSelections: number = AppSettings.MAX_SELECTIONS;
   private started: boolean = false;
-  private pageText: any = {};
   private loaded: boolean = false;
   private sub: any;
 
@@ -63,16 +62,9 @@ export class SearchComponent implements OnInit {
     window.scrollTo(0, 0);
     this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
     this.dataService.currentPage = 'Search';
-    this.dataService.currentPageText = 'Search by ' + (this.view === 'food' ? 'Health Food' : 'Medical Condition');
+    this.dataService.currentPageText = 'Search by ' + (this.view === 'food' ? 'Food / Remedy' : 'Medical Concern');
     this.dataService.footerMargin = true;
 
-    this.textService.getText([this.dataService.currentPageText]).subscribe(
-      text => this.dataService.currentPageText = text[0]);
-    this.textService.getText(['Deselect All', 'Search', 'Find:']).subscribe(text => {
-      this.pageText.deselectAll = text[0]
-      this.pageText.continue = text[1];
-      this.pageText.search = text[2];
-    });
     this.checkedItems = 0;
     let selectedItems = sessionStorage.getItem('selected' + this.view);
     if (selectedItems) {

@@ -160,20 +160,24 @@ export class AppModule {
 
 // Global Application Settings
 export class AppSettings {
+  public static APP_NAME: string = 'Health Foods Matrix';
+
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING
   // public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static MAX_SELECTIONS: number = 10;
   public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Home', display: 'Home', link: 'home' },
-    { name: 'Search by Health Food', display: 'Search by Health Food', link: 'search', data: { view: 'food' } },
-    { name: 'Search by Medical Condition', display: 'Search by Medical Condition', link: 'search', data: { view: 'condition' }  },
+    { name: 'Search by Health Food', display: 'Search by Food / Remedy', link: 'search', data: { view: 'food' } },
+    { name: 'Search by Medical Condition', display: 'Search by Medical Concern', link: 'search', data: { view: 'condition' }  },
     { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
  //   { name: 'Language', display: 'Language', link: 'language' },
-    { name: 'Help', display: 'Help', link: 'help' },
+    { name: 'Help', display: 'Help', link: 'help' }];
+    
+  public static FOOTER_LINKS: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Terms and Conditions', display: 'Terms and Conditions', link: 'disclaimer' },
-    { name: 'Privacy Policy', display: 'Privacy Policy', link: 'privacy' }];
-  
+    { name: 'Privacy Policy', display: 'Privacy Policy', link: 'privacy' },
+    { name: 'Contact Us', display: 'Contact Us', link: 'contact' }];
   public static LANGUAGES: Array<{ name: string, code: string }> = [
             { name: 'Afrikaans', code: 'af' },
             { name: 'Albanian', code: 'sq' },

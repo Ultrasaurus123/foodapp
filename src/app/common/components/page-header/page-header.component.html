@@ -1,11 +1,11 @@
 <div [class.menu-backdrop]="menuOpen" (click)="menuOpen = false"></div>
 <div class="container-fade-top"></div>
-<div class="container-fade-bottom" [class.m-b-85]="footerMargin"></div>
+<div class="container-fade-bottom" [class.m-b-145]="footerMargin"></div>
 
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
   <li><a>{{dataService.currentPageText}}</a></li>
   <template ngFor let-item [ngForOf]="menuItems"> 
-  <li [class.selected-hide-mobile]="item.name === dataService.currentPageText" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
+  <li [class.selected-hide-mobile]="item.display === dataService.currentPageText" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
     <a [class.disabled]="item.name === 'My Charts' && !myChartsActive" (click)="clickMenuLink(item)">{{item.display}}</a>
   </li>
   </template>

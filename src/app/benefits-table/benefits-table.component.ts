@@ -35,7 +35,7 @@ export class BenefitsTableComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Benefits Matrix';
+    this.dataService.currentPageText = 'Matrix of Benefits & Side Effects';
     this.dataService.currentPage = 'Benefits Matrix';
     this.sub = this.route
       .queryParams

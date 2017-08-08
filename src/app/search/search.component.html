@@ -13,14 +13,14 @@
 <div class="col-12">
   <div class="row footer">
     <div class="col-12">
-      {{pageText.search}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+      Find: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
     </div>
     <div class="col-6">
-      <button class="button" [class.btn-disabled]="checkedItems === 0" (click)="deselectAll()">{{pageText.deselectAll}}</button>
+      <button class="button" [class.btn-disabled]="checkedItems === 0" (click)="deselectAll()">Deselect All</button>
     </div>
     <div class="col-6">
       <button class="button" [class.btn-disabled]="checkedItems === 0"
-        (click)="selectItems()">{{pageText.continue}}</button>
+        (click)="selectItems()">Search</button>
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ import {
 import { Router } from '@angular/router';
 import { DataService, PageHeaderComponent, ConfirmModalComponent, Chart } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
+import { AppSettings } from '..';
 
 @Component({
   selector: 'my-charts',
@@ -31,8 +32,8 @@ export class MyChartsComponent implements OnInit {
     let chart = this.myCharts[chartIndex];
     chart.dataArray = [];
     let link = window.location.origin + '/#/benefits?customtable=' + new Buffer(JSON.stringify(chart)).toString('base64');
-    let subject = encodeURIComponent('Check out my custom ' + this.dataService.appName + ' chart!');
-    let body = encodeURIComponent('I created a custom health chart using' + this.dataService.appName +
+    let subject = encodeURIComponent('Check out my custom ' + AppSettings.APP_NAME + ' chart!');
+    let body = encodeURIComponent('I created a custom health chart using' + AppSettings.APP_NAME +
       '.  You can view it by clicking the link below.\n' + chart.name + ': ' + link);
     window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
   }

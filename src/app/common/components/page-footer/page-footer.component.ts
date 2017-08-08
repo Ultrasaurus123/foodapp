@@ -15,53 +15,25 @@ import { AppSettings } from '../../../';
 
 export class PageFooterComponent implements OnInit {
 
-  public menuOpen: boolean = false;
-  public menuItems: Array<{ name: string, display: string, link: string, data?: any }>;
-
-  private displays: Array<string>;
+  private appName: string = AppSettings.APP_NAME;
+  private footerLinks: any = AppSettings.FOOTER_LINKS;
   private footerMargin: boolean;
-  private myChartsActive: boolean;
-  private self: any;
 
   constructor(private router: Router, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
-    this.menuItems = AppSettings.NAV_MENU;
-    this.displays = this.menuItems.map(elem => { return elem.display; });   
-    this.updateMenuItems();
-  }
-
-  public updateMenuItems() {
-     this.textService.getText(this.displays).subscribe(
-      text => {
-        for (let i = 0; i < this.menuItems.length; i++) {
-          this.menuItems[i].display = text[i];
-        }
-      }
-    )
   }
 
   public ngDoCheck() {
-    if (this.textService.languageChanged) {
-      this.updateMenuItems();
-      this.textService.languageChanged = false;
-    } 
     this.footerMargin = (this.dataService.currentPage === 'Search');
-    let myCharts = localStorage.getItem('myCharts');
-    if (myCharts) {
-      this.dataService.myCharts = JSON.parse(myCharts);
-      this.myChartsActive = this.dataService.myCharts && this.dataService.myCharts.length > 0;
-    }  
+    console.log(this.footerMargin);
   }
 
-  public toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
-
-  public clickMenuLink(menuItem: { name: string, link: string, data?: any }) {
-    if (menuItem.name !== 'My Charts' || this.myChartsActive) {
-      this.menuOpen = false;
-      this.router.navigate([menuItem.link, menuItem.data || {}]);
+  public clickFooterLink(link: string) {
+    if (link === "contact") {
+      window.location.href = 'mailto:contact@healthfoodsmatrix.com';
+    } else {
+      this.router.navigateByUrl(link);
     }  
   }
 

@@ -1,3 +1,15 @@
-<div>
-Copyright 2017
+<div [class.fixed-footer]="footerMargin" class="col-12 footer">
+<hr [hidden]="footerMargin">
+<div class="footer-links">
+    <a *ngFor="let link of footerLinks; let i = index;" (click)="clickFooterLink(link.link)">
+        <span>{{link.display}}</span><span [hidden]="i === footerLinks.length - 1">&nbsp;|&nbsp;</span>
+    </a>
+</div>
+<div class="copyright">
+    <span>&copy; 2017 {{appName}}. All rights reserved.</span>
+</div>
+<div [hidden]="footerMargin" class="disclosure">
+    <span>The content on this website is provided for your information only and should not be used for diagnosing or treating a health problem. It is not intended as a substitute for the advice provided by physicians or healthcare professionals. </span>
+</div>   
+<br>
 </div>

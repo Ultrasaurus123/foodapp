@@ -40,27 +40,13 @@ export class HomeComponent implements OnInit {
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.currentPage = 'Home';
+    this.dataService.currentPageText = "Home";
     this.dataService.footerMargin = false;
-    this.textService.getText(['Home']).subscribe(
-      text => this.dataService.currentPageText = text[0]);
-    this.textService.getText(['Welcome to ' + this.dataService.appName]).subscribe(
-      text => this.pageText.headline = text);
-    this.textService.getText([this.dataService.appName + 
-    ` helps you find foods that can help with certain medical conditions while warning you about potential side effects they may have on other conditions.`]).subscribe(
-      text => this.pageText.pageInfo = text);
-    this.textService.getText(['Click here for a quick guide on using this application']).subscribe(
-      text => this.pageText.helpLink = text);
-    this.textService.getText(['To get started, choose what you want to search by:']).subscribe(
-      text => this.pageText.getStarted = text);
-    this.textService.getText(['Foods', 'Conditions', 'Deselect All', 'Continue', 'Search:']).subscribe(text => { 
-      console.log(text);
-      this.pageText.foods = text[0];
-      this.pageText.conditions = text[1];
-      this.pageText.deselectAll = text[2]
-      this.pageText.continue = text[3];
-      this.pageText.search = text[4];
-    });
-
+    this.pageText.headline = 'Welcome to ' + AppSettings.APP_NAME;
+    this.pageText.pageInfo = AppSettings.APP_NAME + 
+      ` helps you find foods that can help with certain medical conditions while warning you about potential side effects they may have on other conditions.`;
+    this.pageText.helpLink = 'Click here for a quick guide on using this application';
+    this.pageText.getStarted = 'To get started, choose what you want to search by:';
     this.dataService.loadFoods();
     this.dataService.loadConditions();
 

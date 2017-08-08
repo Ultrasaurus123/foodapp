@@ -1,7 +1,7 @@
 // create margin and padding classes (increments of 5)
 // for bottom, top, right, left
 
-@for $i from 0 through 100 {
+@for $i from 0 through 200 {
    @if $i % 5 == 0 {  
     .m-b-#{$i} { margin-bottom: $i+px; }
     .m-t-#{$i} { margin-top: $i+px; }
