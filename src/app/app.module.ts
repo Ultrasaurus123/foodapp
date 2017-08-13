@@ -162,9 +162,9 @@ export class AppModule {
 export class AppSettings {
   public static APP_NAME: string = 'Health Foods Matrix';
 
-  //public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
+  public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING
-  public static API_ENDPOINT: string = 'http://localhost:3000/';
+  //public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static MAX_SELECTIONS: number = 10;
   public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Home', display: 'Home', link: 'home' },
