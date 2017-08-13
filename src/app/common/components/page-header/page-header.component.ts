@@ -32,13 +32,6 @@ export class PageHeaderComponent implements OnInit {
   }
 
   public updateMenuItems() {
-     this.textService.getText(this.displays).subscribe(
-      text => {
-        for (let i = 0; i < this.menuItems.length; i++) {
-          this.menuItems[i].display = text[i];
-        }
-      }
-    )
   }
 
   public ngDoCheck() {

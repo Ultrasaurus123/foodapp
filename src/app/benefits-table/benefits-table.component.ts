@@ -18,7 +18,7 @@ import { DialogService } from "ng2-bootstrap-modal";
 })
 export class BenefitsTableComponent implements OnInit {
   private selected: Array<string>;
-  private selectedHeadings: Array<string>;
+  private selectedHeadings: Array<{ heading: string, displayText: string }>;
   private view: string;
   private heading: string;
   private dataArray: Array<any>;
@@ -29,6 +29,10 @@ export class BenefitsTableComponent implements OnInit {
   private sub: any;
   private itemCount: number;
   private filteredColumns: any = {};
+  private translatedItems: any = {};
+  private translatedSelections: any = {};
+  private tableView: { selection: string, items: string };
+  
 
   constructor(private http: Http, private router: Router, private dataService: DataService,
     private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService) { }
@@ -86,17 +90,17 @@ export class BenefitsTableComponent implements OnInit {
       type: '',
       asc: true
     };
-    this.textService.getText(['Beneficial Effect','Assists','Mixed Effects','Inhibits','Negative Effect']).subscribe(
-        text => {
-          this.filterOptions = [
-            { name: text[0], checked: false },
-            { name: text[1], checked: false },
-            { name: text[2], checked: false },
-            { name: text[3], checked: false },
-            { name: text[4], checked: false }
-          ];
-        }
-    );
+    this.filterOptions = [
+      { name: 'Beneficial Effect', checked: false },
+      { name: 'Assists', checked: false },
+      { name: 'Mixed Effects', checked: false },
+      { name: 'Inhibits', checked: false },
+      { name: 'Negative Effect', checked: false }
+    ];
+    this.tableView = {
+      selection: this.view,
+      items: this.view === 'food' ? 'condition' : 'food'
+    };
   };
 
   private initServiceCall = function () {
@@ -107,14 +111,20 @@ export class BenefitsTableComponent implements OnInit {
       query = 'conditions=' + encodeURIComponent(this.selected.join());
     }
 
-    this.http.get(AppSettings.API_ENDPOINT + 'getCompactData?' + query)
-      .map(res => { return res.json() })
-      .catch(this.handleError)
-      .subscribe(data => this.processData(data),
-      error => console.error('Error getting all conditions: ' + error)
-      );
-
-  }
+    this.textService.getTranslation(this.tableView.selection).subscribe(translatedSelections => {
+      this.translatedSelections = translatedSelections;
+      this.textService.getTranslation(this.tableView.items).subscribe(translatedItems => {
+        this.translatedItems = translatedItems;
+        console.log(translatedItems);
+        this.http.get(AppSettings.API_ENDPOINT + 'getCompactData?' + query)
+          .map(res => { return res.json() })
+          .catch(this.handleError)
+          .subscribe(data => this.processData(data),
+            error => console.error('Error getting all items: ' + error)
+          );
+      });
+    });
+  }  
 
   private processData(data: Array<any>, defaultSort: string) {
     this.processSelected();
@@ -134,21 +144,33 @@ export class BenefitsTableComponent implements OnInit {
     let sessionHidden: string = sessionStorage.getItem('hidden');
     let hiddenItems: Array<string> = (sessionHidden) ? JSON.parse(sessionHidden) : [];
     for (let item in dataHash) {
-      this.textService.getText([item]).subscribe(
-        text => {
-          itemIndex++;
-          let hidden = false;
-          let hiddenIndex = hiddenItems.indexOf(item);
-          if (hiddenIndex > -1) {
-            hidden = true;
-            hiddenItems.splice(hiddenIndex, 1);
-          }
-          this.dataArray.push({ item: text[0], values: dataHash[item], hidden: hidden });
-          if (itemIndex === this.itemCount) {
-            this.sort('effect');
-          }
-        }
-      );
+      itemIndex++;
+      let hidden = false;
+      let hiddenIndex = hiddenItems.indexOf(item);
+      if (hiddenIndex > -1) {
+        hidden = true;
+        hiddenItems.splice(hiddenIndex, 1);
+      }
+      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden });
+      if (itemIndex === this.itemCount) {
+        console.log(this.dataArray);
+        this.sort('effect');
+      }
+      // this.textService.getText([item]).subscribe(
+      //   text => {
+      //     itemIndex++;
+      //     let hidden = false;
+      //     let hiddenIndex = hiddenItems.indexOf(item);
+      //     if (hiddenIndex > -1) {
+      //       hidden = true;
+      //       hiddenItems.splice(hiddenIndex, 1);
+      //     }
+      //     this.dataArray.push({ item: text[0], values: dataHash[item], hidden: hidden });
+      //     if (itemIndex === this.itemCount) {
+      //       this.sort('effect');
+      //     }
+      //   }
+      // );
     }
   }
 
@@ -156,29 +178,27 @@ export class BenefitsTableComponent implements OnInit {
     this.selectedHeadings = [];
     let center = 15;
     for (let s = 0; s < this.selected.length; s++) {
-      this.textService.getText([this.selected[s]]).subscribe(
-        text => {
-          let selected = text[0];
-          this.selectedHeadings.push(selected);
-          if (selected.length > center) {
-            let spaces = [], i = -1, closestToCenter = 0;
-            while ((i = selected.indexOf(' ', i+1)) != -1) {
-              spaces.push(i);
-              closestToCenter = (Math.abs(center - i) < Math.abs(center - closestToCenter)) ? i : closestToCenter;
-            }
-            //if there are any spaces, break on space closest to center
-            if (spaces.length > 0) {
-              let left = selected.slice(0, closestToCenter);
-              let right = selected.slice(closestToCenter + 1);
-              this.selectedHeadings[s] = left + '<br>' + right;
-            }
-            //otherwise hyphenate
-            else {
-
-            }
-          }
+      let selected = {
+        heading: this.selected[s],
+        displayText: this.translatedSelections[this.selected[s].toLowerCase()] || this.selected[s]
+      };
+      this.selectedHeadings.push(selected);
+      if (selected.displayText.length > center) {
+        let spaces = [], i = -1, closestToCenter = 0;
+        while ((i = selected.displayText.indexOf(' ', i+1)) != -1) {
+          spaces.push(i);
+          closestToCenter = (Math.abs(center - i) < Math.abs(center - closestToCenter)) ? i : closestToCenter;
         }
-      )
+        //if there are any spaces, break on space closest to center
+        if (spaces.length > 0) {
+          let left = selected.displayText.slice(0, closestToCenter);
+          let right = selected.displayText.slice(closestToCenter + 1);
+          this.selectedHeadings[s].displayText = left + '<br>' + right;
+        }
+        //otherwise hyphenate
+        else {
+        }
+      }
     }
   }
 

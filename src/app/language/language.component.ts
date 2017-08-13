@@ -21,7 +21,7 @@ declare var google: any;
   
 export class LanguageComponent implements OnInit {
   private pageText: any = {};
-  private selectedLang: string;
+  private selectedLang: { name: string, code: string };
   private languageSet: Array<{ name: string, code: string }> = [];
   private searchModel: string = '';
 
@@ -31,10 +31,8 @@ export class LanguageComponent implements OnInit {
     window.scrollTo(0, 0);
     this.selectedLang = this.textService.language;
     this.dataService.currentPage = 'Language';
-    this.textService.getText(['Language']).subscribe(
-      text => this.dataService.currentPageText = text[0]);
-    this.textService.getText(['Search:']).subscribe(
-      text => this.pageText.search = text);
+    this.dataService.currentPageText = 'Language';
+    this.pageText.search ='Search:';
     this.languageSet = AppSettings.LANGUAGES;
 
     //new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
@@ -49,8 +47,9 @@ export class LanguageComponent implements OnInit {
     //});
   }
 
-  private changeLanguage(languageCode: string): void {
-    this.textService.language = languageCode;
+  private changeLanguage(language: { name: string, code: string }): void {
+    this.textService.language = language;
+    sessionStorage.setItem('lang', JSON.stringify(language));
     this.router.navigateByUrl('home');
   }
 }

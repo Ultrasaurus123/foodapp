@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
+import { AppSettings } from '../..';
+// import { DataService } from './data.service'
 
 @Injectable()
 export class TextService {
     public languageChanged: boolean = false;
 
-    private _language: string = 'en';
-    get language(): string {
+    private _language: { name: string, code: string } = { name: 'English', code: 'en' };
+    get language(): { name: string, code: string } {
         return this._language;
     }
-    set language(code: string) {
-        this._language = code;
+    set language(language: { name: string, code: string }) {
+        this._language = language;
         this.languageChanged = true;
     }
     private static _instance: TextService;
@@ -21,21 +23,23 @@ export class TextService {
         if (!TextService._languages || TextService.length === 0) {
             this.initLanguages();
         }
+        let sessionLang = sessionStorage.getItem('lang');
+        if (sessionLang) {
+            this._language = JSON.parse(sessionLang);
+        }
         return TextService._instance = TextService._instance || this;
     }
-
-    get
 
     public getText(source: Array<string>): Observable<Array<string>> {
         if (!source || source.length === 0) {
             return null;
         }
-        if (this.language === 'en') {
+        if (this.language.code === 'en') {
             return Observable.of(source);
         }
         let queryString = source.join('. ');
 
-        return this.http.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + this.language + '&dt=t&q=' + encodeURI(queryString))
+        return this.http.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + this.language.code + '&dt=t&q=' + encodeURI(queryString))
             .map(res => {
                 let text = res.text();
                 while (text.indexOf(',,') > -1) {
@@ -71,6 +75,24 @@ export class TextService {
                 // }
                 // parsedStrings.push(translation);
                 return parsedStrings;
+            });
+        //   .catch(this.handleError)
+    }
+
+    public getTranslation(type: string): Observable<any> {
+        if (!type) {
+            return Observable.of({});
+        }
+        if (this.language.code === 'en') {
+            return Observable.of({});
+//            return Observable.of((type === 'food') ? this.dataService.allFoods : this.dataService.allConditions);
+        }
+        let queryString = 'type=' + type + '&lang=' + this.language.name.toLowerCase() + '&code=' + this.language.code.toLowerCase();
+
+        return this.http.get(AppSettings.API_ENDPOINT + 'getTranslation?' + encodeURI(queryString))
+            .map(res => {
+                console.log(res);
+                return res.json();
             });
         //   .catch(this.handleError)
     }
