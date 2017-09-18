@@ -2,13 +2,13 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { DataService, PromptModalComponent, Chart } from '../common';
+import { ApiService, DataService, PromptModalComponent, Chart } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 
 @Component({
@@ -22,13 +22,15 @@ export class DataMonitorComponent implements OnInit {
   private effectCounts: Array<Array<number>>;
   private currentSort: { type: string, asc: boolean };
 
-  constructor(private http: Http, private router: Router, private dataService: DataService,
+  constructor(private apiService: ApiService, private router: Router, private dataService: DataService,
     private dialogService: DialogService, private route: ActivatedRoute) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Data Monitor';
-    this.dataService.currentPage = 'Data Monitor';
+    this.dataService.page = {
+      text: 'Data Monitor',
+      name: 'Data Monitor'
+    };
     this.init();
   }
   
@@ -45,9 +47,7 @@ export class DataMonitorComponent implements OnInit {
     let query = this.view + '=' + (this.view === 'food') ? encodeURIComponent(this.dataService.allFoods.join())
       : encodeURIComponent(this.dataService.allConditions.join());
 
-    this.http.get(AppSettings.API_ENDPOINT + 'getData?' + query)
-      .map(res => { return res.json() })
-      .catch(this.handleError)
+    this.apiService.get('getData?' + query)
       .subscribe(data => this.processData(data, this.view),
       error => console.error('Error getting all conditions: ' + error)
       );
@@ -63,7 +63,6 @@ export class DataMonitorComponent implements OnInit {
       dataHash[data[i][itemIndex]] = dataHash[data[i][itemIndex]] || {'2': 0, '1': 0, '0': 0, '-1': 0, '-2': 0};
       dataHash[data[i][itemIndex]][data[i][benefitIndex]]++;
     }
-    console.log(dataHash);
 
     // convert hash to array so we can sort/filter/manipulate easier
     for (let item in dataHash) {
@@ -184,19 +183,5 @@ export class DataMonitorComponent implements OnInit {
         return 0;
       }
     }
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, we might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 }

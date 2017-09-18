@@ -2,7 +2,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { DataService } from '../common';
+import { DataService, NavigateService } from '../common';
 import { Router } from '@angular/router';
 import { PageHeaderComponent } from '../common';
 
@@ -12,12 +12,15 @@ import { PageHeaderComponent } from '../common';
   templateUrl: './agreement.component.html'
 })
 export class AgreementComponent implements OnInit {
-  constructor(private router: Router, private dataService: DataService) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Terms and Conditions';
-    this.dataService.currentPage = 'Disclaimer';
+    this.dataService.page = {
+      text: 'Terms and Conditions',
+      name: 'Disclaimer',
+      footerMargin: false
+    }
     let agreement = localStorage.getItem('agreement');
     this.dataService.agreement = agreement === 'true';
   }
@@ -25,6 +28,6 @@ export class AgreementComponent implements OnInit {
   private clickAgree() {
     localStorage.setItem('agreement', 'true');
     this.dataService.agreement = true;
-    this.router.navigateByUrl(this.dataService.disclaimerRedirectUrl);
+    this.navigateService.navigateTo(this.dataService.disclaimerRedirectUrl);
   }
 }

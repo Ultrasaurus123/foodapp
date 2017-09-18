@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { DataService } from '..'
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { DataService, NavigateService } from '..'
 
 @Injectable()
 export class CanActivateAgreement implements CanActivate {
-  constructor(private dataService: DataService, private router: Router) {
+  constructor(private dataService: DataService, private navigateService: NavigateService) {
   }
   
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -12,7 +12,7 @@ export class CanActivateAgreement implements CanActivate {
     if (savedAgreement || this.dataService.agreement) {
       return true;
     } else {
-      this.router.navigateByUrl('disclaimer');
+      this.navigateService.navigateTo('disclaimer');
       this.dataService.disclaimerRedirectUrl = state.url;
       return false;
     }

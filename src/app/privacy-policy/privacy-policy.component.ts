@@ -16,7 +16,9 @@ export class PrivacyPolicyComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Privacy Policy';
-    this.dataService.currentPage = 'Privacy';
+    this.dataService.page = {
+      text: 'Privacy Policy',
+      name: 'Privacy'
+    };
   }
 }

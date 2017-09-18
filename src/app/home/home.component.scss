@@ -74,7 +74,7 @@ div .disabled {
 p {
     font-size: 14px;
     
-    @media (max-width: 359px) { 
+    @media (max-width: 375px) { 
     font-size: 12px;
     }
 }
@@ -87,4 +87,8 @@ p.help-link {
     @media (max-width: 359px) { 
     font-size: 10px;
     }
+}
+
+hr {
+    margin-bottom: 5px;
 }

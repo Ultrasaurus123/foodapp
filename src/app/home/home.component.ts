@@ -4,10 +4,10 @@ import {
 } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { DataService, TextService } from '../common';
+import { DataService, TextService, NavigateService } from '../common';
 import { AppSettings } from '..';
 
 @Component({
@@ -35,132 +35,28 @@ export class HomeComponent implements OnInit {
   private started: boolean = false;
   private pageText: any = {};
 
-  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService) { }
+  constructor(private http: Http, private router: Router, private dataService: DataService, private route: ActivatedRoute,
+    private textService: TextService, private navigateService: NavigateService) { }
 
   public ngOnInit() {
+    this.navigateService.getRouteData(this.route).subscribe(data => {});
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'Home';
-    this.dataService.currentPageText = "Home";
-    this.dataService.footerMargin = false;
+    this.dataService.page = {
+      text: 'Home',
+      name: 'Home'
+    };
     this.pageText.headline = 'Welcome to ' + AppSettings.APP_NAME;
     this.pageText.pageInfo = AppSettings.APP_NAME + 
-      ` helps you find foods that can help with certain medical conditions while warning you about potential side effects they may have on other conditions.`;
+      ` collects health information from multiple sources and matches them to your unique set of multiple health concerns. 
+      It also warns you of potential side effects. The Summary Matrix compares them for your convenience.`;
     this.pageText.helpLink = 'Click here for a quick guide on using this application';
-    this.pageText.getStarted = 'To get started, choose what you want to search by:';
+    this.pageText.getStarted = 'Alternatively, you may search for the benefits and side effects of your favorite foods or remedies:';
     this.dataService.loadFoods();
     this.dataService.loadConditions();
-
-  //   this.http.get(AppSettings.API_ENDPOINT + 'foods')
-  //     .map(this.extractData)
-  //     .catch(this.handleError)
-  //     .subscribe(
-  //     foods => {
-  //       this.dataService.allFoods = foods; this.textService.getText(this.dataService.allFoods.map(function (elem) {
-  //         return elem.item;
-  //       })).subscribe(
-  //         data => console.log(data)
-  //         );
-  //     },
-  //     error => console.error('Error getting all foods: ' + error));
-
-  //   this.http.get(AppSettings.API_ENDPOINT + 'conditions')
-  //     .map(this.extractData)
-  //     .catch(this.handleError)
-  //     .subscribe(
-  //     conditions => this.dataService.allConditions = conditions,
-  //     error => console.error('Error getting all conditions: ' + error));
   }
 
   private showItemList(type) {
     sessionStorage.setItem('view', type);
-    this.router.navigateByUrl('search');
-
-    // window.scrollTo(0, 0);
-    // this.searchModel = '';
-    // this.showFood = type === 'food';
-    // this.showCondition = type === 'condition';
-    // this.dataService.footerMargin = true;
-  }
-
-  private onSelectItem(item: any, type: string) {
-    item.checked = !item.checked;
-    if (item.checked === true) {
-      if (type === 'food') {
-        this.checkedFoods++;
-      } else if (type === 'condition') {
-        this.checkedConditions++;
-      }
-    } else {
-      if (type === 'food') {
-        this.checkedFoods--
-      } else if (type === 'condition') {
-        this.checkedConditions--;
-      }
-    }
-  }
-
-  private deselectAll = function () {
-    this.showFood = this.showCondition = false;
-    this.dataService.footerMargin = false;
-  }
-
-  private selectItems = function () {
-    if ((this.showCondition && this.checkedConditions > 0) || (this.showFood && this.checkedFoods > 0)) {
-      let item = (this.showFood) ? 'food' : 'condition';
-      sessionStorage.setItem('view', item);
-      if (item === 'food') {
-        sessionStorage.setItem('selected', JSON.stringify(this.getSelectedItems(this.dataService.allFoods)));
-      } else if (item === 'condition') {
-        sessionStorage.setItem('selected', JSON.stringify(this.getSelectedItems(this.dataService.allConditions)));
-      }
-      this.router.navigateByUrl('benefits');
-    }
-  }
-
-  private getSelectedItems(allItems: Array<any>) {
-    let selectedItems = [];
-    for (let item of allItems) {
-      if (item.checked) {
-        selectedItems.push(item.item);
-      }
-    }
-    return selectedItems;
-  }
-
-  private searchValueChanged(newValue) {
-    window.scrollTo(0, 0);
-    this.searchModel = newValue;
-    if (this.showFood) {
-      this.itemSet = this.dataService.allFoods.filter(item => {
-        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
-      });
-    } else if (this.showCondition) {
-      this.itemSet = this.dataService.allConditions.filter(item => {
-        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
-      });
-    }
-  }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    let returnData = [];
-    for (let item of body) {
-      returnData.push({ item: item, checked: false });
-    }
-    return returnData || {};
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, we might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
+    this.navigateService.navigateTo('search');
   }
 }

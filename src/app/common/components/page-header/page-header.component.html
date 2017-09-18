@@ -3,13 +3,17 @@
 <div class="container-fade-bottom" [class.m-b-145]="footerMargin"></div>
 
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
-  <li><a>{{dataService.currentPageText}}</a></li>
+  <li><a>{{getMenuTitle()}}</a></li>
   <template ngFor let-item [ngForOf]="menuItems"> 
-  <li [class.selected-hide-mobile]="item.display === dataService.currentPageText" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
-    <a [class.disabled]="item.name === 'My Charts' && !myChartsActive" (click)="clickMenuLink(item)">{{item.display}}</a>
+  <li [class.selected-hide-mobile]="item.display === menuTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
+    <a (click)="clickMenuLink(item)" [class.disabled]="item.name === 'My Charts' && !myChartsActive" >
+    {{item.display}}
+    </a>
   </li>
   </template>
   <li class="icon no-hover">
     <a style="font-size:15px;" class="no-hover" (click)="toggleMenu()" (focusout)="menuOpen = false;">&#9776;</a>
 </li>
 </ul>
+
+

@@ -1,0 +1,40 @@
+<div [class.page-loading]="dataService.dataLoading || !dataService.allFoods || !dataService.allConditions"></div>
+<div class="selection-container" [hidden]="dataService.dataLoading || !dataService.allFoods || !dataService.allConditions">
+  <div class="checkbox-container">
+    <div class="col-12 bold text-center">
+        <span *ngIf="view === 'condition'">Medical Concerns</span>
+        <span *ngIf="view === 'food'">Foods and Remedies</span>
+    </div>
+    <table class="translation-table">
+      <thead>
+        <th class="bold text-center">
+          {{textService.language}}
+        </th>
+        <th class="bold text-center">
+          English
+        </th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? dataService.allFoods : dataService.allConditions">
+          <td>
+            {{item.displayText}}
+          </td>
+          <td>
+            {{item.item}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="col-12">
+  <div class="row footer">
+    <div class="col-6">
+      {{pageText.search}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+    </div>
+    <div class="col-6" [class.show-food-button]="view === 'condition'" [class.show-condition-button]="view === 'food'">
+        <button class="button" (click)="changeView()">{{getButtonLabel()}}</button>       
+      </div>
+  </div>
+</div>

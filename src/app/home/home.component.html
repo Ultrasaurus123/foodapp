@@ -2,24 +2,25 @@
   <div class="col-12">
     <span class="page-header">{{pageText.headline}}</span>
     <hr>
+    <div style="text-align: center">
+      <img class="screen-shot" src="../../assets/img/screenshot.jpg" />
+    </div>
     <p style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
     <br>
     <p>{{pageText.getStarted}}</p>
     <div class="row">
       <div class="col-6">
-        <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
-          <img class="button-icon" src="../../assets/img/foods-icon.png" /><span class="button-label">Foods</span>
+        <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
+          <img class="button-icon" src="../../assets/img/conditions-icon.png" /><span class="button-label">Health Concerns</span>
           </button>
       </div>
       <div class="col-6">
-        <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
-          <img class="button-icon" src="../../assets/img/conditions-icon.png" /><span class="button-label">Conditions</span>
+        <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
+          <img class="button-icon" src="../../assets/img/foods-icon.png" /><span class="button-label">Foods / Remedies</span>
           </button>
       </div>
     </div>
-    <div style="text-align: center">
-    <img class="screen-shot" src="../../assets/img/screenshot.png" />
-    </div>
+
     <br>
     <p class="help-link"><a [routerLink]="['/help']">{{pageText.helpLink}}</a></p>
   </div>

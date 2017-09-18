@@ -5,6 +5,7 @@ import {
 import { Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { TextService } from '../../services/text.service';
+import { NavigateService } from '../../services/navigate.service';
 import { AppSettings } from '../../../';
 
 @Component({
@@ -19,21 +20,22 @@ export class PageFooterComponent implements OnInit {
   private footerLinks: any = AppSettings.FOOTER_LINKS;
   private footerMargin: boolean;
 
-  constructor(private router: Router, private dataService: DataService, private textService: TextService) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
   }
 
   public ngDoCheck() {
-    this.footerMargin = (this.dataService.currentPage === 'Search');
-    console.log(this.footerMargin);
+    this.footerMargin = (this.dataService.page) ? this.dataService.page.footerMargin : false;
   }
 
   public clickFooterLink(link: string) {
-    if (link === "contact") {
+    if (link === 'contact') {
       window.location.href = 'mailto:contact@healthfoodsmatrix.com';
+    } else if (link === 'facebook') {
+      window.open(AppSettings.FACEBOOK_LINK, '_blank');  
     } else {
-      this.router.navigateByUrl(link);
+      this.navigateService.navigateTo(link);
     }  
   }
 

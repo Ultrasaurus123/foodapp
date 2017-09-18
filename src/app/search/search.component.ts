@@ -2,12 +2,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { DataService, TextService } from '../common';
+import { DataService, TextService, NavigateService } from '../common';
 import { AppSettings } from '..';
 
 @Component({
@@ -27,29 +25,44 @@ export class SearchComponent implements OnInit {
   private loaded: boolean = false;
   private sub: any;
 
-  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService, private route: ActivatedRoute) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService, private route: ActivatedRoute) { }
 
   public ngOnInit() {
-    this.sub = this.route
-      .params
-      .subscribe((data: any) => {
-        let dataView = (data) ? data.view : null;
-        if (dataView && this.verifyView(dataView)) {
-          this.view = dataView;
+    this.navigateService.getRouteData(this.route).subscribe(data => {
+      let dataView = (data) ? data.view : null;
+      if (dataView && this.verifyView(dataView)) {
+        this.view = dataView;
+        this.init();
+      } else {
+        this.view = sessionStorage.getItem('view');
+        if (this.view && this.verifyView(this.view)) {
           this.init();
         } else {
-          this.view = sessionStorage.getItem('view');
-          if (this.view && this.verifyView(this.view)) {
-            this.init();
-          } else {
-            this.router.navigateByUrl('home');
-          }
+          this.navigateService.navigateTo('home');
         }
-      });
+      }
+    });
+    // this.route
+    //   .params
+    //   .subscribe((data: any) => {
+    //     let dataView = (data) ? data.view : null;
+    //     if (dataView && this.verifyView(dataView)) {
+    //       this.view = dataView;
+    //       this.init();
+    //     } else {
+    //       this.view = sessionStorage.getItem('view');
+    //       if (this.view && this.verifyView(this.view)) {
+    //         this.init();
+    //       } else {
+    //         this.navigateService.navigateTo('home');
+    //       }
+    //     }
+    //   });
   }
   
   public ngDoCheck() {
-    this.sub = this.route.params.subscribe(data => {
+    // this.sub = this.route.params.subscribe(data => {
+    this.navigateService.getRouteData(this.route).subscribe(data => {
       let dataView = (data) ? data['view'] : null;
       if (dataView && dataView != this.view) {
         this.view = dataView;
@@ -60,10 +73,17 @@ export class SearchComponent implements OnInit {
 
   private init() {
     window.scrollTo(0, 0);
-    this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
-    this.dataService.currentPage = 'Search';
-    this.dataService.currentPageText = 'Search by ' + (this.view === 'food' ? 'Food / Remedy' : 'Medical Concern');
-    this.dataService.footerMargin = true;
+    console.log(this.textService.language);
+    
+    //if (this.textService.language.toLowerCase() === 'english') {
+      this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
+//    }
+    
+    this.dataService.page = {
+      text: 'Search by ' + (this.view === 'food' ? 'Food or Remedy' : 'Health Concern'),
+      name: 'Search',
+      footerMargin: true
+    };
 
     this.checkedItems = 0;
     let selectedItems = sessionStorage.getItem('selected' + this.view);
@@ -103,7 +123,8 @@ export class SearchComponent implements OnInit {
       let itemName = 'selected' + this.view;
       sessionStorage.setItem(itemName, JSON.stringify(selectedItems));
       sessionStorage.setItem('view', this.view);
-      this.router.navigateByUrl('benefits');
+      sessionStorage.removeItem('currentFilter');
+      this.navigateService.navigateTo('benefits');
     }
   }
 
@@ -149,28 +170,5 @@ export class SearchComponent implements OnInit {
         return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
       });
     }
-  }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    let returnData = [];
-    for (let item of body) {
-      returnData.push({ item: item, checked: false });
-    }
-    return returnData || {};
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, we might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 }

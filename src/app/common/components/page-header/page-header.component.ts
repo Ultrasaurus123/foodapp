@@ -5,6 +5,7 @@ import {
 import { Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { TextService } from '../../services/text.service';
+import { NavigateService } from '../../services/navigate.service';
 import { AppSettings } from '../../../';
 
 @Component({
@@ -20,10 +21,11 @@ export class PageHeaderComponent implements OnInit {
 
   private displays: Array<string>;
   private footerMargin: boolean;
+  private menuTitle: string;
   private myChartsActive: boolean;
   private self: any;
 
-  constructor(private router: Router, private dataService: DataService, private textService: TextService) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
     this.menuItems = AppSettings.NAV_MENU;
@@ -35,11 +37,12 @@ export class PageHeaderComponent implements OnInit {
   }
 
   public ngDoCheck() {
-    if (this.textService.languageChanged) {
-      this.updateMenuItems();
-      this.textService.languageChanged = false;
-    } 
-    this.footerMargin = (this.dataService.currentPage === 'Search');
+    // if (this.textService.languageChanged) {
+    //   this.updateMenuItems();
+    //   this.textService.languageChanged = false;
+    // } 
+    this.footerMargin = (this.dataService.page) ? this.dataService.page.footerMargin : false;
+    this.menuTitle = (this.dataService.page) ? this.dataService.page.text : '';
     let myCharts = localStorage.getItem('myCharts');
     if (myCharts) {
       this.dataService.myCharts = JSON.parse(myCharts);
@@ -52,10 +55,20 @@ export class PageHeaderComponent implements OnInit {
   }
 
   public clickMenuLink(menuItem: { name: string, link: string, data?: any }) {
-    if (menuItem.name !== 'My Charts' || this.myChartsActive) {
+    this.menuOpen = false;
+    if (menuItem.name === 'Feedback') {
+      window.location.href = 'mailto:contact@healthfoodsmatrix.com';
+    } else if (menuItem.name === 'Facebook') {
+      window.open(AppSettings.FACEBOOK_LINK, '_blank');  
+    } else if (menuItem.name !== 'My Charts' || this.myChartsActive) {
       this.menuOpen = false;
-      this.router.navigate([menuItem.link, menuItem.data || {}]);
+      // this.router.navigate([menuItem.link, menuItem.data || {}]);
+      this.navigateService.navigateTo(menuItem.link, menuItem.data);      
     }  
+  }
+
+  private getMenuTitle() {
+    return this.menuTitle + (this.textService.language !== 'English' ? ' (' + this.textService.language +')' : '');
   }
 
 }

@@ -37,6 +37,7 @@ import { DetailsComponent } from './details';
 import { WarningsComponent } from './warnings';
 import { HelpComponent } from './help';
 import { LanguageComponent } from './language';
+import { TranslationTableComponent } from './translation-table';
 import { NoContentComponent } from './no-content';
 import { DataMonitorComponent } from './data-monitor';
 
@@ -44,7 +45,7 @@ import { ConfirmModalComponent } from './common';
 import { PromptModalComponent } from './common';
 
 import { AppState, InternalStateType } from './app.service';
-import { DataService, TextService } from './common';
+import { ApiService, DataService, TextService, NavigateService } from './common';
 import { CanActivateAgreement } from './common';
 
 import { KeysPipe } from './common';
@@ -61,7 +62,7 @@ import '../styles/modals.scss';
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState, DataService, TextService, CanActivateAgreement
+  AppState, ApiService, DataService, TextService, NavigateService, CanActivateAgreement
 ];
 
 type StoreType = {
@@ -89,6 +90,7 @@ type StoreType = {
     WarningsComponent,
     HelpComponent,
     LanguageComponent,
+    TranslationTableComponent,
     NoContentComponent,
     KeysPipe,
     ConfirmModalComponent,
@@ -165,14 +167,20 @@ export class AppSettings {
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING
   //public static API_ENDPOINT: string = 'http://localhost:3000/';
+  
+  public static FACEBOOK_LINK: string = 'http://www.facebook.com/Health-Foods-Matrix-1004157829720976/';  
+
   public static MAX_SELECTIONS: number = 10;
   public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Home', display: 'Home', link: 'home' },
-    { name: 'Search by Health Food', display: 'Search by Food / Remedy', link: 'search', data: { view: 'food' } },
-    { name: 'Search by Medical Condition', display: 'Search by Medical Concern', link: 'search', data: { view: 'condition' }  },
+    { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', data: { view: 'food' } },
+    { name: 'Search by Medical Condition', display: 'Search by Health Concern', link: 'search', data: { view: 'condition' }  },
     { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
-    { name: 'Language', display: 'Language', link: 'language' },
-    { name: 'Help', display: 'Help', link: 'help' }];
+    // { name: 'Language', display: 'Language', link: 'language' },
+    // { name: 'Translation Table', display: 'Translation Table', link: 'translation-table' },
+    { name: 'Help', display: 'Help', link: 'help' },
+    { name: 'Feedback', display: 'Provide Feedback', link: 'feedback' },
+    { name: 'Facebook', display: 'Follow us on Facebook', link: 'facebook' }];
     
   public static FOOTER_LINKS: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Terms and Conditions', display: 'Terms and Conditions', link: 'disclaimer' },

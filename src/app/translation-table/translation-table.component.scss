@@ -1,0 +1,102 @@
+/*styles for home content only*/
+@import '../../styles/variables';
+
+.home-container {
+    margin-bottom: 20px;
+}
+
+.selection-container {
+    margin-bottom: 165px;
+}
+
+.selection-container > select {
+  height: 100%;
+}
+
+
+.translation-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    display: table;
+    border: 1px solid #ccc;
+    font-size: 12px;
+}
+
+.translation-table thead th, .translation-table tbody td {
+    border: 1px solid #ccc;
+    font-size: 12px;
+
+    @media (max-width: 320px) { 
+        font-size: 10px;
+        max-width: 40px;
+        min-width: 20px;
+     }
+
+    @media (min-width: 321px) and (max-width: 767px) { 
+        max-width: 60px;
+        min-width: 20px;
+     }
+}
+
+.table-container {
+    margin-bottom: 20px;
+}
+
+.translation-table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.translation-table tr:nth-child(odd) {
+    background-color: #fff
+}
+
+.translation-table tr:nth-child(even) {
+    background-color: #f1f1f1
+}
+
+
+.checkbox-container {
+    height: 100%;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+.button-container {
+    height: 60px;
+
+    .button {
+        float: left;
+        width: 33.33%;
+    }
+}
+
+div .checked {
+    background: $nav-button-color;
+    color: white;
+}
+
+input[type="text"] {
+    width: 100%;
+}
+
+.show-condition-button {
+    @media (min-width: 358px) { 
+        padding-top: 15px;
+     }
+}
+.show-food-button {
+    @media (min-width: 310px) { 
+        padding-top: 15px;
+     }
+}
+
+.footer {
+    position: fixed;
+    bottom: 60px;
+    width: 100%;
+    background: white;
+    height: 85px;
+}
+
+

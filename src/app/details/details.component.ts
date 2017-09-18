@@ -2,13 +2,12 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { KeysPipe, DataService } from '../common';
+import { ApiService, KeysPipe, DataService, NavigateService } from '../common';
 
 @Component({
   selector: 'benefit-details',
@@ -30,12 +29,14 @@ export class DetailsComponent implements OnInit {
   private sideEffectsList: Array<string> = [];
   private maxSelection: number = AppSettings.MAX_SELECTIONS;
 
-  constructor(private http: Http, private router: Router, private dataService: DataService) { }
+  constructor(private apiService: ApiService, private navigateService: NavigateService, private dataService: DataService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'Details';
-    this.dataService.currentPageText = 'Explanation of Benefits and Effects';
+    this.dataService.page = {
+      text: 'Explanation of Benefits and Effects',
+      name: 'Details'
+    };
     //get state of this page
     this.view = sessionStorage.getItem('view');
     this.detailIndex = (this.view === 'food') ? 2 : 0;
@@ -49,7 +50,7 @@ export class DetailsComponent implements OnInit {
 
 
     if (!this.detailItem || !this.view || !this.selectedItems) {
-      this.router.navigateByUrl('benefits');
+      this.navigateService.navigateTo('benefits');
     } else {
       this.pageHeader = (this.view === 'food') ? 'Diet for ' : 'Health effects of ';
       this.pageHeader += this.detailItem;
@@ -71,18 +72,14 @@ export class DetailsComponent implements OnInit {
       query = 'foods=' + encodeURIComponent(this.detailItem) + '&conditions=' + encodeURIComponent(this.selectedItem);
     }
 
-    this.http.get(AppSettings.API_ENDPOINT + 'getData?' + query)
-      .map(res => { return res.json() })
-      .catch(this.handleError)
+    this.apiService.get('getData?' + query, true)
       .subscribe(data => this.processData(data),
       error => console.error('Error getting cross reference data: ' + error)
     );
     
     let warningQuery = 'foods=';
     warningQuery += (this.view === 'food') ? encodeURIComponent(this.selectedItems.join()) : encodeURIComponent(this.detailItem);
-    this.http.get(AppSettings.API_ENDPOINT + 'getWarnings?' + warningQuery)
-      .map(res => { return res.json() })
-      .catch(this.handleError)
+    this.apiService.get('getWarnings?' + warningQuery, true)
       .subscribe(data => this.processWarningsData(data),
       error => console.error('Error getting warnings data: ' + error)
       );
@@ -90,9 +87,7 @@ export class DetailsComponent implements OnInit {
     if (this.view === 'condition') {
       let sideEffectsQuery = 'food=';
       sideEffectsQuery += encodeURIComponent(this.detailItem);
-      this.http.get(AppSettings.API_ENDPOINT + 'getSideEffects?' + sideEffectsQuery)
-        .map(res => { return res.json() })
-        .catch(this.handleError)
+      this.apiService.get('getSideEffects?' + sideEffectsQuery, true)
         .subscribe(data => this.sideEffectsList = data,
         error => console.error('Error getting side effects data: ' + error)
         );
@@ -121,7 +116,6 @@ export class DetailsComponent implements OnInit {
       this.warningsObject[item].warnings.push(data[i][1]);
       this.warningsObject[item].sources.push(data[i][2]);
     }
-    console.log(this.warningsObject);
   }
 
   private getImages() {
@@ -131,9 +125,7 @@ export class DetailsComponent implements OnInit {
     if (this.dataArray.length > 0 && this.dataArray[0].length > 0) {
       imageQuery += ' ' + this.dataArray[0][0][this.detailIndex + 1];
     }
-    this.http.get('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
-      .map(res => { return res.json() })
-      .catch(this.handleError)
+    this.apiService.getExternal('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
       .subscribe(res => this.images = res.items,
       error => console.error('Error getting cross reference data: ' + error)
       );
@@ -168,19 +160,5 @@ export class DetailsComponent implements OnInit {
       this.selectedItems.push(condition);
       sessionStorage.setItem('selectedcondition', JSON.stringify(this.selectedItems));  
     }
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, we might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 }

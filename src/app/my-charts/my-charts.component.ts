@@ -3,7 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, PageHeaderComponent, ConfirmModalComponent, Chart } from '../common';
+import { DataService, PageHeaderComponent, ConfirmModalComponent, Chart, NavigateService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 import { AppSettings } from '..';
 
@@ -14,26 +14,27 @@ import { AppSettings } from '..';
 })
 export class MyChartsComponent implements OnInit {
   private myCharts: Array<Chart> = [];
-  constructor(private router: Router, private dataService: DataService, private dialogService: DialogService) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService, private dialogService: DialogService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'My Charts';
-    this.dataService.currentPageText = 'My Charts';
+    this.dataService.page = {
+      text: 'My Charts',
+      name: 'My Charts',
+    };
     this.myCharts = this.dataService.myCharts;
   }
 
   private selectMyChart(chart: Chart) {
     this.dataService.selectedChart = chart;
-    this.router.navigateByUrl('benefits');
+    this.navigateService.navigateTo('benefits');
   }
 
   private shareMyChart(chartIndex: number) {
     let chart = this.myCharts[chartIndex];
-    chart.dataArray = [];
     let link = window.location.origin + '/#/benefits?customtable=' + new Buffer(JSON.stringify(chart)).toString('base64');
     let subject = encodeURIComponent('Check out my custom ' + AppSettings.APP_NAME + ' chart!');
-    let body = encodeURIComponent('I created a custom health chart using' + AppSettings.APP_NAME +
+    let body = encodeURIComponent('I created a custom health chart using ' + AppSettings.APP_NAME +
       '.  You can view it by clicking the link below.\n' + chart.name + ': ' + link);
     window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
   }

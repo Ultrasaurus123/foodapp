@@ -16,7 +16,9 @@ export class NoContentComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'No Content';
-    this.dataService.currentPageText = '';
+    this.dataService.page = {
+      text: 'No Content',
+      name: 'No Content'
+    };
   }
 }

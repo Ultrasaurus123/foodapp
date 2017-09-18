@@ -17,7 +17,9 @@ export class HelpComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPage = 'Help';
-    this.dataService.currentPageText = 'Help';
+    this.dataService.page = {
+      text: 'Help',
+      name: 'Help'
+    };
   }
 }

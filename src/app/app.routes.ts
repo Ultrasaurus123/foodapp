@@ -10,6 +10,7 @@ import { DetailsComponent } from './details';
 import { WarningsComponent } from './warnings';
 import { HelpComponent } from './help';
 import { LanguageComponent } from './language';
+import { TranslationTableComponent } from './translation-table';
 import { NoContentComponent } from './no-content';
 import { DataMonitorComponent } from './data-monitor';
 
@@ -27,6 +28,7 @@ export const ROUTES: Routes = [
   { path: 'warnings', component: WarningsComponent, canActivate: [CanActivateAgreement] },
   { path: 'help', component: HelpComponent },
   { path: 'language', component: LanguageComponent },
+  { path: 'translation-table', component: TranslationTableComponent },
   { path: 'datamonitor', component: DataMonitorComponent },
   { path: '**', component: NoContentComponent },
 ];

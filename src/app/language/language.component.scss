@@ -6,7 +6,7 @@
 }
 
 .selection-container {
-    margin-bottom: 105px;
+    margin-bottom: 165px;
 }
 
 .selection-container > select {
@@ -33,19 +33,19 @@ div .checked {
     color: white;
 }
 
-div .disabled {
-    color: lightgray;
+.notice {
+    @media (max-width: 414px) { 
+        font-size: 12px;
+    }
 }
-
 
 .footer {
     position: fixed;
-    bottom: 0;
+    bottom: 60px;
     width: 100%;
     background: white;
     height: 85px;
-
-    .button {
-        margin: 0 25px 0 0;
-    }
 }
+
+
+

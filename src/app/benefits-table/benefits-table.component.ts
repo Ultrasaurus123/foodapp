@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { DataService, PromptModalComponent, Chart, TextService } from '../common';
+import { ApiService, DataService, PromptModalComponent, Chart, TextService, NavigateService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 
 @Component({
@@ -26,21 +26,26 @@ export class BenefitsTableComponent implements OnInit {
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
   private selectedItems: Array<number> = [];
   private customHiddenItems: Array<number> = [];
+  private hiddenByColumnFilter: any = {};
   private sub: any;
   private itemCount: number;
   private filteredColumns: any = {};
   private translatedItems: any = {};
   private translatedSelections: any = {};
   private tableView: { selection: string, items: string };
+  private currentSessionFilters: any;
   
 
-  constructor(private http: Http, private router: Router, private dataService: DataService,
+  constructor(private navigateService: NavigateService, private dataService: DataService, private apiService: ApiService, 
     private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.currentPageText = 'Matrix of Benefits & Side Effects';
-    this.dataService.currentPage = 'Benefits Matrix';
+    this.dataService.page = {
+      text: 'Matrix of Benefits & Side Effects',
+      name: 'Benefits Matrix',
+      footerMargin: false
+    }
     this.sub = this.route
       .queryParams
       .subscribe(params => {
@@ -51,7 +56,7 @@ export class BenefitsTableComponent implements OnInit {
             this.dataService.selectedChart = parsedChart;
           } catch (e) {
             console.error('Could not load custom chart, data malformed.');
-            this.router.navigateByUrl('home');
+            this.navigateService.navigateTo('home');            
           }
         }
         this.initNoParams();
@@ -64,11 +69,11 @@ export class BenefitsTableComponent implements OnInit {
       this.init();
       this.view = this.dataService.selectedChart.view;
       this.selected = this.dataService.selectedChart.selected;
-      this.dataArray = this.dataService.selectedChart.dataArray;
+      sessionStorage.setItem('view', JSON.stringify(this.view));
+      sessionStorage.setItem('selected', JSON.stringify(this.selected));
+      sessionStorage.setItem('currentFilter', JSON.stringify(this.dataService.selectedChart.filters));
       this.dataService.selectedChart = null;
-      if (!this.dataArray || this.dataArray.length === 0) {
-        this.initServiceCall();
-      }
+      this.initServiceCall();
     } else {
       //get state of this page
       this.view = sessionStorage.getItem('view');
@@ -76,7 +81,7 @@ export class BenefitsTableComponent implements OnInit {
       this.selected = JSON.parse(selectedString);
 
       if (!this.selected || !this.view) {
-        this.router.navigateByUrl('home');
+        this.navigateService.navigateTo('home');
       } else {
         this.init();
         this.initServiceCall();      
@@ -115,13 +120,12 @@ export class BenefitsTableComponent implements OnInit {
       this.translatedSelections = translatedSelections;
       this.textService.getTranslation(this.tableView.items).subscribe(translatedItems => {
         this.translatedItems = translatedItems;
-        console.log(translatedItems);
-        this.http.get(AppSettings.API_ENDPOINT + 'getCompactData?' + query)
-          .map(res => { return res.json() })
-          .catch(this.handleError)
-          .subscribe(data => this.processData(data),
-            error => console.error('Error getting all items: ' + error)
-          );
+        // console.log(translatedItems);
+        this.apiService.get('getCompactData?' + query, true)
+        .subscribe(data => this.processData(data),
+          error => console.error('Error getting all items: ' + error)
+        );
+
       });
     });
   }  
@@ -140,39 +144,31 @@ export class BenefitsTableComponent implements OnInit {
 
     // convert hash to array so we can sort/filter/manipulate easier
     this.itemCount = Object.keys(dataHash).length;
-    let itemIndex = 0;
-    let sessionHidden: string = sessionStorage.getItem('hidden');
-    let hiddenItems: Array<string> = (sessionHidden) ? JSON.parse(sessionHidden) : [];
+
+    //get session filter data
+    let sessionFilterString: string = sessionStorage.getItem('currentFilter');
+    this.currentSessionFilters = (sessionFilterString) ? JSON.parse(sessionFilterString) : {};
+    this.currentSessionFilters.hidden = this.currentSessionFilters.hidden || [];
+    this.currentSessionFilters.filters = this.currentSessionFilters.filters || [];    
+    this.currentSessionFilters.columns = this.currentSessionFilters.columns || [];    
+    this.customHiddenItems = this.currentSessionFilters.hidden;
+    
     for (let item in dataHash) {
-      itemIndex++;
       let hidden = false;
-      let hiddenIndex = hiddenItems.indexOf(item);
+      let hiddenIndex = this.currentSessionFilters.hidden.indexOf(item);
       if (hiddenIndex > -1) {
         hidden = true;
-        hiddenItems.splice(hiddenIndex, 1);
       }
       this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden });
-      if (itemIndex === this.itemCount) {
-        console.log(this.dataArray);
-        this.sort('effect');
-      }
-      // this.textService.getText([item]).subscribe(
-      //   text => {
-      //     itemIndex++;
-      //     let hidden = false;
-      //     let hiddenIndex = hiddenItems.indexOf(item);
-      //     if (hiddenIndex > -1) {
-      //       hidden = true;
-      //       hiddenItems.splice(hiddenIndex, 1);
-      //     }
-      //     this.dataArray.push({ item: text[0], values: dataHash[item], hidden: hidden });
-      //     if (itemIndex === this.itemCount) {
-      //       this.sort('effect');
-      //     }
-      //   }
-      // );
     }
-  }
+      for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
+        this.onFilterChange(this.currentSessionFilters.filters[i], true);
+      }
+      for (let i = 0; i < this.currentSessionFilters.columns.length; i++) {
+        this.columnFilter(this.currentSessionFilters.columns[i]);
+      }
+    this.sort('effect');
+}
 
   private processSelected() {
     this.selectedHeadings = [];
@@ -218,7 +214,7 @@ export class BenefitsTableComponent implements OnInit {
     return icon;
   };
 
-  private getTableHeadingClass = function (selectionHeading): string {
+  private getTableHeadingClass = function (selectionHeading: string): string {
     let className: string = "table-headings";
     if (selectionHeading.indexOf('<br>') > -1) {
       className += '-two-line';  
@@ -250,15 +246,16 @@ export class BenefitsTableComponent implements OnInit {
   }
 
   private removeRows() {
-    let hiddenItems = [];
     for (let i of this.selectedItems) {
       this.dataArray[i].selected = false;
       this.dataArray[i].hidden = true;
-      this.customHiddenItems.push(i);
-      hiddenItems.push(this.dataArray[i].item);
+      this.customHiddenItems.push(this.dataArray[i].item);
+      if (this.currentSessionFilters.hidden.indexOf(this.dataArray[i].item) === -1) {
+        this.currentSessionFilters.hidden.push(this.dataArray[i].item);
+      }
     }
     this.selectedItems = [];
-    sessionStorage.setItem('hidden', JSON.stringify(hiddenItems));
+    sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
   }
 
   private showAllRows() {
@@ -271,7 +268,10 @@ export class BenefitsTableComponent implements OnInit {
     }
     this.customHiddenItems = [];
     this.filteredColumns = {};
-    sessionStorage.removeItem('hidden');
+    this.currentSessionFilters.hidden = [];
+    this.currentSessionFilters.filters = [];
+    this.currentSessionFilters.columns = [];
+    sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
   }
 
 
@@ -315,9 +315,9 @@ export class BenefitsTableComponent implements OnInit {
 
   private alphabeticSort(orderFactor: number): any {
     return function (a, b) {
-      if (a.item.toLowerCase() < b.item.toLowerCase()) {
+      if (a.displayText.toLowerCase() < b.displayText.toLowerCase()) {
         return -1 * orderFactor;
-      } else if (a.item.toLowerCase() > b.item.toLowerCase()) {
+      } else if (a.displayText.toLowerCase() > b.displayText.toLowerCase()) {
         return 1 * orderFactor;
       }
       return 0;
@@ -394,23 +394,49 @@ export class BenefitsTableComponent implements OnInit {
 
   private columnFilter(column: string): any {
     let columnName = column.replace('<br>', ' ');
-    let indicesToHide = [];
-
-    let itemsToHide = this.dataArray.filter((item, index) => {
-      if (item.values[columnName] == undefined) {
-        indicesToHide.push(index);
-        return true;
+    
+    // if filter already exists, unfilter
+    if (this.hiddenByColumnFilter[columnName] && this.hiddenByColumnFilter[columnName].length > 0) {
+      for (let i = 0; i < this.hiddenByColumnFilter[columnName].length; i++) {
+        let item = this.hiddenByColumnFilter[columnName][i];
+        if (this.currentSessionFilters.hidden.indexOf(this.dataArray[item].item) === -1) {
+          this.dataArray[item].hidden = false;
+        }  
       }
-      return false;
-    });
+      this.filteredColumns[column] = false;
 
-    for (let i of indicesToHide) {
-      this.dataArray[i].selected = false;
-      this.dataArray[i].hidden = true;
-      this.customHiddenItems.push(i);
+      //re-apply all other filters
+      this.hiddenByColumnFilter = {};
+      for (let col in this.filteredColumns) {
+        if (this.filteredColumns[col]) {
+          this.columnFilter(col);
+        }  
+      }
+      for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
+        this.onFilterChange(this.currentSessionFilters.filters[i], true);
+      }
+      
+      if (this.currentSessionFilters.columns.indexOf(columnName) > -1) {
+        this.currentSessionFilters.columns.splice(this.currentSessionFilters.columns.indexOf(columnName), 1);
+      }
     }
-    this.selectedItems = [];
-    this.filteredColumns[column] = true;
+    //else filter by column
+    else {
+      this.hiddenByColumnFilter[columnName] = [];
+      for (let i = 0; i < this.dataArray.length; i++) {
+        if (this.dataArray[i].values[columnName] == undefined) {
+          this.dataArray[i].selected = false;
+          this.dataArray[i].hidden = true;
+          this.hiddenByColumnFilter[columnName].push(i);
+        }
+      }
+      this.selectedItems = [];
+      this.filteredColumns[column] = true; 
+      if (this.currentSessionFilters.columns.indexOf(columnName) === -1) {
+        this.currentSessionFilters.columns.push(columnName);
+      }
+    } 
+    sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
   }
 
   private onFilterChange(index, newValue): void {
@@ -438,27 +464,34 @@ export class BenefitsTableComponent implements OnInit {
           }
         }
       }
-      let sessionItems = sessionStorage.getItem('hidden');
-      let hiddenItems: Array<string> = sessionItems ? JSON.parse(sessionItems) : [];
+    //  let hiddenItems: Array<string> = this.currentSessionFilters.hidden || [];
       if (matchCount === valuesCount) {
         item.hidden = true;
       } else {
         item.hidden = false;
-        for (let i = 0; i < this.customHiddenItems.length; i++) {
-          if (this.dataArray[this.customHiddenItems[i]] === item) {
-            item.hidden = true;
-            break;
-          }
+      }
+      for (let i = 0; i < this.currentSessionFilters.hidden.length; i++) {
+        if (this.currentSessionFilters.hidden[i] === item.item) {
+          item.hidden = true;
+          break;
         }
       }
-      let hiddenIndex: number = hiddenItems.indexOf(item.item);
-      if (item.hidden && hiddenIndex === -1) {
-        hiddenItems.push(item.item);
-      } else if (!item.hidden && hiddenIndex > -1) {
-        hiddenItems.splice(hiddenIndex, 1);
-      }
-      sessionStorage.setItem('hidden', JSON.stringify(hiddenItems));
+    // let hiddenIndex: number =  this.customHiddenItems.indexOf(item.item);
+      // if (item.hidden && hiddenIndex === -1) {
+      //   this.customHiddenItems.push(item.item);
+      // } else if (!item.hidden && hiddenIndex > -1) {
+      //  this.customHiddenItems.splice(hiddenIndex, 1);
+      // }
+      // this.currentSessionFilters.hidden =  this.customHiddenItems;
+
     }
+      //update session filters
+      if (newValue && this.currentSessionFilters.filters.indexOf(index) === -1) {
+        this.currentSessionFilters.filters.push(index);
+      } else if (!newValue && this.currentSessionFilters.filters.indexOf(index) > -1) {
+        this.currentSessionFilters.filters.splice(this.currentSessionFilters.filters.indexOf(index), 1)
+      }
+      sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
   }
 
   private saveChart() {
@@ -473,12 +506,9 @@ export class BenefitsTableComponent implements OnInit {
           if (c) {
             charts = JSON.parse(c);
           }
-          for (let i = 0; i < this.dataArray.length; i++) {
-            this.dataArray[i].selected = false;
-          }
           let chartData = {
             name: message,
-            dataArray: this.dataArray,
+            filters: this.currentSessionFilters,
             selected: this.selected,
             view: this.view
           };
@@ -497,24 +527,10 @@ export class BenefitsTableComponent implements OnInit {
       let details = { food: this.dataArray[i].item, condition: selection };
       sessionStorage.setItem('details', JSON.stringify(details));
     }
-    this.router.navigateByUrl('details');
+    this.navigateService.navigateTo('details');
   }
 
   private goToHelp() {
-    this.router.navigateByUrl('help');
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, we might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
+    this.navigateService.navigateTo('help');
   }
 }

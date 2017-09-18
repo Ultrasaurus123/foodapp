@@ -2,12 +2,13 @@ import {
   Component,
   OnInit
 } from '@angular/core';
+import { Location } from '@angular/common';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { DataService, TextService } from '../common';
+import { DataService, TextService, ApiService } from '../common';
 import { AppSettings } from '..';
 
 declare var google: any;  
@@ -21,19 +22,25 @@ declare var google: any;
   
 export class LanguageComponent implements OnInit {
   private pageText: any = {};
-  private selectedLang: { name: string, code: string };
+  private selectedLang: string;
   private languageSet: Array<{ name: string, code: string }> = [];
   private searchModel: string = '';
 
-  constructor(private http: Http, private router: Router, private dataService: DataService, private textService: TextService) { }
+  constructor(private apiService: ApiService, private router: Router, private dataService: DataService,
+    private textService: TextService, private location: Location) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.selectedLang = this.textService.language;
-    this.dataService.currentPage = 'Language';
-    this.dataService.currentPageText = 'Language';
-    this.pageText.search ='Search:';
-    this.languageSet = AppSettings.LANGUAGES;
+    this.dataService.page = {
+      text: 'Language',
+      name: 'Language',
+      footerMargin: false
+    };
+    this.pageText.search = 'Search:';
+    this.apiService.get('getLanguages', true).subscribe((data) => {
+      this.languageSet = data;      
+    });
 
     //new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
   }
@@ -41,15 +48,14 @@ export class LanguageComponent implements OnInit {
   private searchValueChanged(newValue) {
     window.scrollTo(0, 0);
     this.searchModel = newValue;
-  //  console.log(this.textService.getLanguages());
     //this.languageSet = AppSettings.LANGUAGES.filter(item => {
     //  return item.name.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
     //});
   }
 
-  private changeLanguage(language: { name: string, code: string }): void {
+  private changeLanguage(language: string): void {
     this.textService.language = language;
     sessionStorage.setItem('lang', JSON.stringify(language));
-    this.router.navigateByUrl('home');
+    this.location.back();
   }
 }

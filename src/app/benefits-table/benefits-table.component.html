@@ -23,7 +23,7 @@
                     </label>
                     </div>
                     <hr (click)="showFilter = false">
-                    <a (click)="removeRows(); showFilter = false;">Hide Selected</a>
+                    <a (click)="removeRows(); showFilter = false;">Hide Selected Rows</a>
                     <a (click)="showAllRows(); showFilter = false;">Unhide All</a>
                 </div>
             </div>
@@ -42,8 +42,9 @@
                 <button class="dropbtn" (click)="goToHelp()">?</button>
             </div>
         </div>
-        <div class="row col-12">
-            <span class="text-right">Click a column heading to hide empty rows. Use HIDE menu to unhide rows.</span>
+        <div class="row">
+            <span class="col-3"></span>
+            <span class="col-9 text-right column-sort-info">Click a column heading to hide empty rows. </span>
         </div>
         <div class="table-container">
             <table class="benefits-table">
@@ -66,7 +67,7 @@
                     <td (click)="selectItem(item, i)">
                         {{item.displayText}}
                     </td>
-                    <td class="text-center" *ngFor="let selection of selected" (click)="goToDetails(selection, i)">
+                    <td class="text-center" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">
                         <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection])" /></div>
                     </td>
                 </tr>

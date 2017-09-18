@@ -1,15 +1,15 @@
+<div class="col-12 notice p-b-10">
+  Translation of food and health terms are available in the following languages.  
+  Please note that these translations are a combination of manual and automated translating and may contain errors. 
+  If you see any errors or would like to provide support in adding a new language please <a href="mailto:contact@healthfoodsmatrix.com">contact us</a>.
+</div>
+<div class="col-12 bold p-b-5">
+  Please select a language:
+</div>
 <div class="selection-container">
   <div class="checkbox-container">
-    <div *ngFor="let lang of languageSet" class="p-l-15" [class.checked]="lang.code === selectedLang.code" (click)="lang.code !== selectedLang.code && changeLanguage(lang)">
-      <span [id]="'item-' + lang.code">{{lang.name}}</span>
-    </div>
-  </div>
-</div>
-
-<div class="col-12">
-  <div class="row footer">
-    <div class="col-12">
-      {{pageText.search}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+    <div *ngFor="let lang of languageSet" class="p-l-15" [class.checked]="lang === selectedLang" (click)="lang !== selectedLang && changeLanguage(lang)">
+      <span [id]="'item-' + lang">{{lang}}</span>
     </div>
   </div>
 </div>
