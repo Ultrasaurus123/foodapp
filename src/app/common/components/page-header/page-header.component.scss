@@ -60,3 +60,11 @@
         background-color: $nav-button-color;
     }
 }
+
+.language-header {
+    font-size: 10px;
+
+    @media screen and (max-width: 359px) {
+        display: none !important;
+    }    
+}

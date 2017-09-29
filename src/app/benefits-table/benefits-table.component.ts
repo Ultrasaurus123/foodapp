@@ -42,7 +42,7 @@ export class BenefitsTableComponent implements OnInit {
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.page = {
-      text: 'Matrix of Benefits & Side Effects',
+      text: 'Health Effects Matrix',
       name: 'Benefits Matrix',
       footerMargin: false
     }

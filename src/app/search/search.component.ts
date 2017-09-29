@@ -23,7 +23,6 @@ export class SearchComponent implements OnInit {
   private maxSelections: number = AppSettings.MAX_SELECTIONS;
   private started: boolean = false;
   private loaded: boolean = false;
-  private sub: any;
 
   constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService, private route: ActivatedRoute) { }
 
@@ -61,7 +60,6 @@ export class SearchComponent implements OnInit {
   }
   
   public ngDoCheck() {
-    // this.sub = this.route.params.subscribe(data => {
     this.navigateService.getRouteData(this.route).subscribe(data => {
       let dataView = (data) ? data['view'] : null;
       if (dataView && dataView != this.view) {
@@ -73,7 +71,6 @@ export class SearchComponent implements OnInit {
 
   private init() {
     window.scrollTo(0, 0);
-    console.log(this.textService.language);
     
     //if (this.textService.language.toLowerCase() === 'english') {
       this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
@@ -163,11 +160,11 @@ export class SearchComponent implements OnInit {
     this.searchModel = newValue;
     if (this.view === 'food') {
       this.itemSet = this.dataService.allFoods.filter(item => {
-        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
+        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1 || item.displayText.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
       });
     } else if (this.view === 'condition') {
       this.itemSet = this.dataService.allConditions.filter(item => {
-        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
+        return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1 || item.displayText.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
       });
     }
   }

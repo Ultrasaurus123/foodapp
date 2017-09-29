@@ -8,6 +8,7 @@ export class TextService {
     public languageChanged: boolean = false;
     public loadedFoodSinceChange: boolean = true;
     public loadedCondSinceChange: boolean = true;
+    public rightJustify: boolean = false;
     
     private _language: string = 'English';
     get language(): string {
@@ -17,6 +18,7 @@ export class TextService {
         this._language = language;
         this.loadedFoodSinceChange = this.loadedCondSinceChange = false;
         this.languageChanged = true;
+        this.rightJustify = AppSettings.RIGHT_JUSTIFIED_LANGUAGES[this._language.toLowerCase()];        
     }
 
     private static _instance: TextService;
@@ -27,6 +29,7 @@ export class TextService {
         if (sessionLang) {
             this._language = JSON.parse(sessionLang);
         }
+        this.rightJustify = AppSettings.RIGHT_JUSTIFIED_LANGUAGES[this._language.toLowerCase()];                
         return TextService._instance = TextService._instance || this;
     }
 

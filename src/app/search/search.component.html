@@ -3,7 +3,8 @@
   <div class="selection-container">
     <div class="checkbox-container">
       <div *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? dataService.allFoods : dataService.allConditions" (click)="(checkedItems < maxSelections || item.checked) && onSelectItem(item)" 
-      [class.checked]="item.checked" [class.disabled]="checkedItems >= maxSelections && !item.checked" class="p-l-15">
+      [class.checked]="item.checked" [class.disabled]="checkedItems >= maxSelections && !item.checked"
+      [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify">
         <span [id]="'item-' + item.item">{{item.displayText}}</span>
       </div>
     </div>

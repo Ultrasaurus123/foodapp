@@ -30,7 +30,6 @@ body {
   font-size: 12px;
 }
 
-
 .button {
   background-color: $nav-button-color;
   color: white;
@@ -50,6 +49,9 @@ body {
   background-color: $nav-button-selected;
 }
 
+.text-left {
+  text-align: left !important;
+}
 .text-center {
   text-align: center !important;
 }
@@ -124,12 +126,12 @@ body {
 
 @media (max-width: 1023px) { 
    .hidden-mobile {
-        display: none;   
+        display: none !important;   
     }
 }
 @media (min-width: 1024px) { 
    .hidden-desktop {
-        display: none;   
+        display: none !important;   
     }
 }
 

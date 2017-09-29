@@ -3,10 +3,16 @@
 <div class="container-fade-bottom" [class.m-b-145]="footerMargin"></div>
 
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
-  <li><a>{{getMenuTitle()}}</a></li>
+  <!-- <li><a>{{getMenuTitle()}}</a></li> -->
+  <li>
+    <a><span>{{menuTitle}}</span>
+    <span [hidden]="textService.language === 'English'" class="language-header"> {{textService.language}}</span></a>
+  </li>  
   <template ngFor let-item [ngForOf]="menuItems"> 
   <li [class.selected-hide-mobile]="item.display === menuTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
-    <a (click)="clickMenuLink(item)" [class.disabled]="item.name === 'My Charts' && !myChartsActive" >
+    <a (click)="clickMenuLink(item)" [class.disabled]="item.name === 'My Charts' && !myChartsActive"
+    [class.hidden-desktop]="item.name === 'Facebook' || item.name === 'Feedback'"
+    [hidden]="item.name === 'Translation Table' && textService.language === 'English'">
     {{item.display}}
     </a>
   </li>

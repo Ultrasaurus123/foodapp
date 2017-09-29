@@ -64,7 +64,7 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
-                    <td (click)="selectItem(item, i)">
+                    <td (click)="selectItem(item, i)" [class.text-left]="!textService.rightJustify" [class.text-right]="textService.rightJustify">
                         {{item.displayText}}
                     </td>
                     <td class="text-center" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">

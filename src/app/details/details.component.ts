@@ -20,6 +20,7 @@ export class DetailsComponent implements OnInit {
   private selectedItems: Array<string>;
   private detailIndex: number;
   private selectedIndex: number;
+  private suffixIndex: number;
   private view: string;
   private dataArray: Array<any>;
   private images: Array<any> = [];
@@ -39,8 +40,9 @@ export class DetailsComponent implements OnInit {
     };
     //get state of this page
     this.view = sessionStorage.getItem('view');
-    this.detailIndex = (this.view === 'food') ? 2 : 0;
-    this.selectedIndex = (this.view === 'food') ? 0 : 2;
+    this.detailIndex = (this.view === 'food') ? 1 : 0;
+    this.selectedIndex = (this.view === 'food') ? 0 : 1;
+    this.suffixIndex = (this.view === 'food') ? 6 : 5;
     let detailsString: string = sessionStorage.getItem('details');
     let details: any = JSON.parse(detailsString);
     this.detailItem = (this.view === 'condition') ? details.food : details.condition;
@@ -122,8 +124,8 @@ export class DetailsComponent implements OnInit {
     // GOOGLE IMAGE API
 
     let imageQuery = this.detailItem;
-    if (this.dataArray.length > 0 && this.dataArray[0].length > 0) {
-      imageQuery += ' ' + this.dataArray[0][0][this.detailIndex + 1];
+    if (this.dataArray.length > 0 && this.dataArray[0].length > 0 && this.dataArray[0][0][this.suffixIndex]) {
+      imageQuery += ' ' + this.dataArray[0][0][this.suffixIndex];
     }
     this.apiService.getExternal('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
       .subscribe(res => this.images = res.items,

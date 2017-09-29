@@ -55,8 +55,8 @@ export class DataMonitorComponent implements OnInit {
   }
 
   private processData(data: Array<any>, item: string) {
-    let itemIndex: number = (item === 'food') ? 0 : 2;
-    let benefitIndex: number = 4;
+    let itemIndex: number = (item === 'food') ? 0 : 1;
+    let benefitIndex: number = 2;
     let dataHash = {};
     this.dataArray = [];
     for (let i = 1; i < data.length; i++) {
