@@ -167,7 +167,16 @@ export class BenefitsTableComponent implements OnInit {
       for (let i = 0; i < this.currentSessionFilters.columns.length; i++) {
         this.columnFilter(this.currentSessionFilters.columns[i]);
       }
-    this.sort('effect');
+
+      let sort = sessionStorage.getItem('currentSort');
+      let sortParsed = JSON.parse(sort); 
+      if (sortParsed && sortParsed.type) {
+        this.currentSort = sortParsed;
+        this.currentSort.asc = !sortParsed.asc;
+        this.sort(sortParsed.type);
+      } else {
+        this.selected.length === 1 ? this.sort('az') : this.sort('effect');
+      }  
 }
 
   private processSelected() {
@@ -246,16 +255,37 @@ export class BenefitsTableComponent implements OnInit {
   }
 
   private removeRows() {
-    for (let i of this.selectedItems) {
-      this.dataArray[i].selected = false;
-      this.dataArray[i].hidden = true;
-      this.customHiddenItems.push(this.dataArray[i].item);
-      if (this.currentSessionFilters.hidden.indexOf(this.dataArray[i].item) === -1) {
-        this.currentSessionFilters.hidden.push(this.dataArray[i].item);
+    if (this.selectedItems.length > 0) {
+      for (let i of this.selectedItems) {
+        this.dataArray[i].selected = false;
+        this.dataArray[i].hidden = true;
+        this.customHiddenItems.push(this.dataArray[i].item);
+        if (this.currentSessionFilters.hidden.indexOf(this.dataArray[i].item) === -1) {
+          this.currentSessionFilters.hidden.push(this.dataArray[i].item);
+        }
       }
-    }
-    this.selectedItems = [];
-    sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
+      this.selectedItems = [];
+      sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
+    }  
+  }
+
+  private removeRowsBelow() {
+    if (this.selectedItems.length > 0) {
+      let lowestSelected = 0;
+      for (let i of this.selectedItems) {
+        lowestSelected = (i > lowestSelected) ? i : lowestSelected;
+      }
+
+      for (let i = lowestSelected + 1; i < this.dataArray.length; i++) {
+        this.dataArray[i].selected = false;
+        this.dataArray[i].hidden = true;
+        this.customHiddenItems.push(this.dataArray[i].item);
+        if (this.currentSessionFilters.hidden.indexOf(this.dataArray[i].item) === -1) {
+          this.currentSessionFilters.hidden.push(this.dataArray[i].item);
+        }
+      }
+      sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
+    }  
   }
 
   private showAllRows() {
@@ -311,6 +341,7 @@ export class BenefitsTableComponent implements OnInit {
       default:
         break;
     }
+    sessionStorage.setItem('currentSort', JSON.stringify(this.currentSort));
   }
 
   private alphabeticSort(orderFactor: number): any {

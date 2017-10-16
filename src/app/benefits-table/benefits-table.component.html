@@ -23,7 +23,8 @@
                     </label>
                     </div>
                     <hr (click)="showFilter = false">
-                    <a (click)="removeRows(); showFilter = false;">Hide Selected Rows</a>
+                    <a [class.disabled]="selectedItems.length === 0" (click)="removeRows(); showFilter = false;">Hide Selected Rows</a>
+                    <a [class.disabled]="selectedItems.length === 0" (click)="removeRowsBelow(); showFilter = false;">Hide Below Lowest Selected Row</a>
                     <a (click)="showAllRows(); showFilter = false;">Unhide All</a>
                 </div>
             </div>
@@ -44,7 +45,11 @@
         </div>
         <div class="row">
             <span class="col-3"></span>
-            <span class="col-9 text-right column-sort-info">Click a column heading to hide empty rows. </span>
+            <span class="col-9 text-right column-sort-info">
+                Click a column heading to hide empty rows.<br>
+                Click on row headings and use HIDE menu.<br>
+                Click on icons for explanation of effects. 
+            </span>
         </div>
         <div class="table-container">
             <table class="benefits-table">

@@ -35,7 +35,7 @@ export class DetailsComponent implements OnInit {
   public ngOnInit() {
     window.scrollTo(0, 0);
     this.dataService.page = {
-      text: 'Explanation of Benefits and Effects',
+      text: 'Explanation of Effects',
       name: 'Details'
     };
     //get state of this page

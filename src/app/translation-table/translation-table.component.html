@@ -7,15 +7,15 @@
     </div>
     <table class="translation-table">
       <thead>
-        <th class="bold text-center">
+        <th class="bold text-center" (click)="sort(textService.language)">
           {{textService.language}}
         </th>
-        <th class="bold text-center">
+        <th class="bold text-center" (click)="sort('English')">
           English
         </th>
       </thead>
       <tbody>
-        <tr *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? dataService.allFoods : dataService.allConditions">
+        <tr *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? foods : conditions">
           <td [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify">
             {{item.displayText}}
           </td>
