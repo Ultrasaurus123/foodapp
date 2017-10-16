@@ -46,11 +46,9 @@ export class HomeComponent implements OnInit {
       name: 'Home'
     };
     this.pageText.headline = 'Welcome to ' + AppSettings.APP_NAME;
-    this.pageText.pageInfo = AppSettings.APP_NAME +
-      ` compares foods for your unique set of multiple health concerns
-      It also compares benefits & side effects of multiple sets of foods and home remedies.`;  
+    this.pageText.pageInfo = AppSettings.APP_NAME + 'compares foods for your unique set of multiple health concerns';  
+    this.pageText.getStarted = 'It also compares benefits & side effects of multiple sets of foods and home remedies.';
     this.pageText.helpLink = 'Click here for a quick guide on using this application';
-    this.pageText.getStarted = 'Alternatively, you may search for the benefits and side effects of your favorite foods or remedies:';
     this.dataService.loadFoods();
     this.dataService.loadConditions();
   }

@@ -24,7 +24,7 @@
                     </div>
                     <hr (click)="showFilter = false">
                     <a [class.disabled]="selectedItems.length === 0" (click)="removeRows(); showFilter = false;">Hide Selected Rows</a>
-                    <a [class.disabled]="selectedItems.length === 0" (click)="removeRowsBelow(); showFilter = false;">Hide Below Lowest Selected Row</a>
+                    <a [class.disabled]="selectedItems.length === 0" (click)="removeRowsBelow(); showFilter = false;">Hide Below Selected Rows</a>
                     <a (click)="showAllRows(); showFilter = false;">Unhide All</a>
                 </div>
             </div>
