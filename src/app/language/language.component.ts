@@ -39,7 +39,7 @@ export class LanguageComponent implements OnInit {
     };
     this.pageText.search = 'Search:';
     this.apiService.get('getLanguages', true).subscribe((data) => {
-      this.languageSet = data;      
+      this.languageSet = data.sort();      
     });
 
     //new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');

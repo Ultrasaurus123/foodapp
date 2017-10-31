@@ -121,6 +121,7 @@ export class SearchComponent implements OnInit {
       sessionStorage.setItem(itemName, JSON.stringify(selectedItems));
       sessionStorage.setItem('view', this.view);
       sessionStorage.removeItem('currentFilter');
+      sessionStorage.removeItem('currentSort');
       this.navigateService.navigateTo('benefits');
     }
   }
