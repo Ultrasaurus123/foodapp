@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? dataService.allFoods : dataService.allConditions">
-          <td [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify">
+          <td [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify" [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'">
             {{item.displayText}}
           </td>
           <td class="p-l-5">

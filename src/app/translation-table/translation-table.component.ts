@@ -37,7 +37,7 @@ export class TranslationTableComponent implements OnInit {
       text: 'Translation Table',
       name: 'Translation Table',
       footerMargin: true
-    };
+    }; 
     this.pageText.search = 'Search:';    
   }
 

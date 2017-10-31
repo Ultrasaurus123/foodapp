@@ -3,6 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Http, Response } from '@angular/http';
+import { DomSanitizer, SafeHtml  } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
@@ -18,7 +19,7 @@ import { DialogService } from "ng2-bootstrap-modal";
 })
 export class BenefitsTableComponent implements OnInit {
   private selected: Array<string>;
-  private selectedHeadings: Array<{ heading: string, displayText: string }>;
+  private selectedHeadings: Array<{ heading: string, displayText: string, displayTextLeft: string, displayTextRight: string, splitText: boolean }>;
   private view: string;
   private heading: string;
   private dataArray: Array<any>;
@@ -37,7 +38,7 @@ export class BenefitsTableComponent implements OnInit {
   
 
   constructor(private navigateService: NavigateService, private dataService: DataService, private apiService: ApiService, 
-    private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService) { }
+    private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService, private domSanitizer: DomSanitizer) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
@@ -176,7 +177,10 @@ export class BenefitsTableComponent implements OnInit {
     for (let s = 0; s < this.selected.length; s++) {
       let selected = {
         heading: this.selected[s],
-        displayText: this.translatedSelections[this.selected[s].toLowerCase()] || this.selected[s]
+        displayText: this.translatedSelections[this.selected[s].toLowerCase()] || this.selected[s],
+        displayTextRight: this.translatedSelections[this.selected[s].toLowerCase()] || this.selected[s],
+        displayTextLeft: '',
+        splitText: false
       };
       this.selectedHeadings.push(selected);
       if (selected.displayText.length > center) {
@@ -187,9 +191,12 @@ export class BenefitsTableComponent implements OnInit {
         }
         //if there are any spaces, break on space closest to center
         if (spaces.length > 0) {
-          let left = selected.displayText.slice(0, closestToCenter);
-          let right = selected.displayText.slice(closestToCenter + 1);
-          this.selectedHeadings[s].displayText = left + '<br>' + right;
+          // let left = selected.displayText.slice(0, closestToCenter);
+          // let right = selected.displayText.slice(closestToCenter + 1);
+          // this.selectedHeadings[s].displayText = left + this.getSeparator() + right;
+          this.selectedHeadings[s].displayTextLeft = selected.displayText.slice(0, closestToCenter);
+          this.selectedHeadings[s].displayTextRight = selected.displayText.slice(closestToCenter + 1);
+          this.selectedHeadings[s].splitText = true;
         }
         //otherwise hyphenate
         else {
@@ -214,9 +221,12 @@ export class BenefitsTableComponent implements OnInit {
     return icon;
   };
 
-  private getTableHeadingClass = function (selectionHeading: string): string {
+  private getTableHeadingClass = function (splitText: boolean): string {
     let className: string = "table-headings";
-    if (selectionHeading.indexOf('<br>') > -1) {
+    if (this.textService.rightJustify) {
+      className += '-rtl';        
+    }
+    if (splitText) {
       className += '-two-line';  
     }
 
@@ -379,10 +389,9 @@ export class BenefitsTableComponent implements OnInit {
 
   private columnSort(orderFactor: number, column: string): any {
     orderFactor = 1;
-    let columnName = column.replace('<br>', ' ');
     return function (a, b) {
-      let aValue = a.values[columnName] || -3;
-      let bValue = b.values[columnName] || -3;
+      let aValue = a.values[column] || -3;
+      let bValue = b.values[column] || -3;
       if (aValue > bValue) {
         return -1 * orderFactor;
       } else if (aValue < bValue) {
@@ -393,12 +402,10 @@ export class BenefitsTableComponent implements OnInit {
   }
 
   private columnFilter(column: string): any {
-    let columnName = column.replace('<br>', ' ');
-    
     // if filter already exists, unfilter
-    if (this.hiddenByColumnFilter[columnName] && this.hiddenByColumnFilter[columnName].length > 0) {
-      for (let i = 0; i < this.hiddenByColumnFilter[columnName].length; i++) {
-        let item = this.hiddenByColumnFilter[columnName][i];
+    if (this.hiddenByColumnFilter[column] && this.hiddenByColumnFilter[column].length > 0) {
+      for (let i = 0; i < this.hiddenByColumnFilter[column].length; i++) {
+        let item = this.hiddenByColumnFilter[column][i];
         if (this.currentSessionFilters.hidden.indexOf(this.dataArray[item].item) === -1) {
           this.dataArray[item].hidden = false;
         }  
@@ -416,24 +423,24 @@ export class BenefitsTableComponent implements OnInit {
         this.onFilterChange(this.currentSessionFilters.filters[i], true);
       }
       
-      if (this.currentSessionFilters.columns.indexOf(columnName) > -1) {
-        this.currentSessionFilters.columns.splice(this.currentSessionFilters.columns.indexOf(columnName), 1);
+      if (this.currentSessionFilters.columns.indexOf(column) > -1) {
+        this.currentSessionFilters.columns.splice(this.currentSessionFilters.columns.indexOf(column), 1);
       }
     }
     //else filter by column
     else {
-      this.hiddenByColumnFilter[columnName] = [];
+      this.hiddenByColumnFilter[column] = [];
       for (let i = 0; i < this.dataArray.length; i++) {
-        if (this.dataArray[i].values[columnName] == undefined) {
+        if (this.dataArray[i].values[column] == undefined) {
           this.dataArray[i].selected = false;
           this.dataArray[i].hidden = true;
-          this.hiddenByColumnFilter[columnName].push(i);
+          this.hiddenByColumnFilter[column].push(i);
         }
       }
       this.selectedItems = [];
       this.filteredColumns[column] = true; 
-      if (this.currentSessionFilters.columns.indexOf(columnName) === -1) {
-        this.currentSessionFilters.columns.push(columnName);
+      if (this.currentSessionFilters.columns.indexOf(column) === -1) {
+        this.currentSessionFilters.columns.push(column);
       }
     } 
     sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));

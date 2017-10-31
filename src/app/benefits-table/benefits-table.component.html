@@ -46,10 +46,10 @@
             <span class="col-3"></span>
             <span class="col-9 text-right column-sort-info">Click a column heading to hide empty rows. </span>
         </div>
-        <div class="table-container">
+        <div class="table-container" [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'" >
             <table class="benefits-table">
                 <thead>
-                <th style="vertical-align: middle">
+                <th style="vertical-align: middle" dir="ltr">
                     <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial</span><br>
                     <span class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</span><br>
                     <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed</span><br>
@@ -59,12 +59,16 @@
                     <span class="first-heading">{{heading}}</span>-->
                 </th>
                 <th (click)="columnFilter(selectionHeading.heading)" *ngFor="let selectionHeading of selectedHeadings" [class.column-selected]="filteredColumns[selectionHeading.heading]">
-                    <div [ngClass]="getTableHeadingClass(selectionHeading.displayText)"><span [innerHTML]="selectionHeading.displayText"></span></div>
+                    <div [ngClass]="getTableHeadingClass(selectionHeading.splitText)">
+                        <span>{{selectionHeading.displayTextLeft}}</span>
+                        <span [class.line-break]="selectionHeading.splitText"> </span>
+                        <span>{{selectionHeading.displayTextRight}}</span>
+                    </div>
                 </th>
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
-                    <td (click)="selectItem(item, i)" [class.text-left]="!textService.rightJustify" [class.text-right]="textService.rightJustify">
+                    <td (click)="selectItem(item, i)" [class.text-left]="!textService.rightJustify" [class.text-right]="textService.rightJustify" >
                         {{item.displayText}}
                     </td>
                     <td class="text-center" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">
