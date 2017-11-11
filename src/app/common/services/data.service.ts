@@ -121,13 +121,16 @@ export class DataService {
   }
 
   private alphabeticSort(): any {
-    return function (a, b) {
-      if (a.displayText.toLowerCase() < b.displayText.toLowerCase()) {
-        return -1;
-      } else if (a.displayText.toLowerCase() > b.displayText.toLowerCase()) {
-        return 1;
-      }
-      return 0;
-    }
+    let comparer = new Intl.Collator(AppSettings.LANGUAGE_CODE_MAP[this.textService.language]);
+
+     return function (a, b) {
+    //   if (a.displayText.toLowerCase() < b.displayText.toLowerCase()) {
+    //     return -1;
+    //   } else if (a.displayText.toLowerCase() > b.displayText.toLowerCase()) {
+    //     return 1;
+    //   }
+    //   return 0;
+       return comparer.compare(a.displayText, b.displayText);
+     }
   }
 }

@@ -45,14 +45,6 @@ export class LanguageComponent implements OnInit {
     //new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
   }
 
-  private searchValueChanged(newValue) {
-    window.scrollTo(0, 0);
-    this.searchModel = newValue;
-    //this.languageSet = AppSettings.LANGUAGES.filter(item => {
-    //  return item.name.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
-    //});
-  }
-
   private changeLanguage(language: string): void {
     this.textService.language = language;
     sessionStorage.setItem('lang', JSON.stringify(language));

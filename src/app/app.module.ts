@@ -191,4 +191,22 @@ export class AppSettings {
     'persian': true,
     'arabic': true
   };
+
+  // http://www-01.sil.org/iso639-3/codes.asp?order=reference_name
+  public static LANGUAGE_CODE_MAP: any = {
+    'english': 'en',
+    'french': 'fr',
+    'spanish': 'es',
+    'persian': 'pes',
+    'arabic': 'ar',
+    'greek': 'el',
+    'vietnamese': 'vi',
+    'chinese (simp)': 'zh',
+    'hindi': 'hi',
+    'bengali': 'bn',
+    'dutch': 'nl',
+    'german': 'de',
+    'italian': 'it'
+  };
+
 }
