@@ -56,19 +56,13 @@ export class WarningsComponent implements OnInit {
   private init = function () {
     let warningQuery = 'foods=';
     warningQuery += encodeURIComponent(this.item);
-    this.apiService.get('getWarnings?' + warningQuery, true)
+    this.apiService.get(AppSettings.API_ROUTES.WARNINGS + '?' + warningQuery, true)
       .subscribe(data => this.processWarningsData(data),
       error => console.error('Error getting warnings data: ' + error)
       );
   };
   
- private processWarningsData(data: Array<any>) {
-    // skip headings
-    for (let i = 1; i < data.length; i++) {
-      let item = data[i][0].toLowerCase();
-      this.warningsObject[item] = this.warningsObject[item] || { warnings: [], sources: [] };
-      this.warningsObject[item].warnings.push(data[i][1]);
-      this.warningsObject[item].sources.push(data[i][2]);
-    }
+ private processWarningsData(data: any) {
+    this.warningsObject = data;
   }
 }

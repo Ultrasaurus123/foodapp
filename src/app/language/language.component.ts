@@ -38,7 +38,7 @@ export class LanguageComponent implements OnInit {
       footerMargin: false
     };
     this.pageText.search = 'Search:';
-    this.apiService.get('getLanguages', true).subscribe((data) => {
+    this.apiService.get(AppSettings.API_ROUTES.LANGUAGES, true).subscribe((data) => {
       this.languageSet = data.sort();      
     });
 

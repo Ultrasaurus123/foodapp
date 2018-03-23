@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
+import { ApiService } from './api.service';
 import { AppSettings } from '../..';
 
 @Injectable()
@@ -47,7 +48,7 @@ export class TextService {
         // }
         let queryString = 'type=' + type + '&lang=' + this.language.toLowerCase();
 
-        return this.http.get(AppSettings.API_ENDPOINT + 'getTranslation?' + encodeURI(queryString))
+        return this.http.get(AppSettings.API_ENDPOINT + AppSettings.API_ROUTES.TRANSLATIONS + '?' + encodeURI(queryString))
             .map(res => {
                 let resJson = res.json();
                 // if (type === 'food') {

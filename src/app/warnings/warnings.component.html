@@ -3,10 +3,10 @@
         <span class="page-header">{{pageHeader}}</span>
         <hr>
     </div>
-            <div class="col-12 warnings-section" *ngIf="warningsObject[item.toLowerCase()]">
+            <div class="col-12 warnings-section" *ngIf="warningsObject[item]">
                 <ul>
-                    <li class="warning" *ngFor="let warning of warningsObject[item.toLowerCase()].warnings; let index = index;">
-                         {{warning}} <a [href]="warningsObject[item.toLowerCase()].sources[index]" target="_blank">(Source)</a>
+                    <li class="warning" *ngFor="let warning of warningsObject[item].statements; let index = index;">
+                         {{warning}} <a [href]="warningsObject[item].references[index]" target="_blank">(Source)</a>
                     </li>
                 </ul>
             </div>

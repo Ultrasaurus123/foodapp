@@ -47,11 +47,10 @@ export class DataMonitorComponent implements OnInit {
     let query = this.view + '=' + (this.view === 'food') ? encodeURIComponent(this.dataService.allFoods.join())
       : encodeURIComponent(this.dataService.allConditions.join());
 
-    this.apiService.get('getData?' + query)
+    this.apiService.get(AppSettings.API_ROUTES.ALL_DATA + '?' + query)
       .subscribe(data => this.processData(data, this.view),
       error => console.error('Error getting all conditions: ' + error)
       );
-
   }
 
   private processData(data: Array<any>, item: string) {

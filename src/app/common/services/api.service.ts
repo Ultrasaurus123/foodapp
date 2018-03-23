@@ -10,7 +10,6 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class ApiService {
 
-
   private static _instance: ApiService;
   private static responses: any = {};
   private static sessionId: string;

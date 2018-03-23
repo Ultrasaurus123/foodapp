@@ -74,14 +74,14 @@ export class DetailsComponent implements OnInit {
       query = 'foods=' + encodeURIComponent(this.detailItem) + '&conditions=' + encodeURIComponent(this.selectedItem);
     }
 
-    this.apiService.get('getData?' + query, true)
+    this.apiService.get(AppSettings.API_ROUTES.ALL_DATA + '?' + query, true)
       .subscribe(data => this.processData(data),
       error => console.error('Error getting cross reference data: ' + error)
     );
     
     let warningQuery = 'foods=';
     warningQuery += (this.view === 'food') ? encodeURIComponent(this.selectedItems.join()) : encodeURIComponent(this.detailItem);
-    this.apiService.get('getWarnings?' + warningQuery, true)
+    this.apiService.get(AppSettings.API_ROUTES.WARNINGS + '?' + warningQuery, true)
       .subscribe(data => this.processWarningsData(data),
       error => console.error('Error getting warnings data: ' + error)
       );
@@ -89,7 +89,7 @@ export class DetailsComponent implements OnInit {
     if (this.view === 'condition') {
       let sideEffectsQuery = 'food=';
       sideEffectsQuery += encodeURIComponent(this.detailItem);
-      this.apiService.get('getSideEffects?' + sideEffectsQuery, true)
+      this.apiService.get(AppSettings.API_ROUTES.SIDE_EFECTS + '?' + sideEffectsQuery, true)
         .subscribe(data => this.sideEffectsList = data,
         error => console.error('Error getting side effects data: ' + error)
         );
@@ -110,14 +110,8 @@ export class DetailsComponent implements OnInit {
     this.getImages();
   }
   
-  private processWarningsData(data: Array<any>) {
-    // skip headings
-    for (let i = 1; i < data.length; i++) {
-      let item = data[i][0].toLowerCase();
-      this.warningsObject[item] = this.warningsObject[item] || { warnings: [], sources: [] };
-      this.warningsObject[item].warnings.push(data[i][1]);
-      this.warningsObject[item].sources.push(data[i][2]);
-    }
+  private processWarningsData(data: any) {
+    this.warningsObject = data;
   }
 
   private getImages() {

@@ -41,7 +41,7 @@ export class DataService {
       return Subscription.EMPTY;
     }
     this.textService.loadAfterChange('food');
-    return this.apiService.get('foods', true)
+    return this.apiService.get(AppSettings.API_ROUTES.FOODS, true)
       .subscribe(
       foods => {
         this.allFoods = this.extractData(foods);
@@ -63,7 +63,7 @@ export class DataService {
       return Subscription.EMPTY;
     }
     this.textService.loadAfterChange('condition');
-    return this.apiService.get('conditions', true)
+    return this.apiService.get(AppSettings.API_ROUTES.CONDITIONS, true)
       .subscribe(
       conditions => {
         this.allConditions = this.extractData(conditions);
@@ -86,7 +86,7 @@ export class DataService {
     }
     this.textService.loadAfterChange('food');
     this.textService.loadAfterChange('condition');
-    Observable.forkJoin([this.apiService.get('foods', true), this.apiService.get('conditions', true)]).subscribe(
+    Observable.forkJoin([this.apiService.get(AppSettings.API_ROUTES.FOODS, true), this.apiService.get(AppSettings.API_ROUTES.CONDITIONS, true)]).subscribe(
       items => {
         let foods = items[0];
         let conditions = items[1];

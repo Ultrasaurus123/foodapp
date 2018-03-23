@@ -122,7 +122,7 @@ export class BenefitsTableComponent implements OnInit {
       this.textService.getTranslation(this.tableView.items).subscribe(translatedItems => {
         this.translatedItems = translatedItems;
         // console.log(translatedItems);
-        this.apiService.get('getCompactData?' + query, true)
+        this.apiService.get(AppSettings.API_ROUTES.COMPACT + '?' + query, true)
         .subscribe(data => this.processData(data),
           error => console.error('Error getting all items: ' + error)
         );
