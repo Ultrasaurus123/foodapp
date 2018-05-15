@@ -26,7 +26,7 @@ export class TextService {
     private static _languages: Array<string>;
 
     constructor(private apiService: ApiService) {
-        let sessionLang = sessionStorage.getItem('lang');
+        let sessionLang = localStorage.getItem('lang');
         if (sessionLang) {
             this._language = JSON.parse(sessionLang);
         }

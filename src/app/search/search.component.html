@@ -5,8 +5,9 @@
       <div *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? dataService.allFoods : dataService.allConditions" (click)="(checkedItems < maxSelections || item.checked) && onSelectItem(item)" 
       [class.checked]="item.checked" [class.disabled]="checkedItems >= maxSelections && !item.checked"
       [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify"
-      [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'">
-        <span [id]="'item-' + item.item">{{item.displayText}}</span>
+      [attr.dir]="textService.rightJustify && !showEnglish ? 'rtl' : 'ltr'">
+        <span *ngIf="showEnglish" [id]="'item-e-' + item.item">{{item.item}}</span>
+        <span *ngIf="!showEnglish"  [id]="'item-t-' + item.item">{{item.displayText}}</span>
       </div>
     </div>
   </div>
@@ -16,6 +17,8 @@
   <div class="row footer">
     <div class="col-12">
       Find: <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+      <img class="translation-icon" src="../../assets/img/translation.png" [class.show-eng-enabled]="showEnglish"
+        (click)="showEnglish = !showEnglish" [hidden]="textService.language === 'English'"/>
     </div>
     <div class="col-6">
       <button class="button" [class.btn-disabled]="checkedItems === 0" (click)="deselectAll()">Deselect All</button>

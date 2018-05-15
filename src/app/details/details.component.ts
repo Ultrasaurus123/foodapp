@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { ApiService, KeysPipe, DataService, NavigateService } from '../common';
+import { ApiService, KeysPipe, DataService, NavigateService, TextService } from '../common';
 
 @Component({
   selector: 'benefit-details',
@@ -30,7 +30,8 @@ export class DetailsComponent implements OnInit {
   private sideEffectsList: Array<string> = [];
   private maxSelection: number = AppSettings.MAX_SELECTIONS;
 
-  constructor(private apiService: ApiService, private navigateService: NavigateService, private dataService: DataService) { }
+  constructor(private apiService: ApiService, private navigateService: NavigateService,
+    private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
@@ -156,5 +157,13 @@ export class DetailsComponent implements OnInit {
       this.selectedItems.push(condition);
       sessionStorage.setItem('selectedcondition', JSON.stringify(this.selectedItems));  
     }
+  }
+
+  private getTranslateLink(description: string) {
+    let url: string = "https://translate.google.com/#auto/"
+      + AppSettings.LANGUAGE_CODE_MAP[this.textService.language.toLowerCase()]
+      + "/"
+      + description;
+    return url;
   }
 }

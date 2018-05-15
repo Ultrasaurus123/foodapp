@@ -47,7 +47,7 @@ export class LanguageComponent implements OnInit {
 
   private changeLanguage(language: string): void {
     this.textService.language = language;
-    sessionStorage.setItem('lang', JSON.stringify(language));
+    localStorage.setItem('lang', JSON.stringify(language));
     this.location.back();
   }
 }

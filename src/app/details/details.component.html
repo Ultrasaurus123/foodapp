@@ -13,7 +13,12 @@
                 <br>
                 <div class="bullet-point"><img class="effect-icon" [src]="getIcon(detail[2])" /></div>
                 <div class="description"><span>{{detail[3]}}</span></div>
-            <div class="col-12 reference-link">
+                <div class="col-12" *ngIf="textService.language.toLowerCase() !== 'english'">
+                    <a [href]="getTranslateLink(detail[3])" target="_blank">
+                    TRANSLATE
+                    </a>
+                </div>
+                <div class="col-12 reference-link">
                 <a [href]="detail[4]" target="_blank">
                 Source: {{detail[4]}}
                 </a>

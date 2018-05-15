@@ -184,7 +184,7 @@
 }
 
 .legend-text {
-    font-size: 9px;
+    font-size: 13px;
     padding: 2px 0 2px 0;
     margin-left: 10px;
     // color: white;
@@ -240,4 +240,8 @@ div .checked {
         display: block;
         content: "";
     }
+}
+
+.shaded {
+    background-color: #C5EBAB;
 }

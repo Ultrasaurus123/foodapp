@@ -140,9 +140,11 @@ export class BenefitsTableComponent implements OnInit {
     this.dataArray = [];
     for (let i = 1; i < data.length; i++) {
       dataHash[data[i][dIndex]] = dataHash[data[i][dIndex]] || {};
-      dataHash[data[i][dIndex]][data[i][hIndex]] = data[i][2];
+      dataHash[data[i][dIndex]][data[i][hIndex]] = {
+        effect: data[i][2],
+        top: data[i][3]
+      };
     }
-
     // convert hash to array so we can sort/filter/manipulate easier
     this.itemCount = Object.keys(dataHash).length;
 
@@ -369,13 +371,15 @@ export class BenefitsTableComponent implements OnInit {
     return function (a, b) {
       let aCount: number = 0, bCount: number = 0;
       for (let item in a.values) {
-        if (Number(a.values[item]) !== NaN && Number(a.values[item]) !== 0) {
-          aCount += (Number(a.values[item]) > 0) ? 1 : -1;
+        if (Number(a.values[item].effect) !== NaN && Number(a.values[item].effect) !== 0) {
+          aCount += (Number(a.values[item].effect) > 0) ? 1 : -1;
+          aCount += Number(a.values[item].top);
         }
       }
       for (let item in b.values) {
-        if (Number(b.values[item]) !== NaN && Number(b.values[item]) !== 0) {
-          bCount += (Number(b.values[item]) > 0) ? 1 : -1;
+        if (Number(b.values[item].effect) !== NaN && Number(b.values[item].effect) !== 0) {
+          bCount += (Number(b.values[item].effect) > 0) ? 1 : -1;
+          bCount += Number(b.values[item].top);
         }
       }
       if (aCount > bCount) {
@@ -389,23 +393,31 @@ export class BenefitsTableComponent implements OnInit {
 
   private effectSort(orderFactor: number): any {
     return function (a, b) {
+      let aHighlighted: number = 0, bHighlighted: number = 0;
       let aKeys = Object.keys(a.values);
       let bKeys = Object.keys(b.values);
-
-      if (aKeys.length > bKeys.length) {
+      for (let item in a.values) {
+        aHighlighted += Number(a.values[item].top);
+      }
+      for (let item in b.values) {
+        bHighlighted += Number(b.values[item].top);
+      }
+      if (aKeys.length + aHighlighted > bKeys.length + bHighlighted) {
         return -1 * orderFactor;
-      } else if (aKeys.length < bKeys.length) {
+      } else if (aKeys.length + aHighlighted < bKeys.length + bHighlighted) {
         return 1 * orderFactor;
       } else {
         let aCount: number = 0, bCount: number = 0;
         for (let item in a.values) {
-          if (Number(a.values[item]) !== NaN && Number(a.values[item]) !== 0) {
-            aCount += (Number(a.values[item]) > 0) ? 1 : -1;
+          if (Number(a.values[item].effect) !== NaN && Number(a.values[item].effect) !== 0) {
+            aCount += (Number(a.values[item].effect) > 0) ? 1 : -1;
+            aCount += Number(a.values[item].top);
           }
         }
         for (let item in b.values) {
-          if (Number(b.values[item]) !== NaN && Number(b.values[item]) !== 0) {
-            bCount += (Number(b.values[item]) > 0) ? 1 : -1;
+          if (Number(b.values[item].effect) !== NaN && Number(b.values[item].effect) !== 0) {
+            bCount += (Number(b.values[item].effect) > 0) ? 1 : -1;
+            bCount += Number(b.values[item].top);
           }
         }
         if (aCount > bCount) {
@@ -421,8 +433,8 @@ export class BenefitsTableComponent implements OnInit {
   private columnSort(orderFactor: number, column: string): any {
     orderFactor = 1;
     return function (a, b) {
-      let aValue = a.values[column] || -3;
-      let bValue = b.values[column] || -3;
+      let aValue = a.values[column].effect || -3;
+      let bValue = b.values[column].effect || -3;
       if (aValue > bValue) {
         return -1 * orderFactor;
       } else if (aValue < bValue) {
@@ -491,7 +503,7 @@ export class BenefitsTableComponent implements OnInit {
       let valuesCount: number = 0;
       for (let value in item.values) {
         valuesCount++;
-        let itemVal = Number(item.values[value]);
+        let itemVal = Number(item.values[value].effect);
         if (itemVal !== NaN) {
           if ((beneficial && itemVal === 1) ||
             (assist && itemVal === 2) ||
