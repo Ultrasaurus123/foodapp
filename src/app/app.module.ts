@@ -166,7 +166,7 @@ export class AppSettings {
 
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING
-  //public static API_ENDPOINT: string = 'http://localhost:3000/';
+  ////public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static API_ROUTES = {
     "ALL_DATA": "getDBData",
     "COMPACT": "getDBCompactData",

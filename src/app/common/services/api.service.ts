@@ -25,7 +25,8 @@ export class ApiService {
       return Observable.of(ApiService.responses[endpoint]);
     }
     ApiService.createSessionHeader();
-
+    ApiService.headers.set('Language', sessionStorage.getItem('lang') || `"English"`);
+    
     return this.http.get(AppSettings.API_ENDPOINT + endpoint, { headers: ApiService.headers })
       .map(res => {
         ApiService.sessionId = res.headers.get('SessionId');
@@ -48,7 +49,8 @@ export class ApiService {
 
   public post(endpoint: string, body: any): Observable<any> {
     ApiService.createSessionHeader();
-
+    ApiService.headers.set('Language', sessionStorage.getItem('lang') || `"English"`);
+    
     return this.http.post(AppSettings.API_ENDPOINT + endpoint, body)
       .map(res => {
         ApiService.headers.set('SessionId', res.headers.get('SessionId'));

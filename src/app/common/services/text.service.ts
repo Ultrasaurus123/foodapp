@@ -25,7 +25,7 @@ export class TextService {
     private static _instance: TextService;
     private static _languages: Array<string>;
 
-    constructor(private http: Http) {
+    constructor(private apiService: ApiService) {
         let sessionLang = sessionStorage.getItem('lang');
         if (sessionLang) {
             this._language = JSON.parse(sessionLang);
@@ -48,17 +48,7 @@ export class TextService {
         // }
         let queryString = 'type=' + type + '&lang=' + this.language.toLowerCase();
 
-        return this.http.get(AppSettings.API_ENDPOINT + AppSettings.API_ROUTES.TRANSLATIONS + '?' + encodeURI(queryString))
-            .map(res => {
-                let resJson = res.json();
-                // if (type === 'food') {
-                //     this.dataService.translatedFoods = resJson;
-                // } else if (type === 'condition') {
-                //     this.dataService.translatedConditions = resJson;
-                // }
-                return resJson;
-            });
-        //   .catch(this.handleError)
+        return this.apiService.get(AppSettings.API_ROUTES.TRANSLATIONS + '?' + encodeURI(queryString));
     }
 
     public getLanguages(): Array<string> {
