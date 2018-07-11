@@ -162,7 +162,7 @@ export class AppModule {
 
 // Global Application Settings
 export class AppSettings {
-  public static APP_NAME: string = 'Health Foods Matrix';
+  public static APP_NAME: string = 'Chex 4 Health';
 
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING

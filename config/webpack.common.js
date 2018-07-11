@@ -27,7 +27,7 @@ const ngcWebpack = require('ngc-webpack');
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-  title: 'Health Foods Matrix',
+  title: 'Chex 4 Health',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };
