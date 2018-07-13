@@ -179,7 +179,7 @@ export class AppSettings {
   };
   public static FACEBOOK_LINK: string = 'http://www.facebook.com/Health-Foods-Matrix-1004157829720976/';  
 
-  public static MAX_SELECTIONS: number = 10;
+  public static MAX_SELECTIONS: number = 7;
   public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Home', display: 'Home', link: 'home' },
     { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', data: { view: 'food' } },

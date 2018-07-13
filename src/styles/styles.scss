@@ -147,7 +147,7 @@ ul.topnav {
   padding: 0;
   overflow: hidden;
   background-color: $nav-button-selected;
-  z-index: 10;
+  z-index: 999;
 }
 
 ul.topnav li {float: left;}

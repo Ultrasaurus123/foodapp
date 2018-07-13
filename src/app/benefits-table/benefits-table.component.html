@@ -1,60 +1,9 @@
 <div [class.page-loading]="!dataArray"></div>
 <div *ngIf="dataArray && dataArray.length === itemCount"> 
-    <div [class.menu-backdrop]="showSort || showFilter || showLegend" (click)="showSort = showFilter = showLegend = false"></div>
-    <div>
-        <div class="row col-12 button-container">
-            <div class="dropdown col-3" [class.selected]="showSort">
-                <button class="dropbtn" (click)="showSort = !showSort">Sort</button>
-                <div class="dropdown-content" >
-                    <a (click)="sort('az'); showSort = false;">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
-                    <a (click)="sort('benefit'); showSort = false;">Number of Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
-                    <a (click)="sort('effect'); showSort = false;">Number of Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
-                </div>
-            </div>
-            <!-- filter drop down -->
-            <div class="dropdown col-3" [class.selected]="showFilter">
-                <button class="dropbtn" (click)="showFilter = !showFilter">Hide</button>
-                <div class="dropdown-content">
-                    <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
-                        <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event); showFilter = false;"
-                            [disabled]="false" [ngModel]="option.checked" />
-                        <label class="m-b-0" [for]="'item' + i">
-                        {{option.name}}
-                    </label>
-                    </div>
-                    <hr (click)="showFilter = false">
-                    <a [class.disabled]="selectedItems.length === 0" (click)="removeRows(); showFilter = false;">Hide Selected Rows</a>
-                    <a [class.disabled]="selectedItems.length === 0" (click)="removeRowsBelow(); showFilter = false;">Hide Below Selected Rows</a>
-                    <a (click)="showAllRows(); showFilter = false;">Unhide All</a>
-                </div>
-            </div>
-
-            <!-- spacer -->
-            <!--<div class="col-2">
-            </div>-->
-
-            <!-- save chart button -->
-            <div class="dropdown col-3">
-                <button class="dropbtn" (click)="saveChart()">Save</button>
-            </div>
-
-            <!-- help button -->
-            <div class="dropdown col-3">
-                <button class="dropbtn" (click)="goToHelp()">?</button>
-            </div>
-        </div>
-        <div class="row">
-            <span class="col-3"></span>
-            <span class="col-9 text-right column-sort-info">
-                Click a column heading to hide empty rows.<br>
-                Click on row headings and use HIDE menu.<br>
-                Click on icons for explanation of effects. 
-            </span>
-        </div>
-        <div class="table-container" [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'" >
+        <div class="table-container" [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'" [class.benefits-table-rtl-shift]="textService.rightJustify" >
             <table class="benefits-table">
                 <thead>
-                <th style="vertical-align: middle" dir="ltr">
+                <th style="vertical-align: middle" dir="ltr" class="first-column">
                     <span class="legend-text"><img class="effect-icon" src="../../assets/img/highlight.png" /> Emphasized</span><br>
                     <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial</span><br>
                     <span class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</span><br>
@@ -74,10 +23,11 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
-                    <td (click)="selectItem(item, i)"
+                    <td (click)="selectItem(item, i)" class="first-column"
                         [class.text-left]="!textService.rightJustify" [class.p-l-5]="!textService.rightJustify"
                         [class.text-right]="textService.rightJustify" [class.p-r-5]="textService.rightJustify">
-                        {{item.displayText}}
+                        <span *ngIf="item.showEnglish">{{item.item}}</span>
+                        <span *ngIf="!item.showEnglish">{{item.displayText}}</span>
                     </td>
                     <td class="text-center" [class.shaded]="item.values[selection] && item.values[selection].top" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">
                         <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection].effect)" /></div>
@@ -86,5 +36,137 @@
                 </tbody>
             </table>
         </div>
-    </div>
+</div>
+
+<div *ngFor="let tab of tabs; let i = index">
+    <div id="pullout" [class.active]="tab.active"  style="top: 10%" (click)="openTab(tab)" [hidden]="tab.hidden">
+        <div id="pullout-tab" [style.height.%]="tab.height" [style.top.%]="tab.top" [style.backgroundImage]="'url(' + tab.image + ')'"></div>
+        <div id="pullout-inner">
+            <!-- TODO: turn this into a child component for tabs -->
+            <div [ngSwitch]="tab.name">
+                <!-- ** DETAILS ** -->
+                <div *ngSwitchCase="'Details'">
+                    <div class="tab-content">
+                        <span><b><u>Details</u></b> - Clicking on any Green or Red icon on the table will take you to the explanation of benefits and side effects for that item.</span>
+                    </div>                
+                </div>
+                <!-- ** SORT ** -->
+                <div *ngSwitchCase="'Sort'">
+                    <div class="menu-tab" >
+                        <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
+                        <a (click)="sort('benefit')">Number of Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
+                        <a (click)="sort('effect')">Number of Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+                    </div>                
+                </div>
+                <!-- ** FILTER ** -->
+                <div *ngSwitchCase="'Filter'">
+                    <div class="menu-tab">
+                        <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
+                            <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event)"
+                                [disabled]="false" [ngModel]="option.checked" />
+                            <label class="m-b-0" [for]="'item' + i">
+                            {{option.name}}
+                        </label>
+                        </div>
+                        <hr style="border-color: white">
+                        <a [class.disabled]="selectedItems.length === 0" (click)="removeRows()">Hide Selected Rows</a>
+                        <a [class.disabled]="selectedItems.length === 0" (click)="removeRowsBelow()">Hide Below Selected Rows</a>
+                        <a (click)="showAllRows()">Unhide All</a>
+                    </div>
+                </div>
+                <!-- ** ICONS ** -->
+                <div *ngSwitchCase="'Icons'">
+                    <div class="tab-content" >
+                        <table class="icons-main-table">
+                            <tbody>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p class="tab-effect-icon"><span class="empty"></span></p>
+                                    </td>
+                                    <td>
+                                        <b>Blank Cell</b> - No significant impact found.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p class="tab-effect-icon shaded"><span class="empty"></span></p>
+                                    </td>
+                                    <td>
+                                        <b>Emphasized</b> - The beneficial effect has been emphasized in some references or it provides a large portion of the recommended daily value for the indicated mineral/vitamin.
+                                    </tr>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p><img class="tab-effect-icon" src="../../assets/img/beneficial.png" /></p>
+                                    </td>
+                                    <td>
+                                        <b>Beneficial</b> - A food/remedy supports or controls a health condition, or manage its symptoms.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p><img class="tab-effect-icon" src="../../assets/img/assist.png" /></p>
+                                    </td>
+                                    <td>
+                                        <b>Assists</b> - While a food may not have a direct benefit itself, it could enhance the benefits of other foods consumed with it.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p><img class="tab-effect-icon" src="../../assets/img/negative.png" /></p>
+                                    </td>
+                                    <td>
+                                        <b>Negative</b> - A food or remedy may have a harmful or undesirable impact.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p><img class="tab-effect-icon" src="../../assets/img/inhibit.png" /></p>
+                                    </td>
+                                    <td>
+                                        <b>Inhibits</b> - A food may inhibit benefits of other foods consumed.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-icons">
+                                        <p><img class="tab-effect-icon" src="../../assets/img/mixed.png" /></p>
+                                    </td>
+                                    <td>
+                                        <b>Mixed</b> - Indicates opposing views or conflicting effects. Learn more by clicking on the icon in the table. 
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>                
+                </div>                    
+                <!-- ** HELP ** -->
+                <div *ngSwitchCase="'Help'">
+                    <div class="tab-content">
+                        <span><b><u>Sort Tab</u></b> - Use this tab to sort rows alphabetically or by benefits.</span>
+                        <br>
+                        <span><b><u>Filter Tab</u></b> - Use this tab to show/hide rows to customize the table.</span>
+                        <br>
+                        <span><b><u>Save Tab</u></b> - Use this tab to save your case for future reference or to share with others.</span>
+                        <br>
+                        <span><b><u>Icons Tab</u></b> - Click on this tab to view a description of each icon type.</span>
+                        <br>
+                        <span *ngIf="textService.language !== 'English'">
+                            <b><u>English Tab</u></b> - Use this tab to show the original English word for selected items in case the automated translations are unfamiliar or inaccurate.</span>
+                        <hr style="border-color: white">
+                        <span><b><u>Column Filtering</u></b> - Click any column name hide the rows that have no effect on the selected column.  To unhide these hidden rows simply click on the column name again.</span>
+                    </div>                
+                </div>
+                <!-- ** ENGLISH ** -->
+                <div *ngSwitchCase="'English'">
+                    <div class="menu-tab">
+                        <a (click)="showEnglish()">Show English for selected items</a>
+                        <a (click)="removeAllEnglish()">Remove all English translations</a>
+                        <hr style="border-color: white">
+                    </div>                
+                    <div class="tab-content">
+                        <span>If you know a better translation for any item, please contact us at contact@healthfoodsmatrix.com.</span>
+                    </div>                
+                </div>    
+            </div>
+        </div>
+    </div>    
 </div>

@@ -35,12 +35,14 @@ export class BenefitsTableComponent implements OnInit {
   private translatedSelections: any = {};
   private tableView: { selection: string, items: string };
   private currentSessionFilters: any;
+  private tabs: Array<PulloutTab> = [];
   
 
   constructor(private navigateService: NavigateService, private dataService: DataService, private apiService: ApiService, 
     private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService, private domSanitizer: DomSanitizer) { }
 
   public ngOnInit() {
+    this.createTabs();
     window.scrollTo(0, 0);
     this.dataService.page = {
       text: 'Health Effects Matrix',
@@ -580,7 +582,57 @@ export class BenefitsTableComponent implements OnInit {
     this.navigateService.navigateTo('details');
   }
 
-  private goToHelp() {
-    this.navigateService.navigateTo('help');
+  private showEnglish() {
+    for (let index of this.selectedItems) {
+      this.dataArray[index].showEnglish = true;
+    }
   }
+
+  private removeAllEnglish() {
+    for (let item of this.dataArray) {
+      item.showEnglish = false;
+    }
+  }
+
+  private createTabs(): void {
+    let tabNames: Array<string> = [
+      "Help", "Details", "Sort", "Filter", "Save", "Icons", "English"
+    ];
+    let tabHeight: number = 1. / tabNames.length * 90;
+
+    for (let i = 0; i < tabNames.length; i++) {
+      this.tabs.push({
+        name: tabNames[i],
+        image: "../../assets/img/tab-" + tabNames[i] + ".png",
+        height: tabHeight,
+        top: tabHeight * i + 1 * i,
+        hidden: tabNames[i] === this.textService.language
+      });
+    }
+    console.log(this.tabs);
+  }
+
+  private openTab(tab: PulloutTab): void {
+    if (tab.name === "Save") {
+      this.saveChart();
+      return;
+    }
+    if (tab.active) {
+      tab.active = false;
+      return;
+    }
+    for (let t of this.tabs) {
+      t.active = false;
+    }
+    tab.active = true;
+  }
+}
+
+export interface PulloutTab {
+  name: string;
+  image: string;
+  height: number;
+  top: number;
+  active?: boolean;
+  hidden?: boolean;
 }

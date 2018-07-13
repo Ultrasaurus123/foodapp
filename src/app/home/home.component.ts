@@ -11,15 +11,9 @@ import { DataService, TextService, NavigateService } from '../common';
 import { AppSettings } from '..';
 
 @Component({
-  // The selector is what angular internally uses
-  // for `document.querySelectorAll(selector)` in our index.html
-  // where, in this case, selector is the string 'home'
   selector: 'home',  // <home></home>
-  // We need to tell Angular's Dependency Injection which providers are in our app.
   providers: [DataService],
-  // Our list of styles in our component. We may add more to compose many styles together
   styleUrls: ['./home.component.scss'],
-  // Every Angular template is first compiled by the browser before Angular runs it's compiler
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
@@ -45,10 +39,11 @@ export class HomeComponent implements OnInit {
       text: 'Home',
       name: 'Home'
     };
-    this.pageText.headline = 'Welcome to ' + AppSettings.APP_NAME;
-    this.pageText.pageInfo = AppSettings.APP_NAME + ' compares foods for your unique set of multiple health concerns';  
+    this.pageText.headline = AppSettings.APP_NAME;
+    this.pageText.pageInfo = "Foods & Remedies for Multiple Health Concerns";  
     this.pageText.getStarted = 'It also compares benefits & side effects of multiple sets of foods and home remedies.';
-    this.pageText.helpLink = 'Click here for a quick guide on using this application';
+    this.pageText.helpLink = "User's Guide";
+    this.pageText.examplesLink = 'Examples';
     this.dataService.loadFoods();
     this.dataService.loadConditions();
   }

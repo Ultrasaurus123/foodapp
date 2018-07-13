@@ -1,16 +1,15 @@
 <div class="home-container">
   <div class="col-12">
-    <span class="page-header">{{pageText.headline}}</span>
+    <span class="home-page-title">{{pageText.headline}}</span>
     <span class="hidden-desktop">
       <a [routerLink]="['/language']"><img class="translation-icon" src="../../assets/img/translation.png"/></a>
     </span>
     <hr>
     <div style="text-align: center">
-      <img class="screen-shot" src="../../assets/img/screenshot.jpg" />
+      <img class="screen-shot" src="../../assets/img/home-image.png" />
     </div>
-    <p style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
+    <p class="home-page-title" style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
     <br>
-    <p>{{pageText.getStarted}}</p>
     <div class="row">
       <div class="col-6">
         <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
@@ -25,6 +24,9 @@
     </div>
 
     <br>
-    <p class="help-link"><a [routerLink]="['/help']">{{pageText.helpLink}}</a></p>
+    <p class="help-link">
+      <a style="float: left" [routerLink]="['/help']">{{pageText.helpLink}}</a>
+      <a style="float: right" href="../../assets/docs/chex4health-examples.pdf">{{pageText.examplesLink}}</a>
+    </p>
   </div>
 </div>

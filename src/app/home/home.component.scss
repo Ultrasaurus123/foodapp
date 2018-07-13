@@ -1,6 +1,13 @@
 /*styles for home content only*/
 @import '../../styles/variables';
 
+.home-page-title {
+    color: $nav-button-color;
+    font-weight: 900;
+    font-size: 24px;
+    text-align: center;
+}
+
 .home-container {
     margin-bottom: 20px;
 }
@@ -49,7 +56,6 @@ div .disabled {
     color: lightgray;
 }
 
-
 .footer {
     position: fixed;
     bottom: 0;
@@ -79,14 +85,16 @@ p {
     }
 }
 
-p.help-link {
-    font-size: 12px;
+.home-page-title {
+    color: $nav-button-color;
     font-weight: 900;
+    font-size: 24px;
     text-align: center;
+}
 
-    @media (max-width: 359px) { 
-    font-size: 10px;
-    }
+p.help-link {
+    font-size: 14px;
+    font-style: italic;
 }
 
 hr {

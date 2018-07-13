@@ -8,10 +8,16 @@
 .benefits-table {
     border-collapse: collapse;
     border-spacing: 0;
-    width: 100%;
+    left: 0;
+    width: 90%;
     display: table;
     border: 1px solid #ccc;
     font-size: 12px;
+}
+
+.benefits-table-rtl-shift {
+    padding-right: 10%;
+    margin-left: -10%;
 }
 
 .benefits-table thead th, .benefits-table tbody td {
@@ -27,6 +33,18 @@
     @media (min-width: 321px) and (max-width: 767px) { 
         max-width: 60px;
         min-width: 20px;
+     }
+}
+
+.benefits-table thead th.first-column, .benefits-table tbody td.first-column {
+    @media (max-width: 320px) { 
+        font-size: 12px;
+        width: 45%;
+     }
+
+    @media (min-width: 321px) and (max-width: 767px) { 
+        font-size: 14px;
+        width: 45%;
      }
 }
 
@@ -243,5 +261,82 @@ div .checked {
 }
 
 .shaded {
-    background-color: #C5EBAB;
+    background-color: #C5EBAB !important;
+}
+
+#pullout {
+    z-index: 100;
+    position: fixed;
+    top: 100px;
+    right: -80%;
+    width: 80%;
+    height: 85%;
+    background: $nav-button-selected;
+    transition: all 0.5s ease;
+  }
+  
+  #pullout.active {
+    z-index: 1;
+    right: 0;
+  }
+  
+  #pullout-inner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    padding-right: 12.5%;
+    overflow-y: scroll;
+  }
+  
+  #pullout-tab {
+    position: absolute;
+    top: 0;
+    left: -12.5%;
+    width: 12.5%;
+    height: 75px;
+    // border-top-left-radius: 20%;
+    // border-bottom-left-radius: 20%;
+    background-size: 100% 100%;
+    cursor: pointer;
+  }
+
+  .menu-tab {
+      a, label {
+        color: white !important;
+        padding: 3px 10px 3px 10px;
+        display: block;
+      }
+    }
+  
+  .tab-content {
+      color: white !important;
+      padding: 3px 10px 3px 10px;
+      font-size: 13px;
+  }
+
+  .table-icons {
+    vertical-align: top;  
+  }
+
+.tab-effect-icon {
+    width: 26px;
+    height: 26px;  
+    padding: 5px;
+    border: 1px solid black;
+    background: white;
+
+    .empty {
+        padding: 8px 16px 8px 16px;
+    }
+}
+
+.icons-main-table {
+    tr {
+        font-size: 12px;
+        b {
+            font-size: 14px;
+        }
+    }
 }
