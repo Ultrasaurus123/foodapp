@@ -3,8 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { DataService, NavigateService } from '../common';
-import { Router } from '@angular/router';
-import { PageHeaderComponent } from '../common';
+import { AppSettings } from '../app.module';
 
 @Component({
   selector: 'agreement',
@@ -12,9 +11,14 @@ import { PageHeaderComponent } from '../common';
   templateUrl: './agreement.component.html'
 })
 export class AgreementComponent implements OnInit {
-  constructor(private navigateService: NavigateService, private dataService: DataService) { }
+  private appName: string;
+  private websiteName: string;
 
+  constructor(private navigateService: NavigateService, private dataService: DataService) { }
+  
   public ngOnInit() {
+    this.websiteName = AppSettings.APP_NAME.replace(/ /g, '');
+    this.appName = AppSettings.APP_NAME;
     window.scrollTo(0, 0);
     this.dataService.page = {
       text: 'Terms and Conditions',
