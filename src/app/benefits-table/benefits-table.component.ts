@@ -21,7 +21,7 @@ export class BenefitsTableComponent implements OnInit {
   private selected: Array<string>;
   private selectedHeadings: Array<{ heading: string, displayText: string, displayTextLeft: string, displayTextRight: string, splitText: boolean }>;
   private view: string;
-  private heading: string;
+  private itemPopularity: any = {};
   private dataArray: Array<any>;
   private currentSort: { type: string, asc: boolean };
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
@@ -164,14 +164,14 @@ export class BenefitsTableComponent implements OnInit {
     let hIndex: number = (this.view === 'food') ? 0 : 1;
     let dIndex: number = (this.view === 'food') ? 1 : 0;
     let dataHash = {};
-    this.heading = data[0][hIndex];
     this.dataArray = [];
     for (let i = 1; i < data.length; i++) {
-      dataHash[data[i][dIndex]] = dataHash[data[i][dIndex]] || { popularity: data[i][4] };
+      dataHash[data[i][dIndex]] = dataHash[data[i][dIndex]] || {};
       dataHash[data[i][dIndex]][data[i][hIndex]] = {
         effect: data[i][2],
         top: data[i][3]
       };
+      this.itemPopularity[data[i][dIndex]] = data[i][4];
     }
     // convert hash to array so we can sort/filter/manipulate easier
     this.itemCount = Object.keys(dataHash).length;
@@ -190,7 +190,7 @@ export class BenefitsTableComponent implements OnInit {
       if (hiddenIndex > -1) {
         hidden = true;
       }
-      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, popularity: dataHash[item].popularity });
+      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, });
     }
       for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
         this.onFilterChange(this.currentSessionFilters.filters[i], true);
@@ -462,10 +462,10 @@ export class BenefitsTableComponent implements OnInit {
     }
   }
   private popularitySort(orderFactor: number): any {
-    return function (a, b) {
-      if (Number(a.popularity) < Number(b.popularity)) {
+    return (a, b) => {
+      if (Number(this.itemPopularity[a.item]) < Number(this.itemPopularity[b.item])) {
         return 1 * orderFactor;
-      } else if (Number(a.popularity) > Number(b.popularity)) {
+      } else if (Number(this.itemPopularity[a.item]) > Number(this.itemPopularity[b.item])) {
         return -1 * orderFactor;
       }
       return 0;
