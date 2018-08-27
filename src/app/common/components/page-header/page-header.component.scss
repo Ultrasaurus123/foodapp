@@ -36,7 +36,16 @@
 	background-image: -webkit-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 	background-image: -moz-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
 	background-image: -ms-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
-	background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+    background-image: -o-linear-gradient(270deg, rgba(255,255,255,.5), #fff);
+}
+
+.container-fade-bottom-margin {
+    margin-bottom: 122px;
+    // @media (max-width: 320px) { 
+    // }
+    // @media (min-width: 321px) { 
+    //     margin-bottom: 137px;
+    //}
 }
 
 .disabled {

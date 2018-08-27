@@ -64,7 +64,33 @@ export class BenefitsTableComponent implements OnInit {
         }
         this.initNoParams();
       });
+    
   }
+
+  private ngAfterViewInit() {
+    // open details tab on page load
+    if (!sessionStorage.getItem('viewedDetailsTab')) {
+      let detailsTab: PulloutTab;
+      for (let i = 0; i < this.tabs.length; i++) {
+        if (this.tabs[i].name.toLowerCase() === "details") {
+          detailsTab = this.tabs[i];
+          break;
+        }
+      }
+      if (detailsTab) {
+        setTimeout(() => {
+          this.openTab(detailsTab);
+          setTimeout(() => {
+            if (detailsTab.active) {
+              this.openTab(detailsTab);
+            }
+            sessionStorage.setItem('viewedDetailsTab', "true");
+          }, 3000);
+        }, 1000);
+      }
+    }
+  }
+
   
   private initNoParams() {
     //check if it's a custom MyChart
@@ -141,7 +167,7 @@ export class BenefitsTableComponent implements OnInit {
     this.heading = data[0][hIndex];
     this.dataArray = [];
     for (let i = 1; i < data.length; i++) {
-      dataHash[data[i][dIndex]] = dataHash[data[i][dIndex]] || {};
+      dataHash[data[i][dIndex]] = dataHash[data[i][dIndex]] || { popularity: data[i][4] };
       dataHash[data[i][dIndex]][data[i][hIndex]] = {
         effect: data[i][2],
         top: data[i][3]
@@ -164,7 +190,7 @@ export class BenefitsTableComponent implements OnInit {
       if (hiddenIndex > -1) {
         hidden = true;
       }
-      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden });
+      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, popularity: dataHash[item].popularity });
     }
       for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
         this.onFilterChange(this.currentSessionFilters.filters[i], true);
@@ -349,6 +375,10 @@ export class BenefitsTableComponent implements OnInit {
         this.dataArray.sort(this.effectSort(orderFactor));
         break;
         
+      case 'popularity':
+        this.dataArray.sort(this.popularitySort(orderFactor));
+        break;
+      
       case 'column':
         this.dataArray.sort(this.columnSort(orderFactor, column));
         break;
@@ -429,6 +459,16 @@ export class BenefitsTableComponent implements OnInit {
         }
         return 0;
       }
+    }
+  }
+  private popularitySort(orderFactor: number): any {
+    return function (a, b) {
+      if (Number(a.popularity) < Number(b.popularity)) {
+        return 1 * orderFactor;
+      } else if (Number(a.popularity) > Number(b.popularity)) {
+        return -1 * orderFactor;
+      }
+      return 0;
     }
   }
 
@@ -603,7 +643,7 @@ export class BenefitsTableComponent implements OnInit {
     for (let i = 0; i < tabNames.length; i++) {
       this.tabs.push({
         name: tabNames[i],
-        image: "../../assets/img/tab-" + tabNames[i] + ".png",
+        image: "../../assets/img/tab-" + tabNames[i].toLowerCase() + ".png",
         height: tabHeight,
         top: tabHeight * i + 1 * i,
         hidden: tabNames[i] === this.textService.language

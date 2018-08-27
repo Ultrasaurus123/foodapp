@@ -39,7 +39,7 @@
 </div>
 
 <div *ngFor="let tab of tabs; let i = index">
-    <div id="pullout" [class.active]="tab.active"  style="top: 10%" (click)="openTab(tab)" [hidden]="tab.hidden">
+    <div [attr.id]="'pullout-main-'+tab.name" [class.active]="tab.active" (click)="openTab(tab)" [hidden]="tab.hidden">
         <div id="pullout-tab" [style.height.%]="tab.height" [style.top.%]="tab.top" [style.backgroundImage]="'url(' + tab.image + ')'"></div>
         <div id="pullout-inner">
             <!-- TODO: turn this into a child component for tabs -->
@@ -48,6 +48,9 @@
                 <div *ngSwitchCase="'Details'">
                     <div class="tab-content">
                         <span><b><u>Details</u></b> - Clicking on any Green or Red icon on the table will take you to the explanation of benefits and side effects for that item.</span>
+                        <div class="m-t-10 m-l-10">
+                            <p><img style="width: 50%" src="../../assets/img/tapit.gif" /></p>
+                        </div>
                     </div>                
                 </div>
                 <!-- ** SORT ** -->
@@ -56,6 +59,7 @@
                         <a (click)="sort('az')">Alphabetical <span [innerHTML]="getSortOrderIcon('az')"></span></a>
                         <a (click)="sort('benefit')">Number of Benefits <span [innerHTML]="getSortOrderIcon('benefit')"></span></a>
                         <a (click)="sort('effect')">Number of Total Effects <span [innerHTML]="getSortOrderIcon('effect')"></span></a>
+                        <a (click)="sort('popularity')">Popularity <span [innerHTML]="getSortOrderIcon('popularity')"></span></a>
                     </div>                
                 </div>
                 <!-- ** FILTER ** -->

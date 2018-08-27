@@ -166,7 +166,7 @@ export class AppSettings {
 
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING
-  ////public static API_ENDPOINT: string = 'http://localhost:3000/';
+  //public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static API_ROUTES = {
     "ALL_DATA": "getDBData",
     "COMPACT": "getDBCompactData",
@@ -179,7 +179,7 @@ export class AppSettings {
   };
   public static FACEBOOK_LINK: string = 'http://www.facebook.com/Health-Foods-Matrix-1004157829720976/';  
 
-  public static MAX_SELECTIONS: number = 7;
+  public static MAX_SELECTIONS: number = 6;
   public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Home', display: 'Home', link: 'home' },
     { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', data: { view: 'food' } },

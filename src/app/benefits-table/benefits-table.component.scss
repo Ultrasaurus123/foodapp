@@ -9,10 +9,15 @@
     border-collapse: collapse;
     border-spacing: 0;
     left: 0;
-    width: 90%;
     display: table;
     border: 1px solid #ccc;
     font-size: 12px;
+    @media screen and (orientation: landscape) {
+        width: 94%;
+    }
+    @media screen and (orientation: portrait) {
+        width: 90%;
+    }
 }
 
 .benefits-table-rtl-shift {
@@ -264,18 +269,24 @@ div .checked {
     background-color: #C5EBAB !important;
 }
 
-#pullout {
+div[id^="pullout-main-"] {
     z-index: 100;
     position: fixed;
-    top: 100px;
     right: -80%;
     width: 80%;
     height: 85%;
     background: $nav-button-selected;
     transition: all 0.5s ease;
+
+    @media screen and (orientation: landscape) {
+        top: 15%;
+    }
+    @media screen and (orientation: portrait) {
+        top: 10%;
+    }
   }
   
-  #pullout.active {
+  div[id^="pullout-main-"].active {
     z-index: 1;
     right: 0;
   }
@@ -293,13 +304,18 @@ div .checked {
   #pullout-tab {
     position: absolute;
     top: 0;
-    left: -12.5%;
-    width: 12.5%;
     height: 75px;
-    // border-top-left-radius: 20%;
-    // border-bottom-left-radius: 20%;
     background-size: 100% 100%;
     cursor: pointer;
+
+    @media screen and (orientation: landscape) {
+        left: -7.5%;
+        width: 7.5%;
+    }
+    @media screen and (orientation: portrait) {
+        left: -12.5%;
+        width: 12.5%;
+    }
   }
 
   .menu-tab {
