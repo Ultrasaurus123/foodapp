@@ -69,7 +69,7 @@ export class BenefitsTableComponent implements OnInit {
 
   private ngAfterViewInit() {
     // open details tab on page load
-    if (!sessionStorage.getItem('viewedDetailsTab')) {
+    if (!localStorage.getItem('viewedDetailsTab')) {
       let detailsTab: PulloutTab;
       for (let i = 0; i < this.tabs.length; i++) {
         if (this.tabs[i].name.toLowerCase() === "details") {
@@ -84,7 +84,7 @@ export class BenefitsTableComponent implements OnInit {
             if (detailsTab.active) {
               this.openTab(detailsTab);
             }
-            sessionStorage.setItem('viewedDetailsTab', "true");
+            localStorage.setItem('viewedDetailsTab', "true");
           }, 3000);
         }, 1000);
       }
@@ -206,7 +206,8 @@ export class BenefitsTableComponent implements OnInit {
         this.currentSort.asc = !sortParsed.asc;
         this.sort(sortParsed.type);
       } else {
-        this.selected.length === 1 ? this.sort('az') : this.sort('effect');
+        this.sort('popularity');
+        // this.selected.length === 1 ? this.sort('az') : this.sort('effect');
       }  
 }
 
