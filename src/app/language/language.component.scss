@@ -38,6 +38,11 @@ div .checked {
         font-size: 12px;
     }
 }
+.notice.rtl {
+    @media (max-width: 414px) { 
+        font-size: 14px;
+    }
+}
 
 .footer {
     position: fixed;

@@ -26,7 +26,7 @@ export class DataService {
   public myCharts: Array<Chart> = [];
   public selectedChart: Chart = null;
   public disclaimerRedirectUrl: string;
-  public page: { name: string, text: string, footerMargin?: boolean, search?: boolean };
+  public page: { name: string, text: string, subtitle?: boolean,footerMargin?: boolean, search?: boolean };
 
   private static _instance: DataService;
 
@@ -78,10 +78,13 @@ export class DataService {
       error => console.error('Error getting all conditions: ' + error));
   }
 
-  public loadFoodsAndConditions(): Subscription {
+  public loadFoodsAndConditions(onLoad?: Function): Subscription {
     this.dataLoading = true;    
     if (this.allFoods && this.allFoods.length > 0 && this.allConditions && this.allConditions.length > 0 && !this.textService.languageChanged) {
-      this.dataLoading = false;            
+      this.dataLoading = false;     
+      if (onLoad) {
+        onLoad();
+      }
       return Subscription.EMPTY;
     }
     this.textService.loadAfterChange('food');
@@ -104,7 +107,10 @@ export class DataService {
               this.allConditions[i].displayText = translatedConditions[this.allConditions[i].item.toLowerCase()] || this.allConditions[i].item;
             }
             this.allConditions.sort(this.alphabeticSort());          
-            this.dataLoading = false;                  
+            this.dataLoading = false;            
+            if (onLoad) {
+              onLoad();
+            }
             });
         })
       error => console.error('Error getting all foods: ' + error);

@@ -3,7 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, PageHeaderComponent, ConfirmModalComponent, Chart, NavigateService } from '../common';
+import { DataService, PageHeaderComponent, ConfirmModalComponent, Chart, NavigateService, TextService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 import { AppSettings } from '..';
 
@@ -14,7 +14,10 @@ import { AppSettings } from '..';
 })
 export class MyChartsComponent implements OnInit {
   private myCharts: Array<Chart> = [];
-  constructor(private navigateService: NavigateService, private dataService: DataService, private dialogService: DialogService) { }
+  private pageText: any = {};
+
+  constructor(private navigateService: NavigateService, private dataService: DataService, private dialogService: DialogService,
+    private textService: TextService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
@@ -22,7 +25,18 @@ export class MyChartsComponent implements OnInit {
       text: 'My Charts',
       name: 'My Charts',
     };
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
     this.myCharts = this.dataService.myCharts;
+  }
+
+
+  private setTranslations(data: any) {
+    this.pageText.noCharts = data["no_charts"] || "You have no saved charts.";
+    this.pageText.chartsInfo = data["charts_info"] || "Select a saved chart to load, share or delete your customized benefits table.";
+    this.pageText.share = data["share"] || "share";
+    this.dataService.page.text = data["menu_my_charts"] || 'My Charts';
   }
 
   private selectMyChart(chart: Chart) {

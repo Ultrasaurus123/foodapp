@@ -34,17 +34,32 @@ export class TranslationTableComponent implements OnInit {
 
   public ngOnInit() {
     window.scrollTo(0, 0);
-    this.dataService.loadFoodsAndConditions();
-    // this.dataService.loadConditions();
-    this.foods = this.dataService.allFoods;
-    this.conditions = this.dataService.allConditions;
+    
+    this.dataService.loadFoodsAndConditions(() => {
+      this.foods = this.dataService.allFoods;
+      this.conditions = this.dataService.allConditions;  
+    });
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
     this.dataService.page = {
       text: 'Translation Table',
       name: 'Translation Table',
       footerMargin: true
     }; 
-    this.pageText.search = 'Search:';    
   }
+
+  private setTranslations(data: any) {
+    this.pageText.english = data["english"] || "English";
+    this.pageText.selectedLanguage = data["language"] || this.textService.language;
+    this.pageText.search = data["search"] || "Search";
+    this.pageText.showFoods = data["tt_show_foods"] || "Show Foods";
+    this.pageText.showMedical = data["tt_show_medical"] || "Show Medical Issues";
+    this.pageText.headingFoods = data["tt_heading_foods"] || "Foods and Remedies";
+    this.pageText.headingMedical = data["tt_heading_medical"] || "Medical Concerns";
+    this.dataService.page.text = data["menu_translation_table"] || this.dataService.page.text;
+  }
+
 
   private changeView() {
     this.view = this.view === 'food' ? 'condition' : 'food';
@@ -87,6 +102,10 @@ export class TranslationTableComponent implements OnInit {
   }
 
   private getButtonLabel(): string {
-    return 'Show ' + (this.view === 'condition' ? 'Foods' : 'Concerns');
+    if (this.view === "condition") {
+      return this.pageText.showMedical;
+    } else {
+      return this.pageText.showFoods;
+    }
   }
 }

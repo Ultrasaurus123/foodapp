@@ -1,30 +1,50 @@
 <div class="home-container">
   <div class="col-12">
-    <span class="home-page-title">{{pageText.headline}}</span>
-    <span class="hidden-desktop">
-      <a [routerLink]="['/language']"><img class="translation-icon" src="../../assets/img/translation.png"/></a>
-    </span>
+    <div class="row">
+      <div class="col-10">
+          <img style="max-width: 100%" src="../../assets/img/title.png" />
+      </div>
+      <div class="col-2 text-center">
+          <span class="hidden-desktop">
+              <a [routerLink]="['/language']"><img class="translation-icon" src="../../assets/img/translation.png"/></a>
+            </span>
+            <span class="hidden-desktop">
+                {{currentLanguageCode}}
+              </span>
+        </div>
+    </div>
+    <!-- <span class="home-page-title">{{pageText.headline}}</span> -->
     <hr>
-    <div style="text-align: center">
+    <div class="text-center">
       <img class="screen-shot" src="../../assets/img/home-image.png" />
     </div>
-    <p class="home-page-title" style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
-    <br>
+    <!-- <p class="home-page-title" style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
+    <br> -->
     <div class="row">
       <div class="col-6">
         <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
-          <img class="button-icon" src="../../assets/img/conditions-icon.png" /><span class="button-label">Health Concerns</span>
+          <!-- <img class="button-icon" src="../../assets/img/conditions-icon.png" /> -->
+          <span [class.button-label]="!textService.rightJustify" [class.button-label-rtl]="textService.rightJustify">{{pageText.healthButton}}</span>
           </button>
+          <br>
+          <!-- <p class="search-link" [class.rtl]="textService.rightJustify">
+            <a  (click)="showItemList('condition-20')">{{pageText.topConcernsLink}}</a>
+          </p>      -->
       </div>
       <div class="col-6">
         <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
-          <img class="button-icon" src="../../assets/img/foods-icon.png" /><span class="button-label">Foods / Remedies</span>
+          <!-- <img class="button-icon" src="../../assets/img/foods-icon.png" /> -->
+          <span class="button-label" [class.rtl]="textService.rightJustify">{{pageText.foodButton}}</span>
           </button>
+          <!-- <br>
+          <p class="search-link" [class.rtl]="textService.rightJustify">
+            <a (click)="showItemList('food-20')">{{pageText.topFoodsLink}}s</a>
+          </p>      -->
       </div>
     </div>
 
     <br>
-    <p class="help-link">
+    <p class="help-link" [class.rtl]="textService.rightJustify">
       <a style="float: left" href="../../assets/docs/HFF users guide.pdf">{{pageText.helpLink}}</a>
       <a style="float: right" href="../../assets/docs/HFF examples.pdf">{{pageText.examplesLink}}</a>
     </p>

@@ -37,12 +37,26 @@ export class LanguageComponent implements OnInit {
       name: 'Language',
       footerMargin: false
     };
-    this.pageText.search = 'Search:';
-    this.apiService.get(AppSettings.API_ROUTES.LANGUAGES, true).subscribe((data) => {
-      this.languageSet = data.sort();      
-    });
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
 
     //new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+  }
+
+  private setTranslations(data: any) {
+    this.pageText.selectLanguage = data["select_language"] || "Please select a language:";  
+    this.pageText.languageInfo = data["language_disclaimer"] || `Translations of food and health terms are available in the following languages.  
+      Please note that these translations are a combination of manual and automated translating and may contain errors. 
+      If you see any errors or would like to provide support in adding a new language please contact us.`;  
+    this.pageText.contactUs = data["contact_us"] || "Contact us";
+    this.dataService.page.text = data["menu_language"] || this.dataService.page.text;
+    this.apiService.get(AppSettings.API_ROUTES.LANGUAGES, true).subscribe((langData) => {
+      for (var i = 0; i < langData.length; i++) {
+        langData[i] = data[langData[i].toLowerCase()] || langData[i];
+      }
+      this.languageSet = langData.sort();      
+    });
   }
 
   private changeLanguage(language: string): void {

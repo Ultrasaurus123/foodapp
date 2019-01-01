@@ -11,9 +11,9 @@ import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
                    <div class="modal-body" *ngIf="message">
                      <p>{{message}}</p>
                    </div>
-                   <div class="modal-footer">
-                     <button class="button" (click)="confirm()">OK</button>
-                     <button class="button btn-disabled" (click)="close()" >Cancel</button>
+                   <div class="modal-footer" [class.text-right]="hideCancel">
+                     <button class="button" [style.width.%]="hideCancel ? 50 : 100" (click)="confirm()">OK</button>
+                     <button *ngIf="!hideCancel" class="button btn-disabled" (click)="close()" >Cancel</button>
                    </div>
                  </div>`
 })

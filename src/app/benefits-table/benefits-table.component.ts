@@ -18,17 +18,20 @@ import { DialogService } from "ng2-bootstrap-modal";
   templateUrl: './benefits-table.component.html'
 })
 export class BenefitsTableComponent implements OnInit {
+  private hideUnpopularThreshold: number;
   private selected: Array<string>;
   private selectedHeadings: Array<{ heading: string, displayText: string, displayTextLeft: string, displayTextRight: string, splitText: boolean }>;
   private view: string;
   private itemPopularity: any = {};
-  private dataArray: Array<any>;
+  private dataArray: Array<TableItem>;
+  private dataArraySorterPopularity: Array<TableItem>;
   private currentSort: { type: string, asc: boolean };
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
   private selectedItems: Array<number> = [];
-  private customHiddenItems: Array<number> = [];
+  private customHiddenItems: Array<string> = [];
   private hiddenByColumnFilter: any = {};
   private sub: any;
+  private pageText: any = {};
   private itemCount: number;
   private filteredColumns: any = {};
   private translatedItems: any = {};
@@ -36,6 +39,8 @@ export class BenefitsTableComponent implements OnInit {
   private tableView: { selection: string, items: string };
   private currentSessionFilters: any;
   private tabs: Array<PulloutTab> = [];
+  private minPopularity: number;
+
   
 
   constructor(private navigateService: NavigateService, private dataService: DataService, private apiService: ApiService, 
@@ -66,31 +71,6 @@ export class BenefitsTableComponent implements OnInit {
       });
     
   }
-
-  private ngAfterViewInit() {
-    // open details tab on page load
-    if (!localStorage.getItem('viewedDetailsTab')) {
-      let detailsTab: PulloutTab;
-      for (let i = 0; i < this.tabs.length; i++) {
-        if (this.tabs[i].name.toLowerCase() === "details") {
-          detailsTab = this.tabs[i];
-          break;
-        }
-      }
-      if (detailsTab) {
-        setTimeout(() => {
-          this.openTab(detailsTab);
-          setTimeout(() => {
-            if (detailsTab.active) {
-              this.openTab(detailsTab);
-            }
-            localStorage.setItem('viewedDetailsTab', "true");
-          }, 3000);
-        }, 1000);
-      }
-    }
-  }
-
   
   private initNoParams() {
     //check if it's a custom MyChart
@@ -129,13 +109,28 @@ export class BenefitsTableComponent implements OnInit {
       { name: 'Assists', checked: false },
       { name: 'Mixed Effects', checked: false },
       { name: 'Inhibits', checked: false },
-      { name: 'Negative Effect', checked: false }
+      { name: 'Negative Effect', checked: false },
+      { name: 'Less Popular Items', checked: false },
     ];
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
     this.tableView = {
       selection: this.view,
       items: this.view === 'food' ? 'condition' : 'food'
     };
   };
+
+  private setTranslations(data: any) {
+    this.pageText.emphasized = data["emphasized"] || "Emphasized";
+    this.pageText.beneficial = data["benefits"] || "Benefits";
+    this.pageText.assists = data["assists"] || "Assists";
+    this.pageText.mixed = data["mixed_effects"] || "Mixed";
+    this.pageText.inhibits = data["inhibits"] || "Inhibits";
+    this.pageText.negative = data["side_effect"] || "Side Effect";
+    this.pageText.helperText = data["table_help_text"] || "Click on the red or green symbols for more information about the foods and conditions.";
+    this.dataService.page.text = data["effects_table"] || 'Health Effects Matrix';
+  }
 
   private initServiceCall = function () {
     let query = '';
@@ -176,11 +171,11 @@ export class BenefitsTableComponent implements OnInit {
     // convert hash to array so we can sort/filter/manipulate easier
     this.itemCount = Object.keys(dataHash).length;
 
-    //get session filter data
+    //get session filter and sort data
     let sessionFilterString: string = sessionStorage.getItem('currentFilter');
     this.currentSessionFilters = (sessionFilterString) ? JSON.parse(sessionFilterString) : {};
     this.currentSessionFilters.hidden = this.currentSessionFilters.hidden || [];
-    this.currentSessionFilters.filters = this.currentSessionFilters.filters || [];    
+    this.currentSessionFilters.filters = this.currentSessionFilters.filters || [5];    
     this.currentSessionFilters.columns = this.currentSessionFilters.columns || [];    
     this.customHiddenItems = this.currentSessionFilters.hidden;
     
@@ -190,25 +185,29 @@ export class BenefitsTableComponent implements OnInit {
       if (hiddenIndex > -1) {
         hidden = true;
       }
-      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, });
+      this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, selected: false});
     }
-      for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
-        this.onFilterChange(this.currentSessionFilters.filters[i], true);
-      }
-      for (let i = 0; i < this.currentSessionFilters.columns.length; i++) {
-        this.columnFilter(this.currentSessionFilters.columns[i]);
-      }
 
-      let sort = sessionStorage.getItem('currentSort');
-      let sortParsed = JSON.parse(sort); 
-      if (sortParsed && sortParsed.type) {
-        this.currentSort = sortParsed;
-        this.currentSort.asc = !sortParsed.asc;
-        this.sort(sortParsed.type);
-      } else {
-        this.sort('popularity');
-        // this.selected.length === 1 ? this.sort('az') : this.sort('effect');
-      }  
+    this.hideUnpopularThreshold = this.dataArray.length <= 100 ? 20 : this.dataArray.length * 0.20;
+    this.dataArraySorterPopularity = Object.assign([], this.dataArray);
+    this.dataArraySorterPopularity.sort(this.popularitySort(1));
+
+    for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
+      this.onFilterChange(this.currentSessionFilters.filters[i], true);
+    }
+    for (let i = 0; i < this.currentSessionFilters.columns.length; i++) {
+      this.columnFilter(this.currentSessionFilters.columns[i]);
+    }
+
+    let sort = sessionStorage.getItem('currentSort');
+    let sortParsed = JSON.parse(sort); 
+    if (sortParsed && sortParsed.type) {
+      this.currentSort = sortParsed;
+      this.currentSort.asc = !sortParsed.asc;
+      this.sort(sortParsed.type);
+    } else {
+      this.sort('popularity');
+    }  
 }
 
   private processSelected() {
@@ -270,10 +269,11 @@ export class BenefitsTableComponent implements OnInit {
       className += '-two-line';  
     }
 
-    if (this.selected.length > 1) {
-      let numbers: string[] = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-      className += ' ' + numbers[this.selected.length] + '-col';
-    }
+    // if (this.selected.length > 1) {
+    //   let numbers: string[] = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+    //   className += ' ' + numbers[this.selected.length] + '-col';
+    // }
+    className += ' ' + "six-col";
     return className;
   };
 
@@ -384,6 +384,8 @@ export class BenefitsTableComponent implements OnInit {
         this.dataArray.sort(this.columnSort(orderFactor, column));
         break;
       default:
+        this.currentSort.type = 'popularity';
+        this.dataArray.sort(this.popularitySort(orderFactor));
         break;
     }
     sessionStorage.setItem('currentSort', JSON.stringify(this.currentSort));
@@ -532,7 +534,7 @@ export class BenefitsTableComponent implements OnInit {
     sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
   }
 
-  private onFilterChange(index, newValue): void {
+  private onFilterChange(index: number, newValue: boolean): void {
     this.resetSelection();
     this.filterOptions[index].checked = newValue;
     let beneficial: boolean = this.filterOptions[0].checked;
@@ -540,6 +542,7 @@ export class BenefitsTableComponent implements OnInit {
     let mixed: boolean = this.filterOptions[2].checked;
     let inhibits: boolean = this.filterOptions[3].checked;
     let negative: boolean = this.filterOptions[4].checked;
+    let unpopular: boolean = this.filterOptions[5].checked;
 
     for (let item of this.dataArray) {
       let matchCount: number = 0;
@@ -552,7 +555,8 @@ export class BenefitsTableComponent implements OnInit {
             (assist && itemVal === 2) ||
             (mixed && itemVal === 0) ||
             (inhibits && itemVal === -2) ||
-            (negative && itemVal === -1)) {
+            (negative && itemVal === -1) ||
+            (unpopular && this.shouldHideUnpopular(item))) {
             matchCount++;
           }
         }
@@ -586,6 +590,19 @@ export class BenefitsTableComponent implements OnInit {
       }
       sessionStorage.setItem('currentFilter', JSON.stringify(this.currentSessionFilters));
   }
+
+  private shouldHideUnpopular(tableItem: TableItem): boolean {
+    //HACK - using duplicated array, find a better way
+    // if table length < 100, show 20 items (or all items if less than 20)
+    // otherwise only return top 20% popular items
+    for (let i = 0; i < this.hideUnpopularThreshold; i++) {
+      if (this.dataArraySorterPopularity[i].item == tableItem.item) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   private saveChart() {
     let disposable = this.dialogService.addDialog(PromptModalComponent, {
@@ -637,7 +654,7 @@ export class BenefitsTableComponent implements OnInit {
 
   private createTabs(): void {
     let tabNames: Array<string> = [
-      "Help", "Details", "Sort", "Filter", "Save", "Icons", "English"
+      "Help", "Sort", "Filter", "Save", "Icons", "English"
     ];
     let tabHeight: number = 1. / tabNames.length * 90;
 
@@ -676,4 +693,16 @@ export interface PulloutTab {
   top: number;
   active?: boolean;
   hidden?: boolean;
+}
+
+export interface TableItem {
+  item: string,
+  displayText: string,
+  values: Array<{
+    effect: string,
+    top: string,
+  }>,
+  hidden: boolean,
+  selected: boolean,
+  showEnglish?: boolean,
 }

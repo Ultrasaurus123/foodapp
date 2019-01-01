@@ -48,7 +48,11 @@ export class TextService {
         // }
         let queryString = 'type=' + type + '&lang=' + this.language.toLowerCase();
 
-        return this.apiService.get(AppSettings.API_ROUTES.TRANSLATIONS + '?' + encodeURI(queryString));
+        return this.apiService.get(AppSettings.API_ROUTES.TRANSLATIONS + '?' + encodeURI(queryString), true);
+    }
+
+    public getMiscTranslations(): Observable<any> {
+        return this.apiService.get(AppSettings.API_ROUTES.MISC_TRANSLATIONS + '?lang=' + this.language.toLowerCase(), true);
     }
 
     public getLanguages(): Array<string> {

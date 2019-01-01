@@ -92,9 +92,26 @@ p {
     text-align: center;
 }
 
+p.search-link {
+    color: blue;
+    font-size: 14px;
+    font-style: italic;
+}
+
 p.help-link {
     font-size: 14px;
     font-style: italic;
+    padding-bottom: 5px;
+}
+p.help-link.rtl {
+    font-size: 16px;
+}
+.button-label {
+    font-size: 16px;
+}
+
+.button-label.rtl {
+    font-size: 18px;
 }
 
 hr {
@@ -102,7 +119,7 @@ hr {
 }
 
 .translation-icon {
-    float: right;
+    // float: right;
     height: 32px;
     // margin-top: -8px;
   }

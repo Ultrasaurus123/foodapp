@@ -1,15 +1,16 @@
-<div class="col-12 notice p-b-10">
-  Translations of food and health terms are available in the following languages.  
-  Please note that these translations are a combination of manual and automated translating and may contain errors. 
-  If you see any errors or would like to provide support in adding a new language please <a href="mailto:contact@healthfoodsmatrix.com">contact us</a>.
+<div [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'">
+<div class="col-12 notice p-b-10" [class.rtl]="textService.rightJustify">
+  {{pageText.languageInfo}}<br>
+  <a class="bold" href="mailto:contact@healthfoodsmatrix.com"> {{pageText.contactUs}}</a>.
 </div>
 <div class="col-12 bold p-b-5">
-  Please select a language:
+  {{pageText.selectLanguage}}
 </div>
-<div class="selection-container">
+<div class="selection-container" dir="ltr">
   <div class="checkbox-container">
     <div *ngFor="let lang of languageSet" class="p-l-15" [class.checked]="lang === selectedLang" (click)="lang !== selectedLang && changeLanguage(lang)">
       <span [id]="'item-' + lang">{{lang}}</span>
     </div>
   </div>
+</div>
 </div>

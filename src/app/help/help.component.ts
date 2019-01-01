@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Router, } from '@angular/router';
 import { AppSettings } from '..';
-import { KeysPipe, DataService } from '../common';
+import { KeysPipe, DataService, TextService } from '../common';
 
 @Component({
   selector: 'help',
@@ -12,8 +12,9 @@ import { KeysPipe, DataService } from '../common';
   templateUrl: './help.component.html'
 })
 export class HelpComponent implements OnInit {
+  private pageText: any = {};
 
-  constructor(private router: Router, private dataService: DataService) { }
+  constructor(private router: Router, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
@@ -21,5 +22,12 @@ export class HelpComponent implements OnInit {
       text: 'Help',
       name: 'Help'
     };
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
   }
-}
+
+
+  private setTranslations(data: any) {
+    this.dataService.page.text = data["menu_help"] || this.dataService.page.text;
+  }}

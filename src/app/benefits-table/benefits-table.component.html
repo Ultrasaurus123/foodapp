@@ -2,37 +2,41 @@
 <div *ngIf="dataArray && dataArray.length === itemCount"> 
         <div class="table-container" [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'" [class.benefits-table-rtl-shift]="textService.rightJustify" >
             <table class="benefits-table">
-                <thead>
-                <th style="vertical-align: middle" dir="ltr" class="first-column">
-                    <span class="legend-text"><img class="effect-icon" src="../../assets/img/highlight.png" /> Emphasized</span><br>
-                    <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> Beneficial</span><br>
-                    <span class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> Assists</span><br>
-                    <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> Mixed</span><br>
-                    <span class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> Inhibits</span><br>
-                    <span class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> Negative</span><br>
+                <tbody>
+                <tr class="bold table-heading">
+                <td style="vertical-align: middle" dir="ltr" class="first-column">
+                        <span class="legend-text"><img class="effect-icon" src="../../assets/img/highlight.png" /> {{pageText.emphasized}}</span><br>
+                        <span class="legend-text"><img class="effect-icon" src="../../assets/img/beneficial.png" /> {{pageText.beneficial}}</span><br>
+                        <span class="legend-text"><img class="effect-icon" src="../../assets/img/assist.png" /> {{pageText.assists}}</span><br>
+                        <span class="legend-text"><img class="effect-icon" src="../../assets/img/mixed.png" /> {{pageText.mixed}}</span><br>
+                        <span class="legend-text"><img class="effect-icon" src="../../assets/img/inhibit.png" /> {{pageText.inhibits}}</span><br>
+                        <span class="legend-text"><img class="effect-icon" src="../../assets/img/negative.png" /> {{pageText.negative}}</span><br>
                     <!--<br>
                     <span class="first-heading">{{heading}}</span>-->
-                </th>
-                <th (click)="columnFilter(selectionHeading.heading)" *ngFor="let selectionHeading of selectedHeadings" [class.column-selected]="filteredColumns[selectionHeading.heading]">
-                    <div [ngClass]="getTableHeadingClass(selectionHeading.splitText)">
+                    </td>
+                <td (click)="columnFilter(selectionHeading.heading)" *ngFor="let selectionHeading of selectedHeadings" [class.column-selected]="filteredColumns[selectionHeading.heading]" class="item-column">
+                    <div [ngClass]="getTableHeadingClass(selectionHeading.splitText)" [class.heading-rtl]="textService.rightJustify">
                         <span>{{selectionHeading.displayTextLeft}}</span>
                         <span [class.line-break]="selectionHeading.splitText"> </span>
                         <span>{{selectionHeading.displayTextRight}}</span>
                     </div>
-                </th>
-                </thead>
-                <tbody>
-                <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected">
-                    <td (click)="selectItem(item, i)" class="first-column"
-                        [class.text-left]="!textService.rightJustify" [class.p-l-5]="!textService.rightJustify"
-                        [class.text-right]="textService.rightJustify" [class.p-r-5]="textService.rightJustify">
-                        <span *ngIf="item.showEnglish">{{item.item}}</span>
-                        <span *ngIf="!item.showEnglish">{{item.displayText}}</span>
-                    </td>
-                    <td class="text-center" [class.shaded]="item.values[selection] && item.values[selection].top" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">
-                        <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection].effect)" /></div>
-                    </td>
+                </td>
+                <!-- Blank columns at end -->
+                <td *ngIf="selected.length < 6" class="empty-column helper-column" [attr.colspan]="6 - selected.length" [attr.rowspan]="dataArray.length + 1" [style.width.%]="9 * (6 - selected.length)">
+                    <span *ngIf="selected.length <= 2" class="helper-text" [class.rtl]="textService.rightJustify" [class.two-col]="selected.length==2">{{pageText.helperText}}</span>
+                </td>
                 </tr>
+                    <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" [class.rtl-table-row]="textService.rightJustify">
+                        <td (click)="selectItem(item, i)" class="first-column"
+                            [class.text-left]="!textService.rightJustify" [class.p-l-5]="!textService.rightJustify"
+                            [class.text-right]="textService.rightJustify" [class.p-r-5]="textService.rightJustify">
+                            <span *ngIf="item.showEnglish">{{itemPopularity[item.item]}} {{item.item}}</span>
+                            <span *ngIf="!item.showEnglish">{{itemPopularity[item.item]}} {{item.displayText}}</span>
+                        </td>
+                        <td class="text-center item-column" [class.shaded]="item.values[selection] && item.values[selection].top" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">
+                            <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection].effect)" /></div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

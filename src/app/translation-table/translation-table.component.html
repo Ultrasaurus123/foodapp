@@ -2,17 +2,17 @@
 <div class="selection-container" [hidden]="dataService.dataLoading || !dataService.allFoods || !dataService.allConditions">
   <div class="checkbox-container">
     <div class="col-12 bold text-center">
-        <span *ngIf="view === 'condition'">Medical Concerns</span>
-        <span *ngIf="view === 'food'">Foods and Remedies</span>
+        <span *ngIf="view === 'condition'">{{pageText.headingMedical}}</span>
+        <span *ngIf="view === 'food'">{{pageText.headingFoods}}</span>
     </div>
     <table class="translation-table">
       <thead>
         <th class="bold text-center" (click)="sort(textService.language)">
-          {{textService.language}}
+          {{pageText.selectedLanguage}}
         </th>
         <th class="bold text-center" (click)="sort('English')">
-          English
-        </th>
+            {{pageText.english}}
+          </th>
       </thead>
       <tbody>
         <tr *ngFor="let item of (searchModel.length > 0) ? itemSet : (view === 'food') ? foods : conditions">

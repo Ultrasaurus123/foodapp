@@ -25,6 +25,7 @@ export class DetailsComponent implements OnInit {
   private dataArray: Array<any>;
   private images: Array<any> = [];
   private pageHeader: string;
+  private pageText: { [index: string]: string } = {}
   private dataObject: any = {};
   private warningsObject: any = {};
   private sideEffectsList: Array<string> = [];
@@ -39,6 +40,10 @@ export class DetailsComponent implements OnInit {
       text: 'Explanation of Effects',
       name: 'Details'
     };
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
+
     //get state of this page
     this.view = sessionStorage.getItem('view');
     this.detailIndex = (this.view === 'food') ? 1 : 0;
@@ -61,6 +66,10 @@ export class DetailsComponent implements OnInit {
     }
   }
 
+  private setTranslations(data: any) {
+    this.pageText['translate'] = data["translate"] || "TRANSLATE";
+    this.dataService.page.text = data["menu_details"] || this.dataService.page.text;
+  }
   private init = function () {
     let query = '';
     // Get details for all items, not just specific selected one

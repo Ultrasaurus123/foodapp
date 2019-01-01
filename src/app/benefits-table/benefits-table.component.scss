@@ -6,14 +6,16 @@
 }
 
 .benefits-table {
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     left: 0;
     display: table;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     font-size: 12px;
     @media screen and (orientation: landscape) {
-        width: 94%;
+        width: 60%;
+        margin-right: auto;
+        margin-left: auto;
     }
     @media screen and (orientation: portrait) {
         width: 90%;
@@ -53,6 +55,10 @@
      }
 }
 
+.rtl-table-row {
+    font-size: 15px !important;
+}
+
 .table-container {
     margin-bottom: 20px;
 }
@@ -85,6 +91,61 @@
     text-align: left;      
 }
 
+.table-headings-rtl {
+    font-size: 16px;
+
+    @media (max-width: 414px) { 
+        height: 120px;
+        max-width: 1px !important;
+        white-space: nowrap;
+        transform: translate(0px, -50px) rotate(270deg);
+        
+        &.two-col {
+            transform: translate(10px, -50px) rotate(270deg) !important;
+        }
+        &.three-col, &.four-col {
+            transform: translate(20px, -50px) rotate(270deg) !important;
+        }
+        &.five-col, &.six-col, &.seven-col, &.eight-col {
+            transform: translate(35px, -50px) rotate(270deg) !important;
+        }
+        &.nine-col, &.ten-col {
+            transform: translate(35px, -50px) rotate(270deg) !important;
+        }
+    }
+    @media (min-width: 415px) {    
+        text-align: center;
+        vertical-align: bottom;
+    }
+}
+
+.table-headings-rtl-two-line {
+    @media (max-width: 414px) { 
+        font-size: 14px;
+        height: 120px;
+        max-width: 1px !important;
+        white-space: nowrap;
+        transform: translate(-5px, -50px) rotate(270deg);
+
+        &.two-col {
+            transform: translate(5px, -50px) rotate(270deg) !important;
+        }
+        &.three-col, &.four-col {
+            transform: translate(15px, -50px) rotate(270deg) !important;
+        }
+        &.five-col, &.six-col, &.seven-col, &.eight-col {
+            transform: translate(32px, -50px) rotate(270deg) !important;
+        }
+        &.nine-col, &.ten-col {
+            transform: translate(30px, -50px) rotate(270deg) !important;
+        }
+    }
+    @media (min-width: 415px) {    
+        text-align: center;
+        vertical-align: bottom;
+    }
+}
+
 .table-headings {
     @media (max-width: 414px) { 
         height: 120px;
@@ -105,63 +166,10 @@
             transform: translate(75px, 55px) rotate(270deg) !important;
         }
         &.five-col, &.six-col, &.seven-col, &.eight-col {
-            transform: translate(70px, 55px) rotate(270deg) !important;
+            transform: translate(63px, 55px) rotate(270deg) !important;
         }
         &.nine-col, &.ten-col {
             transform: translate(65px, 55px) rotate(270deg) !important;
-        }
-    }
-    @media (min-width: 415px) {    
-        text-align: center;
-        vertical-align: bottom;
-    }
-}
-
-
-.table-headings-rtl {
-    @media (max-width: 414px) { 
-        height: 120px;
-        max-width: 1px !important;
-        white-space: nowrap;
-        transform: translate(0px, -50px) rotate(270deg);
-        
-        &.two-col {
-            transform: translate(10px, -50px) rotate(270deg) !important;
-        }
-        &.three-col, &.four-col {
-            transform: translate(20px, -50px) rotate(270deg) !important;
-        }
-        &.five-col, &.six-col, &.seven-col, &.eight-col {
-            transform: translate(30px, -50px) rotate(270deg) !important;
-        }
-        &.nine-col, &.ten-col {
-            transform: translate(35px, -50px) rotate(270deg) !important;
-        }
-    }
-    @media (min-width: 415px) {    
-        text-align: center;
-        vertical-align: bottom;
-    }
-}
-
-.table-headings-rtl-two-line {
-    @media (max-width: 414px) { 
-        height: 120px;
-        max-width: 1px !important;
-        white-space: nowrap;
-        transform: translate(-5px, -50px) rotate(270deg);
-
-        &.two-col {
-            transform: translate(5px, -50px) rotate(270deg) !important;
-        }
-        &.three-col, &.four-col {
-            transform: translate(15px, -50px) rotate(270deg) !important;
-        }
-        &.five-col, &.six-col, &.seven-col, &.eight-col {
-            transform: translate(25px, -50px) rotate(270deg) !important;
-        }
-        &.nine-col, &.ten-col {
-            transform: translate(30px, -50px) rotate(270deg) !important;
         }
     }
     @media (min-width: 415px) {    
@@ -187,7 +195,7 @@
             transform: translate(65px, 55px) rotate(270deg) !important;
         }
         &.six-col, &.seven-col, &.eight-col {
-            transform: translate(60px, 55px) rotate(270deg) !important;
+            transform: translate(57px, 55px) rotate(270deg) !important;
         }
         &.nine-col, &.ten-col {
             transform: translate(55px, 55px) rotate(270deg) !important;
@@ -352,6 +360,36 @@ div[id^="pullout-main-"] {
     tr {
         font-size: 12px;
         b {
+            font-size: 14px;
+        }
+    }
+}
+
+.item-column {
+    width: 9%;
+}
+.empty-column {
+    border: none !important;
+    background: white;
+    width: 9%;
+}
+
+.helper-column {
+    vertical-align: top;
+    padding-top: 10%;
+}
+
+.helper-text {
+    position: fixed;
+    margin-right: 12.5%;
+    margin-left: 5px;
+    &.rtl {
+        margin-right: 0;
+        left: 0;
+        max-width: 40%;
+        font-size: 16px;
+        &.two-col {
+            max-width: 30%;
             font-size: 14px;
         }
     }

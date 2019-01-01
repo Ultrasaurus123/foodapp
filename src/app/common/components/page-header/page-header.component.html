@@ -1,12 +1,13 @@
 <div [class.menu-backdrop]="menuOpen" (click)="menuOpen = false"></div>
-<div class="container-fade-top"></div>
+<div class="container-fade-top" [class.sub-title]="pageSubtitle"></div>
 <div class="container-fade-bottom" [class.container-fade-bottom-margin]="footerMargin"></div>
 
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
   <!-- <li><a>{{getMenuTitle()}}</a></li> -->
   <li>
     <a><span>{{menuTitle}}</span>
-    <span [hidden]="textService.language === 'English'" class="language-header"> {{textService.language}}</span></a>
+      <!-- <span [hidden]="textService.language === 'English'" class="language-header"> {{textService.language}}</span> -->
+    </a>
   </li>  
   <template ngFor let-item [ngForOf]="menuItems"> 
   <li [class.selected-hide-mobile]="item.display === menuTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">

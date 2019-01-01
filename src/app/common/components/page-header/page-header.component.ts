@@ -17,10 +17,11 @@ import { AppSettings } from '../../../';
 export class PageHeaderComponent implements OnInit {
 
   public menuOpen: boolean = false;
-  public menuItems: Array<{ name: string, display: string, link: string, data?: any }>;
+  public menuItems: Array<{ name: string, display: string, link: string, id: string, data?: any }>;
 
   private displays: Array<string>;
   private footerMargin: boolean;
+  private pageSubtitle: boolean;
   private menuTitle: string;
   private myChartsActive: boolean;
   private self: any;
@@ -29,20 +30,20 @@ export class PageHeaderComponent implements OnInit {
 
   public ngOnInit() {
     this.menuItems = AppSettings.NAV_MENU;
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
+   
     this.displays = this.menuItems.map(elem => { return elem.display; });   
-    this.updateMenuItems();
-  }
-
-  public updateMenuItems() {
   }
 
   public ngDoCheck() {
-    // if (this.textService.languageChanged) {
-    //   this.updateMenuItems();
-    //   this.textService.languageChanged = false;
-    // } 
-    this.footerMargin = (this.dataService.page) ? this.dataService.page.footerMargin : false;
-    this.menuTitle = (this.dataService.page) ? this.dataService.page.text : '';
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
+      this.footerMargin = (this.dataService.page) ? this.dataService.page.footerMargin : false;
+      this.pageSubtitle = (this.dataService.page) ? this.dataService.page.subtitle : false;
+      this.menuTitle = (this.dataService.page) ? this.dataService.page.text : '';
     let myCharts = localStorage.getItem('myCharts');
     if (myCharts) {
       this.dataService.myCharts = JSON.parse(myCharts);
@@ -65,6 +66,12 @@ export class PageHeaderComponent implements OnInit {
       // this.router.navigate([menuItem.link, menuItem.data || {}]);
       this.navigateService.navigateTo(menuItem.link, menuItem.data);      
     }  
+  }
+
+  private setTranslations(data: any) {
+    this.menuItems.forEach(item => {
+      item.display = data[item.id] || item.display;
+    });
   }
 
   private getMenuTitle() {

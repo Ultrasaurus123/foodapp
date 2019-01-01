@@ -5,8 +5,9 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { DataService, TextService, NavigateService } from '../common';
+import { DataService, TextService, NavigateService, ConfirmModalComponent } from '../common';
 import { AppSettings } from '..';
+import { DialogService } from "ng2-bootstrap-modal";
 
 @Component({
   selector: 'search', 
@@ -15,7 +16,7 @@ import { AppSettings } from '..';
   templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit {
-  private allItems: Array<any>;
+  private pageText: any = {};
   private view: string;
   private itemSet: Array<any>;
   private checkedItems: number = 0;
@@ -24,7 +25,8 @@ export class SearchComponent implements OnInit {
   private started: boolean = false;
   private loaded: boolean = false;
 
-  constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService, private route: ActivatedRoute) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService,
+    private textService: TextService, private route: ActivatedRoute, private dialogService: DialogService) { }
 
   public ngOnInit() {
     this.navigateService.getRouteData(this.route).subscribe(data => {
@@ -62,6 +64,9 @@ export class SearchComponent implements OnInit {
   public ngDoCheck() {
     this.navigateService.getRouteData(this.route).subscribe(data => {
       let dataView = (data) ? data['view'] : null;
+      this.textService.getMiscTranslations().subscribe(
+        data => this.setTranslations(data),
+        error => console.error('Error getting translations: ' + error));
       if (dataView && dataView != this.view) {
         this.view = dataView;
         this.init();
@@ -71,30 +76,44 @@ export class SearchComponent implements OnInit {
 
   private init() {
     window.scrollTo(0, 0);
-    
-    //if (this.textService.language.toLowerCase() === 'english') {
-      this.view === 'food' ? this.dataService.loadFoods() : this.dataService.loadConditions();
-//    }
+    this.view.startsWith('food') ? this.dataService.loadFoods() : this.dataService.loadConditions();
     
     this.dataService.page = {
-      text: 'Search by ' + (this.view === 'food' ? 'Food or Remedy' : 'Health Concern'),
+      text: 'Search by ' + (this.view.startsWith('food') ? 'Food or Remedy' : 'Health Concern'),
       name: 'Search',
-      footerMargin: true
+      footerMargin: true,
+      subtitle: true,
     };
 
     this.checkedItems = 0;
     let selectedItems = sessionStorage.getItem('selected' + this.view);
-    if (selectedItems) {
-      this.initSelectedItems(JSON.parse(selectedItems));
-    } else {
-      this.loaded = true;
-    }
+    // if (selectedItems) {
+    //   this.initSelectedItems(JSON.parse(selectedItems));
+    // } else {
+    //   this.loaded = true;
+    // }
+    // don't preselect last selection
+    this.deselectAll();
+    this.loaded = true;
   }
 
   private verifyView(view: string): boolean {
-    return view && (view === 'food' || view === 'condition');
+    return view && (view === 'food' || view === 'condition' || view === 'food-20' || view === 'condition-20');
   }
 
+  private setTranslations(data: any) {
+    this.pageText.pleaseSelect = data["select_subtitle"] || "Please select up to " + AppSettings.MAX_SELECTIONS + " items";  
+    this.pageText.selectWarning = data["select_warning"] || "Please select at least one item";  
+    this.pageText.find = data["find"] || "Find:";  
+    this.pageText.deselectAll = data["deselect_button"] || "Deselect All";  
+    this.pageText.search = data["search"] || "Search";
+    if (this.view.startsWith('food') && data["menu_search_food"]) {
+      this.dataService.page.text = data["menu_search_food"];
+    } else if (this.view.startsWith('condition') && data["menu_search_condition"]) {
+      this.dataService.page.text = data["menu_search_condition"];
+    }
+  }
+  
   private onSelectItem(item: any) {
     item.checked = !item.checked;
     this.checkedItems += (item.checked) ? 1 : -1;
@@ -104,7 +123,7 @@ export class SearchComponent implements OnInit {
   }
 
   private deselectAll() {
-    let allItems = (this.view === 'food') ? this.dataService.allFoods : this.dataService.allConditions;
+    let allItems = this.view.startsWith('food') ? this.dataService.allFoods : this.dataService.allConditions;
     for (let item of allItems) {
       item.checked = false;
     }
@@ -123,12 +142,18 @@ export class SearchComponent implements OnInit {
       sessionStorage.removeItem('currentFilter');
       sessionStorage.removeItem('currentSort');
       this.navigateService.navigateTo('benefits');
-    }
+    } else {
+      let disposable = this.dialogService.addDialog(ConfirmModalComponent, {
+        title: this.pageText.selectWarning,
+        hideCancel: true,
+      })
+        .subscribe(() => {})
+      }
   }
 
   private initSelectedItems(selectedItems: any) {
     if (selectedItems && selectedItems.length > 0) {
-      let allItems = (this.view === 'food') ? this.dataService.allFoods : this.dataService.allConditions;
+      let allItems = this.view.startsWith('food') ? this.dataService.allFoods : this.dataService.allConditions;
       for (let item of allItems) {
         for (let select of selectedItems) {
           if (item.item === select) {
@@ -146,7 +171,7 @@ export class SearchComponent implements OnInit {
   }
 
   private getSelectedItems() {
-    let allItems = (this.view === 'food') ? this.dataService.allFoods : this.dataService.allConditions;
+    let allItems = this.view.startsWith('food') ? this.dataService.allFoods : this.dataService.allConditions;
     let selectedItems = [];
     for (let item of allItems) {
       if (item.checked) {
@@ -159,11 +184,11 @@ export class SearchComponent implements OnInit {
   private searchValueChanged(newValue) {
     window.scrollTo(0, 0);
     this.searchModel = newValue;
-    if (this.view === 'food') {
+    if (this.view.startsWith('food')) {
       this.itemSet = this.dataService.allFoods.filter(item => {
         return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1 || item.displayText.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
       });
-    } else if (this.view === 'condition') {
+    } else {
       this.itemSet = this.dataService.allConditions.filter(item => {
         return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1 || item.displayText.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
       });

@@ -15,7 +15,7 @@
                 <div class="description"><span>{{detail[3]}}</span></div>
                 <div class="col-12" *ngIf="textService.language.toLowerCase() !== 'english'">
                     <a [href]="getTranslateLink(detail[3])" target="_blank">
-                    TRANSLATE
+                    {{pageText['translate']}}
                     </a>
                 </div>
                 <div class="col-12 reference-link">

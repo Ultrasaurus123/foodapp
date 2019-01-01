@@ -175,21 +175,22 @@ export class AppSettings {
     "TRANSLATIONS": "getDBTranslation",
     "SIDE_EFECTS": "getDBSideEffects",
     "LANGUAGES": "getDBLanguages",
-    "WARNINGS": "getDBWarnings"
+    "WARNINGS": "getDBWarnings",
+    "MISC_TRANSLATIONS": "getDBMiscTranslations"   // TODO: combine with translations call
   };
   public static FACEBOOK_LINK: string = 'http://www.facebook.com/Health-Foods-Matrix-1004157829720976/';  
 
   public static MAX_SELECTIONS: number = 6;
-  public static NAV_MENU: Array<{ name: string, display: string, link: string, data?: any }> = [
-    { name: 'Home', display: 'Home', link: 'home' },
-    { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', data: { view: 'food' } },
-    { name: 'Search by Medical Condition', display: 'Search by Health Concern', link: 'search', data: { view: 'condition' }  },
-    { name: 'My Charts', display: 'My Charts', link: 'my-charts' },
-    { name: 'Language', display: 'Language', link: 'language' },
-    { name: 'Translation Table', display: 'Translation Table', link: 'translation-table' },
-    { name: 'Help', display: 'Help', link: 'help' },
-    { name: 'Feedback', display: 'Provide Feedback', link: 'feedback' },
-    { name: 'Facebook', display: 'Follow us on Facebook', link: 'facebook' }];
+  public static NAV_MENU: Array<{ name: string, display: string, link: string, id: string, data?: any }> = [
+    { name: 'Home', display: 'Home', link: 'home', id: "menu_home" },
+    { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', id: "menu_search_food", data: { view: 'food' } },
+    { name: 'Search by Medical Condition', display: 'Search by Health Concern', link: 'search', id: "menu_search_condition", data: { view: 'condition' }  },
+    { name: 'My Charts', display: 'My Charts', link: 'my-charts', id: "menu_my_charts" },
+    { name: 'Language', display: 'Language', link: 'language', id: "menu_language" },
+    { name: 'Translation Table', display: 'Translation Table', link: 'translation-table', id: "menu_translation_table" },
+    { name: 'Help', display: 'Help', link: 'help', id: "menu_help" },
+    { name: 'Feedback', display: 'Provide Feedback', link: 'feedback', id: "menu_feedback" },
+    { name: 'Facebook', display: 'Follow us on Facebook', link: 'facebook', id: "menu_facebook" }];
     
   public static FOOTER_LINKS: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Terms and Conditions', display: 'Terms and Conditions', link: 'disclaimer' },
@@ -202,20 +203,19 @@ export class AppSettings {
   };
 
   // http://www-01.sil.org/iso639-3/codes.asp?order=reference_name
-  public static LANGUAGE_CODE_MAP: any = {
+  public static LANGUAGE_CODE_MAP: { [index: string]: string } = {
     'english': 'en',
     'french': 'fr',
     'spanish': 'es',
-    'persian': 'pes',
+    'persian': 'fa',
     'arabic': 'ar',
     'greek': 'el',
     'vietnamese': 'vi',
-    'chinese (simp)': 'zh',
+    'chinese (simplified)': 'zh',
     'hindi': 'hi',
     'bengali': 'bn',
     'dutch': 'nl',
     'german': 'de',
     'italian': 'it'
   };
-
 }
