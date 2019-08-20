@@ -1,26 +1,27 @@
 <div [class.menu-backdrop]="menuOpen" (click)="menuOpen = false"></div>
-<div class="container-fade-top" [class.sub-title]="pageSubtitle"></div>
-<div class="container-fade-bottom" [class.container-fade-bottom-margin]="footerMargin"></div>
+<div class="container-back-button-row" [hidden]="dataService.page && dataService.page.name === 'Home'" [class.sub-title]="pageSubtitle">
+  <span (click)="goBack()" class="back-button">&nbsp; &larr; {{pageText.backButton}}</span>
+  <span (click)="goHome()"><img class="home-icon" src="/assets/img/home_icon.png"></span>
+</div>
+<div class="container-fade-bottom" [class.container-fade-bottom-margin]="footerMargin"
+  [hidden]="dataService.page && (dataService.page.hideFooter || dataService.page.name === 'Benefits Matrix')"></div>
 
-<ul class="topnav" id="myTopnav" [class.responsive]="menuOpen">
-  <!-- <li><a>{{getMenuTitle()}}</a></li> -->
+<ul class="topnav" id="myTopnav" [class.responsive]="menuOpen" [class.rtl]="textService.rightJustify">
   <li>
     <a><span>{{menuTitle}}</span>
-      <!-- <span [hidden]="textService.language === 'English'" class="language-header"> {{textService.language}}</span> -->
     </a>
   </li>  
-  <template ngFor let-item [ngForOf]="menuItems"> 
-  <li [class.selected-hide-mobile]="item.display === menuTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
+  <li *ngFor="let item of menuItems" [hidden]="item.display === menuTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
     <a (click)="clickMenuLink(item)" [class.disabled]="item.name === 'My Charts' && !myChartsActive"
-    [class.hidden-desktop]="item.name === 'Facebook' || item.name === 'Feedback'"
     [hidden]="item.name === 'Translation Table' && textService.language === 'English'">
     {{item.display}}
+    <span *ngIf="item.name === 'menubreak'"><hr style="border-color: white"></span>
     </a>
   </li>
-  </template>
-  <li class="icon no-hover">
+  <li class="icon no-hover" [class.rtl]="textService.rightJustify">
     <a style="font-size:15px;" class="no-hover" (click)="toggleMenu()" (focusout)="menuOpen = false;">&#9776;</a>
 </li>
 </ul>
 
 
+<!-- [class.hidden-desktop]="item.name === 'Facebook' || item.name === 'Feedback'" -->

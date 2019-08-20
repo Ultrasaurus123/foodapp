@@ -9,6 +9,7 @@ import { BenefitsTableComponent } from './benefits-table';
 import { DetailsComponent } from './details';
 import { WarningsComponent } from './warnings';
 import { HelpComponent } from './help';
+import { AboutComponent } from './about';
 import { LanguageComponent } from './language';
 import { TranslationTableComponent } from './translation-table';
 import { NoContentComponent } from './no-content';
@@ -32,6 +33,7 @@ export const ROUTES: Routes = [
   { path: 'details', component: DetailsComponent },
   { path: 'warnings', component: WarningsComponent },
   { path: 'help', component: HelpComponent },
+  { path: 'about', component: AboutComponent },
   { path: 'language', component: LanguageComponent },
   { path: 'translation-table', component: TranslationTableComponent },
   { path: 'datamonitor', component: DataMonitorComponent },

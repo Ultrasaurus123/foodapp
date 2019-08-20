@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Http, Response, Headers } from '@angular/http';
 import { AppSettings } from '../..';
-import { Chart } from '..';
+import AWS, { S3 } from 'aws-sdk';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -15,8 +15,23 @@ export class ApiService {
   private static sessionId: string;
   private static headers: Headers;
 
+  private s3Client: S3;
+
   constructor(private http: Http) {
     ApiService.createSessionHeader();
+    // Initialize the Amazon Cognito credentials provider
+    if (!ApiService._instance) {
+      console.log("apiservice constructor");
+      AWS.config.region = 'us-west-2';
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: 'us-west-2:c987d996-8163-4df9-ae24-b63c05c2da1e',
+      });
+      this.s3Client = new AWS.S3({
+        apiVersion: '2006-03-01',
+        params: { Bucket: "health-foods-matrix" }
+      })
+    };
+
     return ApiService._instance = ApiService._instance || this;
   }  
 
@@ -81,5 +96,9 @@ export class ApiService {
     }
     console.error(errMsg);
     return Observable.throw(errMsg);
+  }
+
+  private getS3Client(): S3 {
+    return this.s3Client;
   }
 }

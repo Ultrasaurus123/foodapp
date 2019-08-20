@@ -2,13 +2,11 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
-import { ApiService, KeysPipe, DataService, NavigateService } from '../common';
+import { ApiService, DataService, NavigateService, TextService } from '../common';
 
 @Component({
   selector: 'warnings-details',
@@ -17,18 +15,13 @@ import { ApiService, KeysPipe, DataService, NavigateService } from '../common';
 })
 export class WarningsComponent implements OnInit {
   private item: string;
-  private selectedItems: Array<string>;
-  private detailIndex: number;
-  private selectedIndex: number;
-  private view: string;
-  private dataArray: Array<any>;
-  private images: Array<any> = [];
   private pageHeader: string;
-  private dataObject: any = {};
   private warningsObject: any = {};
+  private pageText: any = {};
   private sub: any;
 
-  constructor(private apiService: ApiService, private navigateService: NavigateService, private dataService: DataService, private route: ActivatedRoute) { }
+  constructor(private textService: TextService, private navigateService: NavigateService, private dataService: DataService,
+    private apiService: ApiService, private route: ActivatedRoute) { }
 
   public ngOnInit() {
     window.scrollTo(0, 0);
@@ -44,9 +37,9 @@ export class WarningsComponent implements OnInit {
         if (!this.item) {
           this.navigateService.navigateTo('home');
         }
-      });
-      this.pageHeader = 'Warnings about ' + this.item;
-      this.init();
+        this.pageHeader = 'Warnings about ' + this.item;
+        this.init();
+        });
   }
 
   public ngOnDestroy() {
@@ -54,6 +47,9 @@ export class WarningsComponent implements OnInit {
   }
 
   private init = function () {
+    this.textService.getMiscTranslations().subscribe(
+      data => this.setTranslations(data),
+      error => console.error('Error getting translations: ' + error));
     let warningQuery = 'foods=';
     warningQuery += encodeURIComponent(this.item);
     this.apiService.get(AppSettings.API_ROUTES.WARNINGS + '?' + warningQuery, true)
@@ -61,8 +57,21 @@ export class WarningsComponent implements OnInit {
       error => console.error('Error getting warnings data: ' + error)
       );
   };
+
+  private setTranslations(data: any) {
+    this.pageText['translate'] = data["translate"] || "TRANSLATE";
+    this.dataService.page.text = data["menu_warnings"] || this.dataService.page.text;
+  }
   
- private processWarningsData(data: any) {
+  private processWarningsData(data: any) {
     this.warningsObject = data;
+  }
+
+  private getTranslateLink(description: string) {
+    let url: string = "https://translate.google.com/#auto/"
+      + AppSettings.LANGUAGE_CODE_MAP[this.textService.language.toLowerCase()]
+      + "/"
+      + description;
+    return url;
   }
 }

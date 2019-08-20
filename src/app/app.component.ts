@@ -19,9 +19,10 @@ import { AppSettings } from '.';
   template: `
     <main>
       <page-header></page-header>
-      <div  class="m-t-70">
+      <div  class="m-t-70 page-body">
       <router-outlet></router-outlet>
       <page-footer></page-footer>
+      <ad-banner></ad-banner>
       </div>
     </main>
   `

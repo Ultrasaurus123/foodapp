@@ -1,52 +1,78 @@
-<div class="home-container">
-  <div class="col-12">
-    <div class="row">
-      <div class="col-10">
-          <img style="max-width: 100%" src="../../assets/img/title.png" />
+<div class="background">
+  <div class="col-12 home-container">
+    <div class="row m-t-40">
+      <div class="col-12 text-center">
+          <img style="max-width: 80%" [attr.src]="textService.language === 'Persian' ? '../../assets/img/title-persian.png' : '../../assets/img/title.png'" />
       </div>
-      <div class="col-2 text-center">
-          <span class="hidden-desktop">
-              <a [routerLink]="['/language']"><img class="translation-icon" src="../../assets/img/translation.png"/></a>
+    </div>
+      <div class="text-center translation-globe">
+          <span style="padding-left: 4px;">
+              <a [routerLink]="['/language']"><img class="translation-icon" src="../../assets/img/translation-globe.png"/></a>
             </span>
-            <span class="hidden-desktop">
+            <br>
+            <span style="font-size: 12px;">
                 {{currentLanguageCode}}
               </span>
         </div>
+    <!-- <span class="home-page-title" translate="no">{{pageText.headline}}</span> -->
+    <div class="text-center m-t-20">
+      <img class="screen-shot" src="../../assets/img/home-image.png" (click)="clickHomeImage()"/>
     </div>
-    <!-- <span class="home-page-title">{{pageText.headline}}</span> -->
-    <hr>
-    <div class="text-center">
-      <img class="screen-shot" src="../../assets/img/home-image.png" />
+
+    <div class="row m-t-50">
+        <!-- <div class="col-1">
+        </div> -->
+        <div class="col-1">
+            <img class="button-icon" src="../../assets/img/heart.png" />
+        </div>
+        <div class="col-10 button-row">
+            <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
+              <span [class.button-label]="!textService.rightJustify" [class.button-label-rtl]="textService.rightJustify">{{pageText.healthButton}}</span>
+            </button>
+        </div>
+        <div class="col-1">
+        </div>
     </div>
-    <!-- <p class="home-page-title" style="margin-bottom: 0px">{{pageText.pageInfo}}</p>
-    <br> -->
-    <div class="row">
-      <div class="col-6">
-        <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
-          <!-- <img class="button-icon" src="../../assets/img/conditions-icon.png" /> -->
-          <span [class.button-label]="!textService.rightJustify" [class.button-label-rtl]="textService.rightJustify">{{pageText.healthButton}}</span>
-          </button>
-          <br>
-          <!-- <p class="search-link" [class.rtl]="textService.rightJustify">
-            <a  (click)="showItemList('condition-20')">{{pageText.topConcernsLink}}</a>
-          </p>      -->
+    <div class="row m-t-20">
+      <div class="col-1">
+          <img class="button-icon" src="../../assets/img/apple.png" />
       </div>
-      <div class="col-6">
-        <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
-          <!-- <img class="button-icon" src="../../assets/img/foods-icon.png" /> -->
-          <span class="button-label" [class.rtl]="textService.rightJustify">{{pageText.foodButton}}</span>
+      <div class="col-10 button-row">
+          <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
+              <span class="button-label" [class.rtl]="textService.rightJustify">{{pageText.foodButton}}</span>
           </button>
-          <!-- <br>
-          <p class="search-link" [class.rtl]="textService.rightJustify">
-            <a (click)="showItemList('food-20')">{{pageText.topFoodsLink}}s</a>
-          </p>      -->
+      </div>
+      <div class="col-1">
       </div>
     </div>
 
+
+<!--
+   <div class="row">
+      <div class="col-6">
+        <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
+          <span [class.button-label]="!textService.rightJustify" [class.button-label-rtl]="textService.rightJustify">{{pageText.healthButton}}</span>
+          </button>
+          <br>
+      </div>
+      <div class="col-6">
+        <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
+          <span class="button-label" [class.rtl]="textService.rightJustify">{{pageText.foodButton}}</span>
+          </button>
+      </div>
+    </div>
+-->
+<!-- 
     <br>
     <p class="help-link" [class.rtl]="textService.rightJustify">
       <a style="float: left" href="../../assets/docs/HFF users guide.pdf">{{pageText.helpLink}}</a>
       <a style="float: right" href="../../assets/docs/HFF examples.pdf">{{pageText.examplesLink}}</a>
-    </p>
+    </p> -->
   </div>
+  <div class="copyright m-t-50">
+        <span>&copy; 2017 Health Foods Matrix LLC. All rights reserved.</span>
+    </div>
+    <div [hidden]="footerMargin" class="disclosure">
+        <span>The content on this website is provided for your information only and should not be used for diagnosing or treating a health problem. It is not intended as a substitute for the advice provided by physicians or healthcare professionals. </span>
+    </div>
 </div>

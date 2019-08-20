@@ -14,10 +14,11 @@ export class DataService {
 
   public allFoods: Array<any> = [];
   public allConditions: Array<any> = [];
-  public translatedFoods:  Array<any> = [];;
-  public translatedConditions:  Array<any> = [];;
+  public translatedFoods: Array<any> = [];;
+  public translatedConditions: Array<any> = [];;
   public agreement: boolean = false;
   public dataLoading: boolean = false;
+  public showAd: boolean = false;
   public loadedFoodSinceLangChange: boolean = true;
   public loadedCondSinceLangChange: boolean = true;
   // public currentPageText: string;
@@ -26,62 +27,63 @@ export class DataService {
   public myCharts: Array<Chart> = [];
   public selectedChart: Chart = null;
   public disclaimerRedirectUrl: string;
-  public page: { name: string, text: string, subtitle?: boolean,footerMargin?: boolean, search?: boolean };
+  public page: Page;
+  public adDiv: Element;
 
-  private static _instance: DataService;
+    private static _instance: DataService;
 
   constructor(private apiService: ApiService, private textService: TextService) {
     return DataService._instance = DataService._instance || this;
-  }  
+  }
 
   public loadFoods(): Subscription {
     this.dataLoading = true;
     if (this.allFoods && this.allFoods.length > 0 && !this.textService.languageChanged) {
-      this.dataLoading = false;      
+      this.dataLoading = false;
       return Subscription.EMPTY;
     }
     this.textService.loadAfterChange('food');
     return this.apiService.get(AppSettings.API_ROUTES.FOODS, true)
       .subscribe(
-      foods => {
-        this.allFoods = this.extractData(foods);
-        return this.textService.getTranslation('food').subscribe(translated => {
-          for (var i = 0; i < this.allFoods.length; i++) {
-            this.allFoods[i].displayText = translated[this.allFoods[i].item.toLowerCase()] || this.allFoods[i].item;
-          }
-          this.allFoods.sort(this.alphabeticSort());
-          this.dataLoading = false;                
-        });
-      },
-      error => console.error('Error getting all foods: ' + error));
+        foods => {
+          this.allFoods = this.extractData(foods);
+          return this.textService.getTranslation('food').subscribe(translated => {
+            for (var i = 0; i < this.allFoods.length; i++) {
+              this.allFoods[i].displayText = translated[this.allFoods[i].item.toLowerCase()] || this.allFoods[i].item;
+            }
+            this.allFoods.sort(this.alphabeticSort());
+            this.dataLoading = false;
+          });
+        },
+        error => console.error('Error getting all foods: ' + error));
   }
 
   public loadConditions(): Subscription {
-    this.dataLoading = true;    
+    this.dataLoading = true;
     if (this.allConditions && this.allConditions.length > 0 && !this.textService.languageChanged) {
-      this.dataLoading = false;            
+      this.dataLoading = false;
       return Subscription.EMPTY;
     }
     this.textService.loadAfterChange('condition');
     return this.apiService.get(AppSettings.API_ROUTES.CONDITIONS, true)
       .subscribe(
-      conditions => {
-        this.allConditions = this.extractData(conditions);
-        return this.textService.getTranslation('condition').subscribe(translated => {
-          for (var i = 0; i < this.allConditions.length; i++) {
-            this.allConditions[i].displayText = translated[this.allConditions[i].item.toLowerCase()] || this.allConditions[i].item;
-          }
-          this.allConditions.sort(this.alphabeticSort());          
-          this.dataLoading = false;                
-        });
-      },
-      error => console.error('Error getting all conditions: ' + error));
+        conditions => {
+          this.allConditions = this.extractData(conditions);
+          return this.textService.getTranslation('condition').subscribe(translated => {
+            for (var i = 0; i < this.allConditions.length; i++) {
+              this.allConditions[i].displayText = translated[this.allConditions[i].item.toLowerCase()] || this.allConditions[i].item;
+            }
+            this.allConditions.sort(this.alphabeticSort());
+            this.dataLoading = false;
+          });
+        },
+        error => console.error('Error getting all conditions: ' + error));
   }
 
   public loadFoodsAndConditions(onLoad?: Function): Subscription {
-    this.dataLoading = true;    
+    this.dataLoading = true;
     if (this.allFoods && this.allFoods.length > 0 && this.allConditions && this.allConditions.length > 0 && !this.textService.languageChanged) {
-      this.dataLoading = false;     
+      this.dataLoading = false;
       if (onLoad) {
         onLoad();
       }
@@ -106,19 +108,19 @@ export class DataService {
             for (var i = 0; i < this.allConditions.length; i++) {
               this.allConditions[i].displayText = translatedConditions[this.allConditions[i].item.toLowerCase()] || this.allConditions[i].item;
             }
-            this.allConditions.sort(this.alphabeticSort());          
-            this.dataLoading = false;            
+            this.allConditions.sort(this.alphabeticSort());
+            this.dataLoading = false;
             if (onLoad) {
               onLoad();
             }
-            });
-        })
-      error => console.error('Error getting all foods: ' + error);
+          });
+      })
+    error => console.error('Error getting all foods: ' + error);
   }
 
-  
+
   private extractData(body: any): Array<any> {
-//    let body = res.json();
+    //    let body = res.json();
     let returnData = [];
     for (let item of body) {
       returnData.push({ item: item, checked: false });
@@ -129,14 +131,23 @@ export class DataService {
   private alphabeticSort(): any {
     let comparer = new Intl.Collator(AppSettings.LANGUAGE_CODE_MAP[this.textService.language]);
 
-     return function (a, b) {
-    //   if (a.displayText.toLowerCase() < b.displayText.toLowerCase()) {
-    //     return -1;
-    //   } else if (a.displayText.toLowerCase() > b.displayText.toLowerCase()) {
-    //     return 1;
-    //   }
-    //   return 0;
-       return comparer.compare(a.displayText, b.displayText);
-     }
+    return function (a, b) {
+      //   if (a.displayText.toLowerCase() < b.displayText.toLowerCase()) {
+      //     return -1;
+      //   } else if (a.displayText.toLowerCase() > b.displayText.toLowerCase()) {
+      //     return 1;
+      //   }
+      //   return 0;
+      return comparer.compare(a.displayText, b.displayText);
+    }
   }
+}
+
+export interface Page {
+  name: string;
+  text: string;
+  subtitle?: boolean;
+  footerMargin?: boolean;
+  search?: boolean;
+  hideFooter?: boolean;
 }

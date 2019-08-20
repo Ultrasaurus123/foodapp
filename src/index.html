@@ -31,7 +31,9 @@
 <body>
 
   <app>
-      App is loading...
+    <div style="text-align: center">
+      <span id="loadingText"></span>
+    </div>
       <div class="loader"></div>
 
       <style> 
@@ -98,6 +100,22 @@
 }
 
       </style>
+      <script>
+        var loadingTexts = [
+          "Loading over 400 medical conditions...",
+          "Loading over 500 health foods & more...",
+          "Loading over 14,000 health tips..."
+        ];
+        var i = Math.floor(Math.random() * Math.floor(3));;
+        document.getElementById("loadingText").textContent = loadingTexts[i];
+        setInterval(() => {
+          i++;
+          var loadingEl = document.getElementById("loadingText");
+          if (loadingEl && loadingEl.textContent) {
+            loadingEl.textContent = loadingTexts[i % 3];
+          }
+        }, 1000);
+      </script>
   </app>
 
   <!-- Google Analytics: change UA-71073175-1 to be your site's ID -->
@@ -117,4 +135,32 @@
   <% } %>
   
 </body>
+
+<script>
+    if ('serviceWorker' in navigator) {
+       navigator.serviceWorker.register('service-worker.js')
+         .then(function(reg){
+        }).catch(function(err) {
+       });
+    }
+
+    window.addEventListener("beforeinstallprompt", ev => { 
+      // Stop Chrome from asking _now_
+      ev.preventDefault();
+      ev.prompt();
+    });
+   </script>
+<script type="text/javascript">
+  var clickyab_ad = clickyab_ad || []; 
+  clickyab_ad['id'] = 6891560068482 ; 
+  clickyab_ad['domain'] = 'healthfoodfinder.com'; 
+  clickyab_ad['slot'] = 17806390735; 
+  clickyab_ad['width'] = 320; 
+  clickyab_ad['height'] = 50; 
+  clickyab_ad['responsive'] = 'true' ; 
+  clickyab_ad['effect'] = "";
+</script> 
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.512.0.min.js"></script>
+<!-- <script async id="clickyab-show-js-v2" type="text/javascript" src="//a.clickyab.com/show.js"></script>     -->
+
 </html>

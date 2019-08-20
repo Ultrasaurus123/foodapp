@@ -56,6 +56,11 @@ export class DetailsComponent implements OnInit {
     let selectedString: string = sessionStorage.getItem('selected' + this.view);
     this.selectedItems = JSON.parse(selectedString);
 
+    console.log(this.view);
+    console.log(this.selectedItem);
+    console.log(selectedString);
+    console.log(this.selectedItems);
+    console.log(this.detailItem);
 
     if (!this.detailItem || !this.view || !this.selectedItems) {
       this.navigateService.navigateTo('benefits');
@@ -70,6 +75,7 @@ export class DetailsComponent implements OnInit {
     this.pageText['translate'] = data["translate"] || "TRANSLATE";
     this.dataService.page.text = data["menu_details"] || this.dataService.page.text;
   }
+  
   private init = function () {
     let query = '';
     // Get details for all items, not just specific selected one
@@ -126,7 +132,6 @@ export class DetailsComponent implements OnInit {
 
   private getImages() {
     // GOOGLE IMAGE API
-
     let imageQuery = this.detailItem;
     if (this.dataArray.length > 0 && this.dataArray[0].length > 0 && this.dataArray[0][0][this.suffixIndex]) {
       imageQuery += ' ' + this.dataArray[0][0][this.suffixIndex];

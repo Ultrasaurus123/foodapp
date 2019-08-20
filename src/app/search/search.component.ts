@@ -83,6 +83,7 @@ export class SearchComponent implements OnInit {
       name: 'Search',
       footerMargin: true,
       subtitle: true,
+      hideFooter: true,
     };
 
     this.checkedItems = 0;
@@ -104,6 +105,8 @@ export class SearchComponent implements OnInit {
   private setTranslations(data: any) {
     this.pageText.pleaseSelect = data["select_subtitle"] || "Please select up to " + AppSettings.MAX_SELECTIONS + " items";  
     this.pageText.selectWarning = data["select_warning"] || "Please select at least one item";  
+    this.pageText.rtlFindWarning = data["rtl_find_warning"] || "";
+    this.pageText.okButton = data["ok_button"] || "OK";
     this.pageText.find = data["find"] || "Find:";  
     this.pageText.deselectAll = data["deselect_button"] || "Deselect All";  
     this.pageText.search = data["search"] || "Search";
@@ -145,6 +148,8 @@ export class SearchComponent implements OnInit {
     } else {
       let disposable = this.dialogService.addDialog(ConfirmModalComponent, {
         title: this.pageText.selectWarning,
+        rightJustify: this.textService.rightJustify,
+        okText: this.pageText.okButton,
         hideCancel: true,
       })
         .subscribe(() => {})
@@ -193,5 +198,22 @@ export class SearchComponent implements OnInit {
         return item.item.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1 || item.displayText.toLowerCase().indexOf(this.searchModel.toLowerCase()) > -1;
       });
     }
+  }
+
+  private clickFindInput(): void {
+    // if (this.textService.rightJustify && this.pageText.rtlFindWarning) {
+    //   if (!sessionStorage.getItem("shownRTLWarning")) {
+    //     let disposable = this.dialogService.addDialog(ConfirmModalComponent, {
+    //       title: " ",
+    //       message: this.pageText.rtlFindWarning,
+    //       rightJustify: true,
+    //       okText: this.pageText.okButton,
+    //       hideCancel: true,
+    //     })
+    //       .subscribe(() => {
+    //         sessionStorage.setItem("shownRTLWarning", "true");
+    //       })
+    //     }
+    // }
   }
 }

@@ -32,8 +32,8 @@ export class PageFooterComponent implements OnInit {
   public clickFooterLink(link: string) {
     if (link === 'contact') {
       window.location.href = 'mailto:contact@healthfoodsmatrix.com';
-    } else if (link === 'facebook') {
-      window.open(AppSettings.FACEBOOK_LINK, '_blank');  
+    } else if (link === 'telegram') {
+      window.open(AppSettings.TELEGRAM_LINK, '_blank');  
     } else {
       this.navigateService.navigateTo(link);
     }  

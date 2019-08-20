@@ -1,6 +1,21 @@
 /*styles for home content only*/
 @import '../../styles/variables';
 
+.background {
+    background-color: #4c7c73;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 41px;
+    bottom: 0;
+}
+
+.home-container {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .home-page-title {
     color: $nav-button-color;
     font-weight: 900;
@@ -8,9 +23,6 @@
     text-align: center;
 }
 
-.home-container {
-    margin-bottom: 20px;
-}
 
 .selection-container {
     margin-bottom: 105px;
@@ -26,13 +38,9 @@
     margin-bottom: 10px;
 }
 
-.button-container {
-    height: 60px;
-
-    .button {
-        float: left;
-        width: 33.33%;
-    }
+.button-row {
+    padding-left:24px;
+    padding-right:24px;
 }
 
 .btn-food {
@@ -69,11 +77,11 @@ div .disabled {
 }
 
 .screen-shot {
-    max-height: 275px;
+    max-height: 168px;
     max-width: 100%;
     
-    @media (max-width: 359px) { 
-        max-height: 250px;
+    @media (max-width: 767px) { 
+        max-height: 125px;
     }
 }
 
@@ -108,18 +116,53 @@ p.help-link.rtl {
 }
 .button-label {
     font-size: 16px;
+    @media (max-width: 343px) { 
+        font-size: 13px;
+     }
 }
 
 .button-label.rtl {
     font-size: 18px;
+    @media (max-width: 343px) { 
+        font-size: 15px;
+     }
 }
 
 hr {
     margin-bottom: 5px;
 }
 
+.translation-globe {
+    position: fixed;
+    left: 5px;
+    top: 46px;
+}
 .translation-icon {
-    // float: right;
+    height: 24px;
+}
+.button-icon {
+    margin-top:3px;
     height: 32px;
-    // margin-top: -8px;
-  }
+}
+
+.copyright {
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-right: 5px;
+    @media (max-width: 343px) { 
+        font-size: 9px;
+     }
+    @media (min-width: 344px) { 
+        font-size: 12px;
+    }
+}
+
+.disclosure {
+    color: white;
+    text-align: center;
+    font-size: 8px;
+    margin-left: 5px;
+    margin-right: 5px;
+}

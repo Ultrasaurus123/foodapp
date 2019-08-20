@@ -2,11 +2,12 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { DataService } from '../../services/data.service';
 import { TextService } from '../../services/text.service';
 import { NavigateService } from '../../services/navigate.service';
 import { AppSettings } from '../../../';
+import { MenuItem } from '../../interfaces/menu.interface';
 
 @Component({
   selector: 'page-header',
@@ -16,17 +17,18 @@ import { AppSettings } from '../../../';
 
 export class PageHeaderComponent implements OnInit {
 
+  public loadingMisc: boolean = false;
   public menuOpen: boolean = false;
-  public menuItems: Array<{ name: string, display: string, link: string, id: string, data?: any }>;
+  public menuItems: Array<MenuItem>;
 
   private displays: Array<string>;
   private footerMargin: boolean;
   private pageSubtitle: boolean;
   private menuTitle: string;
   private myChartsActive: boolean;
-  private self: any;
+  private pageText: any = {};
 
-  constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService) { }
+  constructor(private location: Location, private navigateService: NavigateService, private dataService: DataService, private textService: TextService) { }
 
   public ngOnInit() {
     this.menuItems = AppSettings.NAV_MENU;
@@ -34,16 +36,20 @@ export class PageHeaderComponent implements OnInit {
       data => this.setTranslations(data),
       error => console.error('Error getting translations: ' + error));
    
-    this.displays = this.menuItems.map(elem => { return elem.display; });   
+    this.displays = this.menuItems.map(elem => elem.display);   
   }
 
   public ngDoCheck() {
-    this.textService.getMiscTranslations().subscribe(
-      data => this.setTranslations(data),
-      error => console.error('Error getting translations: ' + error));
-      this.footerMargin = (this.dataService.page) ? this.dataService.page.footerMargin : false;
-      this.pageSubtitle = (this.dataService.page) ? this.dataService.page.subtitle : false;
-      this.menuTitle = (this.dataService.page) ? this.dataService.page.text : '';
+    if (!this.loadingMisc) {
+      this.loadingMisc = true;
+      this.textService.getMiscTranslations().subscribe(
+        data => this.setTranslations(data),
+        error => console.error('Error getting translations: ' + error)
+      );
+    }
+    this.footerMargin = (this.dataService.page) ? this.dataService.page.footerMargin : false;
+    this.pageSubtitle = (this.dataService.page) ? this.dataService.page.subtitle : false;
+    this.menuTitle = (this.dataService.page) ? this.dataService.page.text : '';
     let myCharts = localStorage.getItem('myCharts');
     if (myCharts) {
       this.dataService.myCharts = JSON.parse(myCharts);
@@ -55,12 +61,20 @@ export class PageHeaderComponent implements OnInit {
     this.menuOpen = !this.menuOpen;
   }
 
-  public clickMenuLink(menuItem: { name: string, link: string, data?: any }) {
+  public clickMenuLink(menuItem: MenuItem) {
     this.menuOpen = false;
     if (menuItem.name === 'Feedback') {
       window.location.href = 'mailto:contact@healthfoodsmatrix.com';
+    } else if (menuItem.link === 'contact') {
+      window.location.href = 'mailto:contact@healthfoodsmatrix.com';
+    } else if (menuItem.link === 'examples') {
+      window.open(AppSettings.EXAMPLES_LINK, '_blank');  
+    } else if (menuItem.link === 'guide') {
+      window.open(AppSettings.GUIDE_LINK, '_blank');  
     } else if (menuItem.name === 'Facebook') {
       window.open(AppSettings.FACEBOOK_LINK, '_blank');  
+    } else if (menuItem.name === 'Shortcut') {
+      window.open(AppSettings.CREATE_SHORTCUT_LINK, '_blank');  
     } else if (menuItem.name !== 'My Charts' || this.myChartsActive) {
       this.menuOpen = false;
       // this.router.navigate([menuItem.link, menuItem.data || {}]);
@@ -72,10 +86,29 @@ export class PageHeaderComponent implements OnInit {
     this.menuItems.forEach(item => {
       item.display = data[item.id] || item.display;
     });
+    this.pageText.backButton = data["back"] || "Back";
+    this.loadingMisc = false;
   }
 
-  private getMenuTitle() {
+  private getMenuTitle(): string {
     return this.menuTitle + (this.textService.language !== 'English' ? ' (' + this.textService.language +')' : '');
   }
 
+  private goBack(): void {
+    this.location.back();
+  }
+
+  private goHome(): void {
+    this.navigateService.navigateTo("home");      
+  }
 }
+
+
+
+
+
+
+
+
+
+

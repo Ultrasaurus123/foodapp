@@ -7,6 +7,12 @@
                 <ul>
                     <li class="warning" *ngFor="let warning of warningsObject[item].statements; let index = index;">
                          {{warning}} <a [href]="warningsObject[item].references[index]" target="_blank">(Source)</a>
+                         <span class="col-12" *ngIf="textService.language.toLowerCase() !== 'english'">
+                            <a [href]="getTranslateLink(warning)" target="_blank">
+                            {{pageText['translate']}}
+                            </a>
+                        </span>
+        
                     </li>
                 </ul>
             </div>

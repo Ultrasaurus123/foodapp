@@ -5,7 +5,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { DataService, TextService, NavigateService, ApiService } from '../common';
+import { Location } from '@angular/common';
+import { DataService, TextService, NavigateService } from '../common';
 import { AppSettings } from '..';
 
 @Component({
@@ -18,16 +19,27 @@ export class HomeComponent implements OnInit {
   private pageText: any = {};
   private translations: any;
   private currentLanguageCode: string;
+  private examplesLink: string;
+  private guideLink: string;
 
-  constructor(private dataService: DataService, private route: ActivatedRoute, private apiService: ApiService,
+  constructor(private dataService: DataService, private route: ActivatedRoute, private location: Location,
     private textService: TextService, private navigateService: NavigateService) { }
 
   public ngOnInit() {
-    this.navigateService.getRouteData(this.route).subscribe(data => { });
+    this.examplesLink = AppSettings.EXAMPLES_LINK;
+    this.guideLink = AppSettings.GUIDE_LINK
+    this.route.queryParams.subscribe(data => {
+      if (data && data["language"] && data["language"].toLowerCase() === "persian") {
+        this.textService.language = 'Persian';
+        this.dataService.showAd = true;
+        this.location.go("/home");
+}
+     });
     window.scrollTo(0, 0);
     this.dataService.page = {
       text: 'Home',
-      name: 'Home'
+      name: 'Home',
+      hideFooter: true,
     };
     this.currentLanguageCode = AppSettings.LANGUAGE_CODE_MAP[this.textService.language.toLowerCase()].toUpperCase();
     this.textService.getMiscTranslations().subscribe(
@@ -53,5 +65,9 @@ export class HomeComponent implements OnInit {
   private showItemList(type) {
     sessionStorage.setItem('view', type);
     this.navigateService.navigateTo('search');
+  }
+
+  private clickHomeImage() {
+    this.navigateService.navigateTo('about');
   }
 }

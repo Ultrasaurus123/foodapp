@@ -14,7 +14,7 @@
 .container-fade-top
 {
 	position: fixed;
-	top: 50px;
+	top: 41px;
     left: 0;
 	height: 20px;
 	width: 100%;
@@ -24,10 +24,31 @@
 	background-image: -ms-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
 	background-image: -o-linear-gradient(90deg, rgba(255,255,255,.5), #fff);
 }
+.container-back-button-row
+{
+	position: fixed;
+	top: 41px;
+    left: 0;
+	height: 25px;
+	width: 100%;
+    z-index: 1;
+    background: $nav-button-color;
+    font-weight: bold;
+}
+
+.home-icon {
+    width: 24px;
+    float: right;
+    padding: 2px;
+    margin-right: 5px;
+}
+
 .container-fade-top.sub-title {
     top: 75px;
 }
-
+.container-back-button-row.sub-title {
+    top: 41px;
+}
 .container-fade-bottom
 {
 	position: fixed;
@@ -79,4 +100,8 @@
     @media screen and (max-width: 359px) {
         display: none !important;
     }    
+}
+
+.back-button {
+    color: white;
 }

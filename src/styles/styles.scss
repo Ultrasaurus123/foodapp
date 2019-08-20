@@ -11,6 +11,14 @@ body {
     overflow-x: hidden;
 }
 
+.page-body {
+  @media (min-width: 1024px) { 
+    max-width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .clearfix:after {
   content: "";
   display: table;
@@ -19,7 +27,7 @@ body {
 
 .button-icon {
   @media (max-width: 359px) { 
-    display: none
+    // display: none
   }
   padding-right: 5px;
   float: left;
@@ -150,13 +158,14 @@ ul.topnav {
   z-index: 999;
 }
 
-ul.topnav li {float: left;}
+ul.topnav li { float: left; }
+ul.topnav.rtl li { float: right; }
 
 ul.topnav li a {
   display: inline-block;
   color: #f2f2f2 !important;
   text-align: center;
-  padding: 14px 16px;
+  padding: 8px 16px;
   text-decoration: none;
   transition: 0.3s;
   font-size: 17px;
@@ -168,19 +177,24 @@ ul.topnav li:not(:first-child):not(.no-hover):not(.disabled) a:hover:not(.no-hov
 
 ul.topnav li.icon {display: none;}
 
-@media (min-width: 1024px) {
-    ul.topnav li:first-child {display: none;}
-}
+// @media (min-width: 1024px) {
+//     ul.topnav li:first-child {display: none;}
+// }
 
-@media screen and (max-width: 1023px) {
+//@media screen and (max-width: 1023px) {
   ul.topnav li:not(:first-child) {display: none;}
   ul.topnav li.icon {
     float: right;
     display: inline-block;
+    color: white !important
   }
-}
+  ul.topnav li.icon.rtl {
+    float: left;
+    display: inline-block;
+  }
+//}
 
-@media screen and (max-width: 1023px) {
+// @media screen and (max-width: 1023px) {
 //   ul.topnav.responsive {position: relative;}
   ul.topnav.responsive li.icon {
     position: absolute;
@@ -200,7 +214,7 @@ ul.topnav li.icon {display: none;}
   .hide-mobile {
     display: none !important;
   }
-}
+// }
 
 .bold {
   font-weight: 700;

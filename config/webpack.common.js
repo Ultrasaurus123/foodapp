@@ -239,7 +239,8 @@ module.exports = function (options) {
        */
       new CopyWebpackPlugin([
         { from: 'src/assets', to: 'assets', ignore: [ 'src/assets/docs/*' ] },
-        { from: 'src/meta'}
+        { from: 'src/meta'},
+        { from: 'src/service-worker.js', to: 'service-worker.js'}
       ]),
 
 

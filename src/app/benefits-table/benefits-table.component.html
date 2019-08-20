@@ -22,19 +22,34 @@
                     </div>
                 </td>
                 <!-- Blank columns at end -->
-                <td *ngIf="selected.length < 6" class="empty-column helper-column" [attr.colspan]="6 - selected.length" [attr.rowspan]="dataArray.length + 1" [style.width.%]="9 * (6 - selected.length)">
-                    <span *ngIf="selected.length <= 2" class="helper-text" [class.rtl]="textService.rightJustify" [class.two-col]="selected.length==2">{{pageText.helperText}}</span>
+                <td *ngIf="selected.length < 6" class="empty-column helper-column" [attr.colspan]="6 - selected.length" [attr.rowspan]="dataArray.length + 1" [style.width.%]="9 * (6 - selected.length)" [class.rtl]="textService.rightJustify">
+                    <div *ngIf="selected.length <= 2" class="helper-text-container">
+                        <span class="helper-text-title-1" [class.rtl]="textService.rightJustify" [class.two-col]="selected.length==2">{{pageText.helperTitle1}}</span>
+                        <span class="helper-text-title-2" [class.rtl]="textService.rightJustify" [class.two-col]="selected.length==2">{{pageText.helperTitle2}}</span>
+                        <span class="helper-text" [class.rtl]="textService.rightJustify" [class.two-col]="selected.length==2">{{pageText.helperText}}</span>
+                    </div>
+                    <div *ngIf="selected.length === 1" class="table-image-container">
+                        <a *ngFor="let image of images">
+                            <img [src]="image.image.thumbnailLink" class="table-image"/>
+                        </a>
+                    </div>
                 </td>
                 </tr>
-                    <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" [class.rtl-table-row]="textService.rightJustify">
+                    <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" [class.rtl-table-row]="textService.rightJustify" class="table-row">
                         <td (click)="selectItem(item, i)" class="first-column"
                             [class.text-left]="!textService.rightJustify" [class.p-l-5]="!textService.rightJustify"
                             [class.text-right]="textService.rightJustify" [class.p-r-5]="textService.rightJustify">
-                            <span *ngIf="item.showEnglish">{{itemPopularity[item.item]}} {{item.item}}</span>
-                            <span *ngIf="!item.showEnglish">{{itemPopularity[item.item]}} {{item.displayText}}</span>
+                            <span *ngIf="item.showEnglish">{{item.item}}</span>
+                            <span *ngIf="!item.showEnglish">{{item.displayText}}</span>
                         </td>
                         <td class="text-center item-column" [class.shaded]="item.values[selection] && item.values[selection].top" *ngFor="let selection of selected" (click)="item.values[selection] !== undefined && goToDetails(selection, i)">
                             <div *ngIf="item.values[selection] !== undefined"><img class="effect-icon" [src]="getIcon(item.values[selection].effect)" /></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td *ngIf="dataArray.length > hideUnpopularThreshold" [attr.colspan]="selected.length + 1" class="text-right see-more-text" (click)="toggleSeeMore()">
+                            <span *ngIf="hidingUnpopular">{{pageText.seeMore}}</span>
+                            <span *ngIf="!hidingUnpopular">{{pageText.seeLess}}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -69,7 +84,8 @@
                 <!-- ** FILTER ** -->
                 <div *ngSwitchCase="'Filter'">
                     <div class="menu-tab">
-                        <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked">
+                        <div *ngFor="let option of filterOptions; let i = index;" class="p-l-10" [class.checked]="option.checked"
+                            [hidden]="dataArray && option.name === 'Less Popular Items' && dataArray.length <= hideUnpopularThreshold">
                             <input type="checkbox" name="filterOptions" value="{{option.name}}" [id]="'item' + i" (ngModelChange)="onFilterChange(i, $event)"
                                 [disabled]="false" [ngModel]="option.checked" />
                             <label class="m-b-0" [for]="'item' + i">
@@ -178,3 +194,5 @@
         </div>
     </div>    
 </div>
+
+<div id="ad-slot" class="clickyab-ad"></div>

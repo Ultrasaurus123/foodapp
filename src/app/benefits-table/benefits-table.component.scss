@@ -55,6 +55,10 @@
      }
 }
 
+.table-row {
+    line-height: 1.8;
+}
+
 .rtl-table-row {
     font-size: 15px !important;
 }
@@ -134,7 +138,7 @@
             transform: translate(15px, -50px) rotate(270deg) !important;
         }
         &.five-col, &.six-col, &.seven-col, &.eight-col {
-            transform: translate(32px, -50px) rotate(270deg) !important;
+            transform: translate(27px, -50px) rotate(270deg) !important;
         }
         &.nine-col, &.ten-col {
             transform: translate(30px, -50px) rotate(270deg) !important;
@@ -377,20 +381,91 @@ div[id^="pullout-main-"] {
 .helper-column {
     vertical-align: top;
     padding-top: 10%;
+    &.rtl {
+        text-align: right;
+    }
+}
+
+.helper-text-title-1 {
+    position: fixed;
+    margin-right: 12.5%;
+    margin-left: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    color: red;
+    top: 100px;
+    &.rtl {
+        margin-right: 0;
+        left: 0;
+        max-width: 38%;
+        width: 100%;
+        font-size: 28px;
+        &.two-col {
+            max-width: 30%;
+            width: 100%;
+            font-size: 24px;
+        }
+    }
+}
+
+.helper-text-title-2 {
+    position: fixed;
+    margin-right: 12.5%;
+    margin-left: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    color: red;
+    top: 130px;
+    &.rtl {
+        margin-right: 0;
+        left: 0;
+        max-width: 38%;
+        width: 100%;
+        font-size: 28px;
+        &.two-col {
+            max-width: 30%;
+            width: 100%;
+            font-size: 24px;
+        }
+    }
+}
+
+.helper-text-container {
+    position: fixed;
+    min-height: 160px;
+    top: 60px;
+    width: 200px;
+    background: white;
 }
 
 .helper-text {
     position: fixed;
     margin-right: 12.5%;
     margin-left: 5px;
+    top: 160px;
     &.rtl {
         margin-right: 0;
         left: 0;
-        max-width: 40%;
+        max-width: 38%;
+        width: 100%;
         font-size: 16px;
         &.two-col {
             max-width: 30%;
+            width: 100%;
             font-size: 14px;
         }
     }
+}
+
+.see-more-text {
+    font-size: 14px !important;
+    color: blue;
+}
+
+.table-image-container {
+    margin-top: 130px;
+}
+.table-image {
+    width: 100%;
+    padding: 5px 5px 5px 5px;
 }

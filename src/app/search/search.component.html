@@ -1,12 +1,12 @@
 <div class="m-t-95">
-<div class="page-title">{{pageText.pleaseSelect}}</div>
+<div class="page-title" [class.rtl]="textService.rightJustify">{{pageText.pleaseSelect}}</div>
 <div [class.page-loading]="view.startsWith('food') ? dataService.allFoods.length === 0 : dataService.allConditions.length === 0"></div>
 <div class="m-t-10">
   <div class="selection-container">
     <div class="checkbox-container">
       <div *ngFor="let item of (searchModel.length > 0) ? itemSet : this.view.startsWith('food') ? dataService.allFoods : dataService.allConditions" (click)="(checkedItems < maxSelections || item.checked) && onSelectItem(item)" 
       [class.checked]="item.checked" [class.disabled]="checkedItems >= maxSelections && !item.checked"
-      [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify"
+      [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify && !showEnglish"
       [attr.dir]="textService.rightJustify && !showEnglish ? 'rtl' : 'ltr'">
         <span *ngIf="showEnglish" [id]="'item-e-' + item.item">{{item.item}}</span>
         <span *ngIf="!showEnglish"  [id]="'item-t-' + item.item">{{item.displayText}}</span>
@@ -18,7 +18,7 @@
 <div class="col-12">
   <div class="row footer">
     <div class="col-12" [attr.dir]="textService.rightJustify ? 'rtl' : 'ltr'">
-      {{pageText.find}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" />
+      {{pageText.find}} <input type="text" [ngModel]="searchModel" (ngModelChange)="searchValueChanged($event)" (click)="clickFindInput()"/>
       <img class="translation-icon" src="../../assets/img/translation.png" [class.show-eng-enabled]="showEnglish"
         (click)="showEnglish = !showEnglish" [hidden]="textService.language === 'English'"/>
     </div>

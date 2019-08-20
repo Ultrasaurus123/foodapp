@@ -9,6 +9,7 @@ export class TextService {
     public languageChanged: boolean = false;
     public loadedFoodSinceChange: boolean = true;
     public loadedCondSinceChange: boolean = true;
+    public loadedMiscSinceChange: boolean = true;
     public rightJustify: boolean = false;
     
     private _language: string = 'English';
@@ -17,8 +18,9 @@ export class TextService {
     }
     set language(language: string) {
         this._language = language;
-        this.loadedFoodSinceChange = this.loadedCondSinceChange = false;
+        this.loadedFoodSinceChange = this.loadedCondSinceChange = this.loadedMiscSinceChange = false;
         this.languageChanged = true;
+        localStorage.setItem('lang', JSON.stringify(language));
         this.rightJustify = AppSettings.RIGHT_JUSTIFIED_LANGUAGES[this._language.toLowerCase()];        
     }
 
@@ -52,7 +54,11 @@ export class TextService {
     }
 
     public getMiscTranslations(): Observable<any> {
-        return this.apiService.get(AppSettings.API_ROUTES.MISC_TRANSLATIONS + '?lang=' + this.language.toLowerCase(), true);
+        // if (!this.loadedMiscSinceChange) {
+        //     this.loadedMiscSinceChange = true;
+            return this.apiService.get(AppSettings.API_ROUTES.MISC_TRANSLATIONS + '?lang=' + this.language.toLowerCase(), true)
+        // };
+        // return Observable.of({});
     }
 
     public getLanguages(): Array<string> {
@@ -60,13 +66,11 @@ export class TextService {
     }
 
     public loadAfterChange(view: string) {
-        console.log(view);
         if (view.toLowerCase() === 'food') {
             this.loadedFoodSinceChange = true;
         } else if (view.toLowerCase() === 'condition') {
             this.loadedCondSinceChange = true;            
         }
         this.languageChanged = !(this.loadedFoodSinceChange && this.loadedCondSinceChange);
-        console.log(this.languageChanged);
     }
 }

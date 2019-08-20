@@ -1,8 +1,9 @@
-<div [class.fixed-footer]="footerMargin" class="col-12 footer">
+<div [class.fixed-footer]="footerMargin" class="col-12 footer" [hidden]="dataService.page && dataService.page.hideFooter"
+    [class.m-b-90]="dataService.page && dataService.page.name === 'Benefits Matrix'">
 <hr [hidden]="footerMargin">
 <div class="footer-links">
-    <a (click)="clickFooterLink('facebook')">
-        <img class="social-media-icon" src="/assets/img/facebook_button.png">&nbsp;|&nbsp;
+    <a (click)="clickFooterLink('telegram')">
+        <img class="social-media-icon" src="/assets/img/telegram_button.png">&nbsp;|&nbsp;
     </a>
     <a *ngFor="let link of footerLinks; let i = index;" (click)="clickFooterLink(link.link)">
         <span>{{link.display}}</span><span [hidden]="i === footerLinks.length - 1">&nbsp;|&nbsp;</span>

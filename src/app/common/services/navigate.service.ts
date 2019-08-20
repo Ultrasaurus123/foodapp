@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TextService } from './text.service';
+import { DataService } from './data.service';
 
 @Injectable()
 export class NavigateService {
@@ -15,7 +16,7 @@ export class NavigateService {
   
   private langData: string = '';
 
-  constructor(private router: Router, private route: ActivatedRoute, private textService: TextService) {
+  constructor(private router: Router, private route: ActivatedRoute, private textService: TextService, private dataService: DataService) {
     return NavigateService._instance = NavigateService._instance || this;
   }  
 

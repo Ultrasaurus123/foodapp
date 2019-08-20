@@ -2,15 +2,14 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { DomSanitizer, SafeHtml  } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
 import { ApiService, DataService, PromptModalComponent, Chart, TextService, NavigateService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
+import { S3 } from 'aws-sdk';
 
 @Component({
   selector: 'benefits-table',
@@ -24,7 +23,7 @@ export class BenefitsTableComponent implements OnInit {
   private view: string;
   private itemPopularity: any = {};
   private dataArray: Array<TableItem>;
-  private dataArraySorterPopularity: Array<TableItem>;
+  private dataArraySortedPopularity: Array<TableItem>;
   private currentSort: { type: string, asc: boolean };
   private filterOptions: Array<{ name: string, checked: boolean }> = [];
   private selectedItems: Array<number> = [];
@@ -37,15 +36,20 @@ export class BenefitsTableComponent implements OnInit {
   private translatedItems: any = {};
   private translatedSelections: any = {};
   private tableView: { selection: string, items: string };
-  private currentSessionFilters: any;
+  private currentSessionFilters: SessionFilters;
   private tabs: Array<PulloutTab> = [];
-  private minPopularity: number;
-
-  
+  private hidingUnpopular: boolean;
+  private images: any;
+  private imageCount: number = 2;
 
   constructor(private navigateService: NavigateService, private dataService: DataService, private apiService: ApiService, 
-    private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService, private domSanitizer: DomSanitizer) { }
+    private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService, private location: Location) { }
 
+  public ngOnDestroy() {
+    this.dataService.adDiv = document.body.lastElementChild;
+    this.dataService.adDiv.setAttribute("hidden", "true");
+  }
+  
   public ngOnInit() {
     this.createTabs();
     window.scrollTo(0, 0);
@@ -57,17 +61,37 @@ export class BenefitsTableComponent implements OnInit {
     this.sub = this.route
       .queryParams
       .subscribe(params => {
-        let customTable = params['customtable'] || '';
-        if (customTable) {
-          try {
-            let parsedChart = <Chart>JSON.parse(atob(customTable));
-            this.dataService.selectedChart = parsedChart;
-          } catch (e) {
-            console.error('Could not load custom chart, data malformed.');
-            this.navigateService.navigateTo('home');            
+        if (params['table']) {
+          this.apiService.get(AppSettings.API_ROUTES.AD_PAGES + '?name=' + params['table'], true)
+            .subscribe(
+              data => { console.log(data); this.loadPresetTable(data) },
+              error => {
+                let customTable = params['customtable'] || '';
+                if (customTable) {
+                  try {
+                    let parsedChart = <Chart>JSON.parse(atob(customTable));
+                    this.dataService.selectedChart = parsedChart;
+                  } catch (e) {
+                    console.error('Could not load custom chart, data malformed.');
+                    this.navigateService.navigateTo('home');            
+                  }
+                }
+                this.initNoParams();        
+              }
+            );
+        } else {
+          let customTable = params['customtable'] || '';
+          if (customTable) {
+            try {
+              let parsedChart = <Chart>JSON.parse(atob(customTable));
+              this.dataService.selectedChart = parsedChart;
+            } catch (e) {
+              console.error('Could not load custom chart, data malformed.');
+              this.navigateService.navigateTo('home');            
+            }
           }
+          this.initNoParams();        
         }
-        this.initNoParams();
       });
     
   }
@@ -78,7 +102,7 @@ export class BenefitsTableComponent implements OnInit {
       this.init();
       this.view = this.dataService.selectedChart.view;
       this.selected = this.dataService.selectedChart.selected;
-      sessionStorage.setItem('view', JSON.stringify(this.view));
+      sessionStorage.setItem('view', this.view);
       sessionStorage.setItem('selected', JSON.stringify(this.selected));
       sessionStorage.setItem('currentFilter', JSON.stringify(this.dataService.selectedChart.filters));
       this.dataService.selectedChart = null;
@@ -128,12 +152,32 @@ export class BenefitsTableComponent implements OnInit {
     this.pageText.mixed = data["mixed_effects"] || "Mixed";
     this.pageText.inhibits = data["inhibits"] || "Inhibits";
     this.pageText.negative = data["side_effect"] || "Side Effect";
-    this.pageText.helperText = data["table_help_text"] || "Click on the red or green symbols for more information about the foods and conditions.";
+    this.pageText.helperTitle1 = data["table_help_title_1"] || "Details?";
+    this.pageText.helperTitle2 = data["table_help_title_2"] || "References?";
+    this.pageText.helperText = data["table_help_text"] || "Click on Green or Red Symbols";
+    this.pageText.seeMore = data["table_see_more"] || "Click to see more...";
+    this.pageText.seeLess = data["table_see_less"] || "Click to see less...";
     this.dataService.page.text = data["effects_table"] || 'Health Effects Matrix';
   }
 
   private initServiceCall = function () {
-    let query = '';
+    // if only 1 column, load images
+    if (this.selected.length === 1) {
+      let suffixQuery: string = (this.view === 'food' ? 'food=' : 'condition=') + encodeURIComponent(this.selected);
+        this.apiService.get(AppSettings.API_ROUTES.SUFFIX + '?' + suffixQuery, true)
+          .subscribe(
+            data => {
+              this.apiService.getExternal('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=' + this.imageCount + '&safe=high&fields=items(image)&q=' + data)
+                .subscribe(
+                  res => this.images = res.items,
+                  error => console.error('Error getting cross reference data: ' + error)
+                );
+            },
+            error => console.error('Error getting image search: ' + error)
+          );
+      }
+
+    let query: string = '';
     if (this.view === 'food') {
       query = 'foods=' + encodeURIComponent(this.selected.join());
     } else if (this.view === 'condition') {
@@ -144,17 +188,38 @@ export class BenefitsTableComponent implements OnInit {
       this.translatedSelections = translatedSelections;
       this.textService.getTranslation(this.tableView.items).subscribe(translatedItems => {
         this.translatedItems = translatedItems;
-        // console.log(translatedItems);
         this.apiService.get(AppSettings.API_ROUTES.COMPACT + '?' + query, true)
         .subscribe(data => this.processData(data),
           error => console.error('Error getting all items: ' + error)
         );
-
       });
     });
+    this.loadAd();
   }  
 
-  private processData(data: Array<any>, defaultSort: string) {
+  private loadPresetTable(data: PresetTable) {
+    // validate table
+    if (!data.type || data.items.length < 1) {
+      this.initNoParams();
+    } else {
+      if (AppSettings.LANGUAGE_CODE_MAP[data.language.toLowerCase()]) {
+        this.textService.language = data.language;
+        if (data.language.toLowerCase() === "persian") {
+          this.dataService.showAd = true;
+        }
+      } 
+      this.view = data.type.toLowerCase();
+      this.selected = data.items;
+      sessionStorage.setItem('view', this.view);
+      sessionStorage.setItem('selected', JSON.stringify(this.selected));
+      sessionStorage.setItem('selected' + this.view, JSON.stringify(this.selected));
+      this.location.go("/benefits");
+      this.initNoParams();
+    }
+    
+  }
+
+  private processData(data: Array<any>) {
     this.processSelected();
     let hIndex: number = (this.view === 'food') ? 0 : 1;
     let dIndex: number = (this.view === 'food') ? 1 : 0;
@@ -175,7 +240,7 @@ export class BenefitsTableComponent implements OnInit {
     let sessionFilterString: string = sessionStorage.getItem('currentFilter');
     this.currentSessionFilters = (sessionFilterString) ? JSON.parse(sessionFilterString) : {};
     this.currentSessionFilters.hidden = this.currentSessionFilters.hidden || [];
-    this.currentSessionFilters.filters = this.currentSessionFilters.filters || [5];    
+    this.currentSessionFilters.filters = this.currentSessionFilters.filters || [5]; // default filter to 5 (hide unpopular)   
     this.currentSessionFilters.columns = this.currentSessionFilters.columns || [];    
     this.customHiddenItems = this.currentSessionFilters.hidden;
     
@@ -188,9 +253,9 @@ export class BenefitsTableComponent implements OnInit {
       this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, selected: false});
     }
 
-    this.hideUnpopularThreshold = this.dataArray.length <= 100 ? 20 : this.dataArray.length * 0.20;
-    this.dataArraySorterPopularity = Object.assign([], this.dataArray);
-    this.dataArraySorterPopularity.sort(this.popularitySort(1));
+    this.hideUnpopularThreshold = this.dataArray.length <= 100 ? 10 : this.dataArray.length * 0.10;
+    this.dataArraySortedPopularity = Object.assign([], this.dataArray);
+    this.dataArraySortedPopularity.sort(this.popularitySort(1));
 
     for (let i = 0; i < this.currentSessionFilters.filters.length; i++) {
       this.onFilterChange(this.currentSessionFilters.filters[i], true);
@@ -208,11 +273,13 @@ export class BenefitsTableComponent implements OnInit {
     } else {
       this.sort('popularity');
     }  
+
+    this.hidingUnpopular = this.currentSessionFilters.filters.indexOf(5) > -1;
 }
 
   private processSelected() {
     this.selectedHeadings = [];
-    let center = 15;
+    let center = this.textService.rightJustify ? 18 : 15;
     for (let s = 0; s < this.selected.length; s++) {
       let selected = {
         heading: this.selected[s],
@@ -543,6 +610,7 @@ export class BenefitsTableComponent implements OnInit {
     let inhibits: boolean = this.filterOptions[3].checked;
     let negative: boolean = this.filterOptions[4].checked;
     let unpopular: boolean = this.filterOptions[5].checked;
+    this.hidingUnpopular = unpopular;
 
     for (let item of this.dataArray) {
       let matchCount: number = 0;
@@ -596,7 +664,7 @@ export class BenefitsTableComponent implements OnInit {
     // if table length < 100, show 20 items (or all items if less than 20)
     // otherwise only return top 20% popular items
     for (let i = 0; i < this.hideUnpopularThreshold; i++) {
-      if (this.dataArraySorterPopularity[i].item == tableItem.item) {
+      if (this.dataArraySortedPopularity[i].item == tableItem.item) {
         return false;
       }
     }
@@ -652,11 +720,16 @@ export class BenefitsTableComponent implements OnInit {
     }
   }
 
+  private toggleSeeMore() {
+    this.hidingUnpopular = !this.hidingUnpopular;
+    this.onFilterChange(5, this.hidingUnpopular);
+  }
+
   private createTabs(): void {
     let tabNames: Array<string> = [
-      "Help", "Sort", "Filter", "Save", "Icons", "English"
+      "Help", "Sort", "Filter", "Save", "Icons", "Translate"
     ];
-    let tabHeight: number = 1. / tabNames.length * 90;
+    let tabHeight: number = 1. / tabNames.length * 85;
 
     for (let i = 0; i < tabNames.length; i++) {
       this.tabs.push({
@@ -675,6 +748,9 @@ export class BenefitsTableComponent implements OnInit {
       this.saveChart();
       return;
     }
+    if (tab.name === "Translate") {
+      this.navigateService.navigateTo('language');
+    }
     if (tab.active) {
       tab.active = false;
       return;
@@ -683,6 +759,38 @@ export class BenefitsTableComponent implements OnInit {
       t.active = false;
     }
     tab.active = true;
+  }
+
+  private loadAd(): void {
+    // if (this.dataService.adDiv) {
+    //   this.dataService.adDiv.removeAttribute("hidden");
+    //   return;
+    // }
+    
+    // if (this.dataService.showAd) {
+    //   var slotDom: Element = document.getElementById("ad-slot");
+    //   for (var keys = Object.keys(window["clickyab_ad"]), i = 0; i < keys.length; i++) {
+    //     window["clickyab_ad"][keys[i]] && slotDom.setAttribute("clickyab-" + keys[i], window["clickyab_ad"][keys[i]]);
+    //   }
+    //   // window["addEventListener("DOMContentLoaded", function() {
+    //   window["totalOfClickyabShowAd"] = window["totalOfClickyabShowAd"] || 1;
+    //   window["countOfClickyabShowAd"] = window["countOfClickyabShowAd"] ? window["countOfClickyabShowAd"] + 1 : 1;
+    //   window["totalOfClickyabShowAd"] === window["countOfClickyabShowAd"] && (i = 0);
+    //   window["clickyabParams"] = {
+    //     id: window["clickyab_ad"].id,
+    //     domain: window["clickyab_ad"].domain
+    //   };
+    //   if (!document.getElementById("clickyab-show-js-v2")) {
+    //     window["injectClickyabMultiJs"] = !0;
+    //     var s = document.createElement("script");
+    //     s.async = true;
+    //     s.type = "text/javascript";
+    //     s.id = "clickyab-show-js-v2";
+    //     s.src = "//supplier.clickyab.com/api/multi.js";
+    //     document.body.appendChild(s);
+    //   }
+    //   // }, !1),
+    // }
   }
 }
 
@@ -705,4 +813,17 @@ export interface TableItem {
   hidden: boolean,
   selected: boolean,
   showEnglish?: boolean,
+}
+
+export interface SessionFilters {
+  hidden: Array<any>;
+  filters: Array<any>;
+  columns: Array<any>;
+}
+
+export interface PresetTable {
+  name: string;
+  language: string;
+  type: string;
+  items: Array<string>;
 }

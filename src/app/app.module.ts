@@ -25,8 +25,7 @@ import { ROUTES } from './app.routes';
 // App is our top level component
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { PageHeaderComponent } from './common';
-import { PageFooterComponent } from './common';
+import { PageHeaderComponent, MenuItem, PageFooterComponent, AdBannerComponent } from './common';
 import { AgreementComponent } from './agreement';
 import { PrivacyPolicyComponent } from './privacy-policy';
 import { HomeComponent } from './home';
@@ -58,6 +57,7 @@ import '../styles/margins.scss';
 import '../styles/page-loading.scss';
 import '../styles/loader.scss';
 import '../styles/modals.scss';
+import { AboutComponent } from './about';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -80,6 +80,7 @@ type StoreType = {
     AppComponent,
     PageHeaderComponent,
     PageFooterComponent,
+    AdBannerComponent,
     AgreementComponent,
     PrivacyPolicyComponent,
     HomeComponent,
@@ -89,6 +90,7 @@ type StoreType = {
     DetailsComponent,
     WarningsComponent,
     HelpComponent,
+    AboutComponent,
     LanguageComponent,
     TranslationTableComponent,
     NoContentComponent,
@@ -166,7 +168,7 @@ export class AppSettings {
 
   public static API_ENDPOINT: string = 'https://nourai-food-app.herokuapp.com/';
   // LOCAL TESTING
-  //public static API_ENDPOINT: string = 'http://localhost:3000/';
+  // public static API_ENDPOINT: string = 'http://localhost:3000/';
   public static API_ROUTES = {
     "ALL_DATA": "getDBData",
     "COMPACT": "getDBCompactData",
@@ -176,21 +178,35 @@ export class AppSettings {
     "SIDE_EFECTS": "getDBSideEffects",
     "LANGUAGES": "getDBLanguages",
     "WARNINGS": "getDBWarnings",
+    "AD_PAGES": "getPresetTable",
+    "SUFFIX": "getDBSuffix",  // TODO: return this with compact data?
     "MISC_TRANSLATIONS": "getDBMiscTranslations"   // TODO: combine with translations call
   };
   public static FACEBOOK_LINK: string = 'http://www.facebook.com/Health-Foods-Matrix-1004157829720976/';  
+  public static TELEGRAM_LINK: string = 'https://t.me/Healthlist';  
+  public static CREATE_SHORTCUT_LINK: string = '../../assets/docs/Adding program Icon to your Home Screen.pdf';  
+  public static EXAMPLES_LINK: string = '../../assets/docs/HFF examples.pdf';  
+  public static GUIDE_LINK: string = '../../assets/docs/HFF users guide.pdf';  
 
   public static MAX_SELECTIONS: number = 6;
-  public static NAV_MENU: Array<{ name: string, display: string, link: string, id: string, data?: any }> = [
+  public static NAV_MENU: Array<MenuItem> = [
     { name: 'Home', display: 'Home', link: 'home', id: "menu_home" },
-    { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', id: "menu_search_food", data: { view: 'food' } },
-    { name: 'Search by Medical Condition', display: 'Search by Health Concern', link: 'search', id: "menu_search_condition", data: { view: 'condition' }  },
-    { name: 'My Charts', display: 'My Charts', link: 'my-charts', id: "menu_my_charts" },
+    { name: 'Shortcut', display: 'How to Create a Shortcut', link: 'shortcut', id: "menu_shortcut" },
+//    { name: 'Search by Health Food', display: 'Search by Food or Remedy', link: 'search', id: "menu_search_food", data: { view: 'food' } },
+//    { name: 'Search by Medical Condition', display: 'Search by Health Concern', link: 'search', id: "menu_search_condition", data: { view: 'condition' }  },
     { name: 'Language', display: 'Language', link: 'language', id: "menu_language" },
+    { name: 'Contact', display: 'Contact Us', link: 'contact', id: "contact" },
+    { name: 'About', display: 'About Us', link: 'about', id: "menu_about" },
+    { name: 'My Charts', display: 'My Charts', link: 'my-charts', id: "menu_my_charts" },
     { name: 'Translation Table', display: 'Translation Table', link: 'translation-table', id: "menu_translation_table" },
+    { name: 'menubreak', display: '', link: '', id: "" },
     { name: 'Help', display: 'Help', link: 'help', id: "menu_help" },
-    { name: 'Feedback', display: 'Provide Feedback', link: 'feedback', id: "menu_feedback" },
-    { name: 'Facebook', display: 'Follow us on Facebook', link: 'facebook', id: "menu_facebook" }];
+    { name: 'User\'s Guide', display: 'User\s Guide', link: 'guide', id: "guide" },
+    { name: 'Examples', display: 'Examples', link: 'examples', id: "examples" },
+    { name: 'Facebook', display: 'Follow us on Facebook', link: 'facebook', id: "menu_facebook" },
+    // { name: 'Feedback', display: 'Provide Feedback', link: 'feedback', id: "menu_feedback" },
+    { name: 'Terms', display: 'Terms and Conditions', link: 'disclaimer', id: "menu_terms" },
+    { name: 'Privacy', display: 'Privacy Policy', link: 'privacy', id: "menu_privacy" }];
     
   public static FOOTER_LINKS: Array<{ name: string, display: string, link: string, data?: any }> = [
     { name: 'Terms and Conditions', display: 'Terms and Conditions', link: 'disclaimer' },
