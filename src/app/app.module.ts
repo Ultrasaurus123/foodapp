@@ -178,15 +178,19 @@ export class AppSettings {
     "SIDE_EFECTS": "getDBSideEffects",
     "LANGUAGES": "getDBLanguages",
     "WARNINGS": "getDBWarnings",
+    "EMIT_EVENT": "ueEmit",
     "AD_PAGES": "getPresetTable",
     "SUFFIX": "getDBSuffix",  // TODO: return this with compact data?
     "MISC_TRANSLATIONS": "getDBMiscTranslations"   // TODO: combine with translations call
   };
   public static FACEBOOK_LINK: string = 'http://www.facebook.com/Health-Foods-Matrix-1004157829720976/';  
   public static TELEGRAM_LINK: string = 'https://t.me/Healthlist';  
-  public static CREATE_SHORTCUT_LINK: string = '../../assets/docs/Adding program Icon to your Home Screen.pdf';  
-  public static EXAMPLES_LINK: string = '../../assets/docs/HFF examples.pdf';  
-  public static GUIDE_LINK: string = '../../assets/docs/HFF users guide.pdf';  
+  public static CREATE_SHORTCUT_LINK: string = 'https://health-foods-matrix.s3-us-west-2.amazonaws.com/Docs/Icon+on+Home+Screen.pdf';  
+  public static EXAMPLES_LINK: string = 'https://health-foods-matrix.s3-us-west-2.amazonaws.com/Docs/Examples.pdf';  
+  public static GUIDE_LINK: string = 'https://health-foods-matrix.s3-us-west-2.amazonaws.com/Docs/Users+Guide.pdf';  
+  public static ABOUT_US_LINK: string = 'https://health-foods-matrix.s3-us-west-2.amazonaws.com/Docs/About+us.pdf';  
+  public static TERMS_AND_CONDITIONS_LINK: string = 'https://health-foods-matrix.s3-us-west-2.amazonaws.com/Docs/T+and+C.pdf';  
+  public static PRIVACY_POLICY_LINK: string = 'https://health-foods-matrix.s3-us-west-2.amazonaws.com/Docs/Privacy+Policy.pdf';  
 
   public static MAX_SELECTIONS: number = 6;
   public static NAV_MENU: Array<MenuItem> = [
@@ -203,7 +207,7 @@ export class AppSettings {
     { name: 'Help', display: 'Help', link: 'help', id: "menu_help" },
     { name: 'User\'s Guide', display: 'User\s Guide', link: 'guide', id: "guide" },
     { name: 'Examples', display: 'Examples', link: 'examples', id: "examples" },
-    { name: 'Facebook', display: 'Follow us on Facebook', link: 'facebook', id: "menu_facebook" },
+    { name: 'Telegram', display: 'Follow us on Telegram', link: 'telegram', id: "menu_telegram" },
     // { name: 'Feedback', display: 'Provide Feedback', link: 'feedback', id: "menu_feedback" },
     { name: 'Terms', display: 'Terms and Conditions', link: 'disclaimer', id: "menu_terms" },
     { name: 'Privacy', display: 'Privacy Policy', link: 'privacy', id: "menu_privacy" }];

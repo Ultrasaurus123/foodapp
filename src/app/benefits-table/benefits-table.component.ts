@@ -10,6 +10,7 @@ import { AppSettings } from '..';
 import { ApiService, DataService, PromptModalComponent, Chart, TextService, NavigateService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
 import { S3 } from 'aws-sdk';
+import { promise } from 'selenium-webdriver';
 
 @Component({
   selector: 'benefits-table',
@@ -39,8 +40,12 @@ export class BenefitsTableComponent implements OnInit {
   private currentSessionFilters: SessionFilters;
   private tabs: Array<PulloutTab> = [];
   private hidingUnpopular: boolean;
-  private images: any;
+  private images: Array<string> = [];
+  private googleImages: Array<any> = [];
+  private s3Images: Array<string> = [];
   private imageCount: number = 2;
+
+  
 
   constructor(private navigateService: NavigateService, private dataService: DataService, private apiService: ApiService, 
     private dialogService: DialogService, private route: ActivatedRoute, private textService: TextService, private location: Location) { }
@@ -163,20 +168,10 @@ export class BenefitsTableComponent implements OnInit {
   private initServiceCall = function () {
     // if only 1 column, load images
     if (this.selected.length === 1) {
-      let suffixQuery: string = (this.view === 'food' ? 'food=' : 'condition=') + encodeURIComponent(this.selected);
-        this.apiService.get(AppSettings.API_ROUTES.SUFFIX + '?' + suffixQuery, true)
-          .subscribe(
-            data => {
-              this.apiService.getExternal('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=' + this.imageCount + '&safe=high&fields=items(image)&q=' + data)
-                .subscribe(
-                  res => this.images = res.items,
-                  error => console.error('Error getting cross reference data: ' + error)
-                );
-            },
-            error => console.error('Error getting image search: ' + error)
-          );
+      for (var i = 0; i < this.imageCount; i++) {
+        this.images.push("https://health-foods-matrix.s3.us-west-2.amazonaws.com/images/" + this.selected + "-" + (i + 1) + ".jpg");
       }
-
+    }
     let query: string = '';
     if (this.view === 'food') {
       query = 'foods=' + encodeURIComponent(this.selected.join());
@@ -216,7 +211,6 @@ export class BenefitsTableComponent implements OnInit {
       this.location.go("/benefits");
       this.initNoParams();
     }
-    
   }
 
   private processData(data: Array<any>) {

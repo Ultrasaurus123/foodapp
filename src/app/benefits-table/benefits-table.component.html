@@ -30,7 +30,7 @@
                     </div>
                     <div *ngIf="selected.length === 1" class="table-image-container">
                         <a *ngFor="let image of images">
-                            <img [src]="image.image.thumbnailLink" class="table-image"/>
+                            <img [src]="image" class="table-image"/>
                         </a>
                     </div>
                 </td>

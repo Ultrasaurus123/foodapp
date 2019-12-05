@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Location } from '@angular/common';
-import { DataService, TextService, NavigateService } from '../common';
+import { DataService, TextService, NavigateService, ApiService } from '../common';
 import { AppSettings } from '..';
 
 @Component({
@@ -21,20 +21,32 @@ export class HomeComponent implements OnInit {
   private currentLanguageCode: string;
   private examplesLink: string;
   private guideLink: string;
+  private bgColor: string;
 
   constructor(private dataService: DataService, private route: ActivatedRoute, private location: Location,
-    private textService: TextService, private navigateService: NavigateService) { }
+    private textService: TextService, private navigateService: NavigateService, private apiService: ApiService) { }
 
   public ngOnInit() {
+    this.bgColor = document.body.style.background;
+    document.body.style.background = "#4c7c73";
     this.examplesLink = AppSettings.EXAMPLES_LINK;
     this.guideLink = AppSettings.GUIDE_LINK
     this.route.queryParams.subscribe(data => {
+      var reload: boolean = false;
+      if (data && data["reftag"]) {
+        this.apiService.post(AppSettings.API_ROUTES.EMIT_EVENT, { e: "Referral", d: data["reftag"] }).subscribe();
+        reload = true;
+      }
       if (data && data["language"] && data["language"].toLowerCase() === "persian") {
         this.textService.language = 'Persian';
         this.dataService.showAd = true;
+        reload = true;
+      }
+      if (reload) {
         this.location.go("/home");
-}
-     });
+      }
+    });
+
     window.scrollTo(0, 0);
     this.dataService.page = {
       text: 'Home',
@@ -47,6 +59,10 @@ export class HomeComponent implements OnInit {
       error => console.error('Error getting translations: ' + error));
     this.dataService.loadFoods();
     this.dataService.loadConditions();
+  }
+
+  public ngOnDestroy() {
+    document.body.style.background = this.bgColor;
   }
 
   private setTranslations(data: any) {

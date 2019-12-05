@@ -8,7 +8,8 @@
       [class.checked]="item.checked" [class.disabled]="checkedItems >= maxSelections && !item.checked"
       [class.left-justified]="!textService.rightJustify" [class.right-justified]="textService.rightJustify && !showEnglish"
       [attr.dir]="textService.rightJustify && !showEnglish ? 'rtl' : 'ltr'">
-        <span *ngIf="showEnglish" [id]="'item-e-' + item.item">{{item.item}}</span>
+      <input type="checkbox" [checked]="item.checked" [name]="item.item">
+      <span *ngIf="showEnglish" [id]="'item-e-' + item.item">{{item.item}}</span>
         <span *ngIf="!showEnglish"  [id]="'item-t-' + item.item">{{item.displayText}}</span>
       </div>
     </div>

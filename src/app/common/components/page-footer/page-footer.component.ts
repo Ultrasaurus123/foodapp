@@ -7,6 +7,7 @@ import { DataService } from '../../services/data.service';
 import { TextService } from '../../services/text.service';
 import { NavigateService } from '../../services/navigate.service';
 import { AppSettings } from '../../../';
+import { ApiService, UserEvent } from '../../services/api.service';
 
 @Component({
   selector: 'page-footer',
@@ -20,7 +21,8 @@ export class PageFooterComponent implements OnInit {
   private footerLinks: any = AppSettings.FOOTER_LINKS;
   private footerMargin: boolean;
 
-  constructor(private navigateService: NavigateService, private dataService: DataService, private textService: TextService) { }
+  constructor(private navigateService: NavigateService, private dataService: DataService,
+    private textService: TextService, private apiService: ApiService) { }
 
   public ngOnInit() {
   }
@@ -34,6 +36,12 @@ export class PageFooterComponent implements OnInit {
       window.location.href = 'mailto:contact@healthfoodsmatrix.com';
     } else if (link === 'telegram') {
       window.open(AppSettings.TELEGRAM_LINK, '_blank');  
+    } else if (link === 'disclaimer') {
+      this.apiService.post(AppSettings.API_ROUTES.EMIT_EVENT, { e: "Get doc", d: "t and c" }).subscribe();
+      window.open(AppSettings.TERMS_AND_CONDITIONS_LINK, '_blank');  
+    } else if (link === 'privacy') {
+      this.apiService.post(AppSettings.API_ROUTES.EMIT_EVENT, { e: "Get doc", d: "privacy policy" }).subscribe();
+      window.open(AppSettings.PRIVACY_POLICY_LINK, '_blank');
     } else {
       this.navigateService.navigateTo(link);
     }  

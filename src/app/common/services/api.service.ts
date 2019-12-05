@@ -65,7 +65,6 @@ export class ApiService {
   public post(endpoint: string, body: any): Observable<any> {
     ApiService.createSessionHeader();
     ApiService.headers.set('Language', localStorage.getItem('lang') || `"English"`);
-    
     return this.http.post(AppSettings.API_ENDPOINT + endpoint, body)
       .map(res => {
         ApiService.headers.set('SessionId', res.headers.get('SessionId'));
@@ -101,4 +100,9 @@ export class ApiService {
   private getS3Client(): S3 {
     return this.s3Client;
   }
+}
+
+export interface UserEvent {
+  e: string;  // event
+  d: any;  // data 
 }
