@@ -1,4 +1,81 @@
-<div class="background">
+<div *ngIf="!pageText.headline">
+      <div class="loader"></div>
+  
+      <style>
+        .loader,
+        .loader:before,
+        .loader:after {
+          background: #00838F;
+          -webkit-animation: load1 1s infinite ease-in-out;
+          animation: load1 1s infinite ease-in-out;
+          width: 1em;
+          height: 4em;
+        }
+  
+        .loader {
+          color: #00838F;
+          text-indent: -9999em;
+          margin: 88px auto;
+          position: relative;
+          font-size: 11px;
+          -webkit-transform: translateZ(0);
+          -ms-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-animation-delay: -0.16s;
+          animation-delay: -0.16s;
+        }
+  
+        .loader:before,
+        .loader:after {
+          position: absolute;
+          top: 0;
+          content: '';
+        }
+  
+        .loader:before {
+          left: -1.5em;
+          -webkit-animation-delay: -0.32s;
+          animation-delay: -0.32s;
+        }
+  
+        .loader:after {
+          left: 1.5em;
+        }
+  
+        @-webkit-keyframes load1 {
+  
+          0%,
+          80%,
+          100% {
+            box-shadow: 0 0;
+            height: 4em;
+          }
+  
+          40% {
+            box-shadow: 0 -2em;
+            height: 5em;
+          }
+        }
+  
+        @keyframes load1 {
+  
+          0%,
+          80%,
+          100% {
+            box-shadow: 0 0;
+            height: 4em;
+          }
+  
+          40% {
+            box-shadow: 0 -2em;
+            height: 5em;
+          }
+        }
+      </style>
+</div>
+
+
+<div class="background" *ngIf="pageText.headline">
   <div class="col-12 home-container">
     <div class="row m-t-40">
       <div class="col-12 text-center">
@@ -23,7 +100,7 @@
         <!-- <div class="col-1">
         </div> -->
         <div class="col-1">
-            <img class="button-icon" src="../../assets/img/heart.png" />
+            <img class="button-icon" src="../../assets/img/conditions-icon.png" />
         </div>
         <div class="col-10 button-row">
             <button class="button btn-condition" [class.btn-selected]="showCondition" (click)="showItemList('condition')">
@@ -35,7 +112,7 @@
     </div>
     <div class="row m-t-20">
       <div class="col-1">
-          <img class="button-icon" src="../../assets/img/apple.png" />
+          <img class="button-icon" src="../../assets/img/foods-icon.png" />
       </div>
       <div class="col-10 button-row">
           <button class="button btn-food" [class.btn-selected]="showFood" (click)="showItemList('food')">
@@ -70,7 +147,7 @@
     </p> -->
   </div>
   <div class="copyright m-t-50">
-        <span>&copy; 2017 Health Foods Matrix LLC. All rights reserved.</span>
+    <span>Powered by Health Foods Matrix &copy; 2017</span>
     </div>
     <div [hidden]="footerMargin" class="disclosure">
         <span>The content on this website is provided for your information only and should not be used for diagnosing or treating a health problem. It is not intended as a substitute for the advice provided by physicians or healthcare professionals. </span>

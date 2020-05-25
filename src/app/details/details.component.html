@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-12 reference-link">
                 <a [href]="detail[4]" target="_blank">
-                Source: {{detail[4]}}
+                    (Source)
                 </a>
             </div>
             </div>
@@ -54,13 +54,10 @@
             <span class="page-header">Images of {{detailItem}}</span>
         </div>
         <div class="col-12">
-            <span class="benefit-title"><a [href]="getImageSearchURL()" target="_blank">Source: Google search</a></span>
-        </div>
-        <div class="col-12">
     <ul id="rig">
         <li *ngFor="let image of images">
             <a class="rig-cell">
-                <img [src]="image.image.thumbnailLink" [width]="150" [height]="150" />
+                <img [src]="image" [width]="150" [height]="150" />
                 <span class="rig-overlay"></span>
             </a>
         </li>

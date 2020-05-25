@@ -9,8 +9,6 @@ import 'rxjs/add/operator/catch';
 import { AppSettings } from '..';
 import { ApiService, DataService, PromptModalComponent, Chart, TextService, NavigateService } from '../common';
 import { DialogService } from "ng2-bootstrap-modal";
-import { S3 } from 'aws-sdk';
-import { promise } from 'selenium-webdriver';
 
 @Component({
   selector: 'benefits-table',
@@ -41,8 +39,6 @@ export class BenefitsTableComponent implements OnInit {
   private tabs: Array<PulloutTab> = [];
   private hidingUnpopular: boolean;
   private images: Array<string> = [];
-  private googleImages: Array<any> = [];
-  private s3Images: Array<string> = [];
   private imageCount: number = 2;
 
   
@@ -59,7 +55,7 @@ export class BenefitsTableComponent implements OnInit {
     this.createTabs();
     window.scrollTo(0, 0);
     this.dataService.page = {
-      text: 'Health Effects Matrix',
+      text: 'Table of Health Effects',
       name: 'Benefits Matrix',
       footerMargin: false
     }
@@ -67,6 +63,7 @@ export class BenefitsTableComponent implements OnInit {
       .queryParams
       .subscribe(params => {
         if (params['table']) {
+          this.dataService.showGiahDarmani = true;
           this.apiService.get(AppSettings.API_ROUTES.AD_PAGES + '?name=' + params['table'], true)
             .subscribe(
               data => { console.log(data); this.loadPresetTable(data) },
@@ -143,7 +140,8 @@ export class BenefitsTableComponent implements OnInit {
     ];
     this.textService.getMiscTranslations().subscribe(
       data => this.setTranslations(data),
-      error => console.error('Error getting translations: ' + error));
+      error => console.error('Error getting translations: ' + error)
+    );
     this.tableView = {
       selection: this.view,
       items: this.view === 'food' ? 'condition' : 'food'
@@ -162,7 +160,7 @@ export class BenefitsTableComponent implements OnInit {
     this.pageText.helperText = data["table_help_text"] || "Click on Green or Red Symbols";
     this.pageText.seeMore = data["table_see_more"] || "Click to see more...";
     this.pageText.seeLess = data["table_see_less"] || "Click to see less...";
-    this.dataService.page.text = data["effects_table"] || 'Health Effects Matrix';
+    this.dataService.page.text = data["effects_table"] || "Table of Health Effects";
   }
 
   private initServiceCall = function () {
@@ -246,7 +244,15 @@ export class BenefitsTableComponent implements OnInit {
       }
       this.dataArray.push({ item: item, displayText: this.translatedItems[item.toLowerCase()] || item, values: dataHash[item], hidden: hidden, selected: false});
     }
-
+    // if conditions view (so data items are foods)
+    if (this.view === "condition") {
+      let warningQuery = 'foods=';
+      this.apiService.get(AppSettings.API_ROUTES.WARNINGS + '?' + warningQuery, true)
+        .subscribe(
+          data => this.processWarningsData(data),
+          error => console.error('Error getting warnings data: ' + error)
+        );
+    }
     this.hideUnpopularThreshold = this.dataArray.length <= 100 ? 10 : this.dataArray.length * 0.10;
     this.dataArraySortedPopularity = Object.assign([], this.dataArray);
     this.dataArraySortedPopularity.sort(this.popularitySort(1));
@@ -269,7 +275,7 @@ export class BenefitsTableComponent implements OnInit {
     }  
 
     this.hidingUnpopular = this.currentSessionFilters.filters.indexOf(5) > -1;
-}
+  }
 
   private processSelected() {
     this.selectedHeadings = [];
@@ -304,6 +310,13 @@ export class BenefitsTableComponent implements OnInit {
       }
     }
   }
+
+  private processWarningsData(data) {
+    for (let item of this.dataArray) {
+      item.hasWarning = data[item.item];
+    }
+  }
+
 
   private getIcon = function (benefit): string {
     let icon = '../../assets/img/';
@@ -807,6 +820,7 @@ export interface TableItem {
   hidden: boolean,
   selected: boolean,
   showEnglish?: boolean,
+  hasWarning?: boolean
 }
 
 export interface SessionFilters {

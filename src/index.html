@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
@@ -34,132 +35,140 @@
     <div style="text-align: center">
       <span id="loadingText"></span>
     </div>
-      <div class="loader"></div>
+    <div class="loader"></div>
 
-      <style> 
-      @import 'variables';
+    <style>
+      .loader,
+      .loader:before,
+      .loader:after {
+        background: #00838F;
+        -webkit-animation: load1 1s infinite ease-in-out;
+        animation: load1 1s infinite ease-in-out;
+        width: 1em;
+        height: 4em;
+      }
 
-.loader,
-.loader:before,
-.loader:after {
-  background: #00838F;
-  -webkit-animation: load1 1s infinite ease-in-out;
-  animation: load1 1s infinite ease-in-out;
-  width: 1em;
-  height: 4em;
-}
-.loader {
-  color: #00838F;
-  text-indent: -9999em;
-  margin: 88px auto;
-  position: relative;
-  font-size: 11px;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
-}
-.loader:before,
-.loader:after {
-  position: absolute;
-  top: 0;
-  content: '';
-}
-.loader:before {
-  left: -1.5em;
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
-}
-.loader:after {
-  left: 1.5em;
-}
-@-webkit-keyframes load1 {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 0;
-    height: 4em;
-  }
-  40% {
-    box-shadow: 0 -2em;
-    height: 5em;
-  }
-}
-@keyframes load1 {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 0;
-    height: 4em;
-  }
-  40% {
-    box-shadow: 0 -2em;
-    height: 5em;
-  }
-}
+      .loader {
+        color: #00838F;
+        text-indent: -9999em;
+        margin: 88px auto;
+        position: relative;
+        font-size: 11px;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+      }
 
-      </style>
-      <script>
-        var loadingTexts = [
-          "Loading over 400 medical conditions...",
-          "Loading over 500 health foods & more...",
-          "Loading over 14,000 health tips..."
-        ];
-        var i = Math.floor(Math.random() * Math.floor(3));;
-        document.getElementById("loadingText").textContent = loadingTexts[i];
-        setInterval(() => {
-          i++;
-          var loadingEl = document.getElementById("loadingText");
-          if (loadingEl && loadingEl.textContent) {
-            loadingEl.textContent = loadingTexts[i % 3];
-          }
-        }, 1000);
-      </script>
+      .loader:before,
+      .loader:after {
+        position: absolute;
+        top: 0;
+        content: '';
+      }
+
+      .loader:before {
+        left: -1.5em;
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+      }
+
+      .loader:after {
+        left: 1.5em;
+      }
+
+      @-webkit-keyframes load1 {
+
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 0;
+          height: 4em;
+        }
+
+        40% {
+          box-shadow: 0 -2em;
+          height: 5em;
+        }
+      }
+
+      @keyframes load1 {
+
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 0;
+          height: 4em;
+        }
+
+        40% {
+          box-shadow: 0 -2em;
+          height: 5em;
+        }
+      }
+    </style>
+    <script>
+      var loadingTexts = [
+        "Loading over 400 medical conditions...",
+        "Loading over 500 health foods & more...",
+        "Loading over 14,000 health tips..."
+      ];
+      var i = Math.floor(Math.random() * Math.floor(3));;
+      document.getElementById("loadingText").textContent = loadingTexts[i];
+      setInterval(() => {
+        i++;
+        var loadingEl = document.getElementById("loadingText");
+        if (loadingEl && loadingEl.textContent) {
+          loadingEl.textContent = loadingTexts[i % 3];
+        }
+      }, 1000);
+    </script>
   </app>
 
-  <!-- Google Analytics: change UA-71073175-1 to be your site's ID -->
-  <script>
-    (function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=r;A[l]=A[l]||function(){
-    (A[l].q=A[l].q||[]).push(arguments)},A[l].l=1*new Date();a=n.createElement(g),
-    r=n.getElementsByTagName(g)[0];a.async=1;a.src=u;r.parentNode.insertBefore(a,r)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-71073175-1', 'auto');
-    ga('send', 'pageview');
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136420176-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-136420176-1');
   </script>
 
   <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
   <!-- Webpack Dev Server reload -->
   <script src="/webpack-dev-server.js"></script>
   <% } %>
-  
+
 </body>
 
 <script>
-    if ('serviceWorker' in navigator) {
-       navigator.serviceWorker.register('service-worker.js')
-         .then(function(reg){
-        }).catch(function(err) {
-       });
-    }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(function (reg) {
+      }).catch(function (err) {
+      });
+  }
 
-    window.addEventListener("beforeinstallprompt", ev => { 
-      // Stop Chrome from asking _now_
-      ev.preventDefault();
-      ev.prompt();
-    });
-   </script>
+  window.addEventListener("beforeinstallprompt", ev => {
+    // Stop Chrome from asking _now_
+    ev.preventDefault();
+    ev.prompt();
+  });
+</script>
 <script type="text/javascript">
-  var clickyab_ad = clickyab_ad || []; 
-  clickyab_ad['id'] = 6891560068482 ; 
-  clickyab_ad['domain'] = 'healthfoodfinder.com'; 
-  clickyab_ad['slot'] = 17806390735; 
-  clickyab_ad['width'] = 320; 
-  clickyab_ad['height'] = 50; 
-  clickyab_ad['responsive'] = 'true' ; 
+  var clickyab_ad = clickyab_ad || [];
+  clickyab_ad['id'] = 6891560068482;
+  clickyab_ad['domain'] = 'healthfoodfinder.com';
+  clickyab_ad['slot'] = 17806390735;
+  clickyab_ad['width'] = 320;
+  clickyab_ad['height'] = 50;
+  clickyab_ad['responsive'] = 'true';
   clickyab_ad['effect'] = "";
-</script> 
+</script>
 <!-- <script async id="clickyab-show-js-v2" type="text/javascript" src="//a.clickyab.com/show.js"></script>     -->
 
 </html>

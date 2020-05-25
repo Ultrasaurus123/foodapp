@@ -38,11 +38,11 @@ div .disabled {
     position: fixed;
     background: white;
     @media (max-width: 320px) { 
-        bottom: 0px;
+        top: 96px;
         height: 80px;
     }
     @media (min-width: 321px) { 
-        bottom: 0px;
+        top: 96px;
         height: 80px;
     }    
     @media (max-width: 1023px) { 
@@ -75,7 +75,7 @@ div .disabled {
 
 .page-title {
     position: fixed;
-    margin-top: -36px;
+    margin-top: -125px;
     background: white;
     font-weight: bolder;
     font-size: 18px;
@@ -101,3 +101,8 @@ div .disabled {
         text-align: right;
     }
 }
+
+.row-top-container {
+    margin-top: 186px;
+}
+

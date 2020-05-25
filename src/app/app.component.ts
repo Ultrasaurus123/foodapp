@@ -3,8 +3,6 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppSettings } from '.';
 
 /*
  * App Component
@@ -28,7 +26,7 @@ import { AppSettings } from '.';
   `
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router) { }
+  constructor() { }
 
   public ngOnInit() {
   }

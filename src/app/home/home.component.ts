@@ -27,8 +27,13 @@ export class HomeComponent implements OnInit {
     private textService: TextService, private navigateService: NavigateService, private apiService: ApiService) { }
 
   public ngOnInit() {
-    this.bgColor = document.body.style.background;
-    document.body.style.background = "#4c7c73";
+    this.dataService.page = {
+      text: 'Home',
+      name: 'Home',
+      hideFooter: true,
+    };
+    window.scrollTo(0, 0);
+    this.dataService.loadFoodsAndConditions();
     this.examplesLink = AppSettings.EXAMPLES_LINK;
     this.guideLink = AppSettings.GUIDE_LINK
     this.route.queryParams.subscribe(data => {
@@ -46,26 +51,21 @@ export class HomeComponent implements OnInit {
         this.location.go("/home");
       }
     });
-
-    window.scrollTo(0, 0);
-    this.dataService.page = {
-      text: 'Home',
-      name: 'Home',
-      hideFooter: true,
-    };
     this.currentLanguageCode = AppSettings.LANGUAGE_CODE_MAP[this.textService.language.toLowerCase()].toUpperCase();
     this.textService.getMiscTranslations().subscribe(
       data => this.setTranslations(data),
-      error => console.error('Error getting translations: ' + error));
-    this.dataService.loadFoods();
-    this.dataService.loadConditions();
-  }
+      error => console.error('Error getting translations: ' + error)
+    );
+}
 
   public ngOnDestroy() {
     document.body.style.background = this.bgColor;
   }
 
   private setTranslations(data: any) {
+    // HACK for background styling once loaded
+    this.bgColor = document.body.style.background;
+    document.body.style.background = "#4c7c73";
     this.pageText.headline = AppSettings.APP_NAME;
     this.pageText.pageInfo = data["description"] || "Foods & Remedies for Multiple Health Concerns";  
     this.pageText.getStarted = 'It also compares benefits & side effects of multiple sets of foods and home remedies.';

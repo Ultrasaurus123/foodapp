@@ -8,7 +8,10 @@
 
 <ul class="topnav" id="myTopnav" [class.responsive]="menuOpen" [class.rtl]="textService.rightJustify">
   <li>
-    <a><span>{{menuTitle}}</span>
+    <a>
+      <span [hidden]="dataService.page && dataService.page.name !== 'Benefits Matrix' || !dataService.showGiahDarmani || !textService.rightJustify">GiahDarmani.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span [attr.dir]="textService.rightJustify">{{menuTitle}}</span>
+      <span [hidden]="dataService.page && dataService.page.name !== 'Benefits Matrix' || !dataService.showGiahDarmani || textService.rightJustify" class="giah-darmani-ltr">&nbsp;&nbsp;GiahDarmani.com</span>
     </a>
   </li>  
   <li *ngFor="let item of menuItems" [hidden]="item.display === menuTitle" [class.disabled]="item.name === 'My Charts' && !myChartsActive">
@@ -22,6 +25,5 @@
     <a style="font-size:15px;" class="no-hover" (click)="toggleMenu()" (focusout)="menuOpen = false;">&#9776;</a>
 </li>
 </ul>
-
 
 <!-- [class.hidden-desktop]="item.name === 'Facebook' || item.name === 'Feedback'" -->

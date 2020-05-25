@@ -35,7 +35,7 @@
                     </div>
                 </td>
                 </tr>
-                    <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" [class.rtl-table-row]="textService.rightJustify" class="table-row">
+                    <tr *ngFor="let item of dataArray; let i = index" [hidden]="item.hidden" [class.row-selected]="item.selected" [class.rtl-table-row]="textService.rightJustify" class="table-row" [class.warning-item]="item.hasWarning">
                         <td (click)="selectItem(item, i)" class="first-column"
                             [class.text-left]="!textService.rightJustify" [class.p-l-5]="!textService.rightJustify"
                             [class.text-right]="textService.rightJustify" [class.p-r-5]="textService.rightJustify">
@@ -176,7 +176,7 @@
                         <span *ngIf="textService.language !== 'English'">
                             <b><u>English Tab</u></b> - Use this tab to show the original English word for selected items in case the automated translations are unfamiliar or inaccurate.</span>
                         <hr style="border-color: white">
-                        <span><b><u>Column Filtering</u></b> - Click any column name hide the rows that have no effect on the selected column.  To unhide these hidden rows simply click on the column name again.</span>
+                        <span><b><u>Column Filtering</u></b> - Click any column name to hide the rows that have no effect on the selected column.  To unhide these hidden rows simply click on the column name again.</span>
                     </div>                
                 </div>
                 <!-- ** ENGLISH ** -->

@@ -23,13 +23,14 @@ export class DetailsComponent implements OnInit {
   private suffixIndex: number;
   private view: string;
   private dataArray: Array<any>;
-  private images: Array<any> = [];
   private pageHeader: string;
   private pageText: { [index: string]: string } = {}
   private dataObject: any = {};
   private warningsObject: any = {};
   private sideEffectsList: Array<string> = [];
   private maxSelection: number = AppSettings.MAX_SELECTIONS;
+  private imageCount: number = 2;
+  private images: Array<string> = [];
 
   constructor(private apiService: ApiService, private navigateService: NavigateService,
     private dataService: DataService, private textService: TextService) { }
@@ -132,14 +133,18 @@ export class DetailsComponent implements OnInit {
 
   private getImages() {
     // GOOGLE IMAGE API
-    let imageQuery = this.detailItem;
-    if (this.dataArray.length > 0 && this.dataArray[0].length > 0 && this.dataArray[0][0][this.suffixIndex]) {
-      imageQuery += ' ' + this.dataArray[0][0][this.suffixIndex];
+    // let imageQuery = this.detailItem;
+    // if (this.dataArray.length > 0 && this.dataArray[0].length > 0 && this.dataArray[0][0][this.suffixIndex]) {
+    //   imageQuery += ' ' + this.dataArray[0][0][this.suffixIndex];
+    // }
+    // this.apiService.getExternal('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
+    //   .subscribe(res => this.images = res.items,
+    //   error => console.error('Error getting cross reference data: ' + error)
+    //   );
+
+    for (var i = 0; i < this.imageCount; i++) {
+      this.images.push("https://health-foods-matrix.s3.us-west-2.amazonaws.com/images/" + this.detailItem + "-" + (i + 1) + ".jpg");
     }
-    this.apiService.getExternal('https://www.googleapis.com/customsearch/v1?key=AIzaSyANob8Nzzo_KhTLJSSQOm8XusU9uUBPsVc&cx=018410904851487458112:gwczc-vwosw&searchType=image&num=4&safe=high&fields=items(image)&q=' + imageQuery)
-      .subscribe(res => this.images = res.items,
-      error => console.error('Error getting cross reference data: ' + error)
-      );
   }
 
   private getImageSearchURL() {

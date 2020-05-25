@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../common'
+import { NavigateService } from '../common'
 
 @Component({
   selector: 'no-content',
@@ -12,13 +12,9 @@ import { DataService } from '../common'
 })
 export class NoContentComponent implements OnInit {
 
-  constructor(private dataService: DataService) { }
+  constructor(private navigateService: NavigateService) { }
 
   public ngOnInit() {
-    window.scrollTo(0, 0);
-    this.dataService.page = {
-      text: 'No Content',
-      name: 'No Content'
-    };
+    this.navigateService.navigateTo('home');            
   }
 }

@@ -29,6 +29,7 @@ export class DataService {
   public disclaimerRedirectUrl: string;
   public page: Page;
   public adDiv: Element;
+  public showGiahDarmani: boolean = false;
 
     private static _instance: DataService;
 
@@ -37,6 +38,7 @@ export class DataService {
   }
 
   public loadFoods(): Subscription {
+    console.log(this.dataLoading);
     this.dataLoading = true;
     if (this.allFoods && this.allFoods.length > 0 && !this.textService.languageChanged) {
       this.dataLoading = false;
@@ -89,8 +91,6 @@ export class DataService {
       }
       return Subscription.EMPTY;
     }
-    this.textService.loadAfterChange('food');
-    this.textService.loadAfterChange('condition');
     Observable.forkJoin([this.apiService.get(AppSettings.API_ROUTES.FOODS, true), this.apiService.get(AppSettings.API_ROUTES.CONDITIONS, true)]).subscribe(
       items => {
         let foods = items[0];
@@ -110,6 +110,8 @@ export class DataService {
             }
             this.allConditions.sort(this.alphabeticSort());
             this.dataLoading = false;
+            this.textService.loadAfterChange('food');
+            this.textService.loadAfterChange('condition');        
             if (onLoad) {
               onLoad();
             }
